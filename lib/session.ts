@@ -27,10 +27,10 @@ export const createSession = async (user: SessionUser) => {
 
 export const deleteSession = async () => {
   (await cookies()).delete("session");
-  redirect("/login");
+    redirect("/login");
 };
 
-export const encrypt = (payload: SessionPayload) => {
+export const encrypt = async (payload: SessionPayload) => {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()

@@ -129,7 +129,7 @@ model User {
     verificationStatus VerificationStatus     @default(PENDING)
     razorpayId         String?                @unique
     password           String?
-    membershipId       Int?
+    membershipId       Int?                @unique
     positionState      StatePositionTitle? // Optional: Only used if committeeType is STATE
     positionDistrict   DistrictPositionTitle? // Optional: Only used if committeeType is DISTRICT
     // MISC
