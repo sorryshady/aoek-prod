@@ -4,6 +4,7 @@ import { SessionPayload, SessionUser } from "@/types";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { NextRequest } from "next/server";
 
 const secretKey = process.env.SECRET_KEY;
 const encodedKey = new TextEncoder().encode(secretKey);
@@ -27,7 +28,7 @@ export const createSession = async (user: SessionUser) => {
 
 export const deleteSession = async () => {
   (await cookies()).delete("session");
-    redirect("/login");
+  redirect("/login");
 };
 
 export const encrypt = async (payload: SessionPayload) => {
@@ -48,4 +49,12 @@ export const decrypt = async (session: string) => {
     console.log("Error: ", error);
     return { error };
   }
+};
+
+export const getBearerToken = (req: NextRequest): string | undefined => {
+  const authHeader = req.headers.get("Authorization");
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    return authHeader.substring(7); // Remove "Bearer " prefix
+  }
+  return undefined;
 };
