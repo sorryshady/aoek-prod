@@ -109,7 +109,7 @@ model User {
     gender             Gender
     bloodGroup         BloodGroup
     // Current employed Status and professional address
-    userStatus         UserStatus             @default(WORKING)
+    userStatus         UserStatus             @default(RETIRED)
     department         Department?
     designation        Designation?
     officeAddress      String?

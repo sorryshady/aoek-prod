@@ -2,10 +2,10 @@ services:
   db:
     image: postgres:16
     restart: always
-    container_name: assceng-prod
+    container_name: assceng_prod
     ports:
-      - '5432:5432'
+      - '5433:5432'
     environment:
       POSTGRES_USER: akhil
       POSTGRES_PASSWORD: test
-      POSTGRES_DB: prod-db
+      POSTGRES_DB: prod_db
