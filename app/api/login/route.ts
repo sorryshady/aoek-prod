@@ -1,192 +1,274 @@
 "use server";
 
 import { db } from "@/db";
-import { User } from "@prisma/client";
+import { SecurityQuestionType, User } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { createSession } from "@/lib/session";
 import { SessionUser } from "@/types";
 export async function GET(request: NextRequest) {
   try {
-    let existingUser: User | null = null;
-    // accessing search params to check for email or membershipId
     const { searchParams } = request.nextUrl;
     const email = searchParams.get("email");
     const membershipId = searchParams.get("membershipId");
 
-    // If neither is present, return error response
+    // Validate input
     if (!email && !membershipId) {
       return NextResponse.json(
-        { error: "Email or membershipId is required!" },
-        { status: 400 },
-      );
-    } else if (email && membershipId) {
-      return NextResponse.json(
-        { error: "Only one of email or membershipId is allowed!" },
+        { error: "Either 'email' or 'membershipId' is required." },
         { status: 400 },
       );
     }
-    // if email is present, find user using email
-    if (email) {
-      existingUser = await db.user.findUnique({ where: { email } });
-      if (!existingUser) {
-        return NextResponse.json(
-          { error: "User with email not found!" },
-          { status: 404 },
-        );
-      }
-    }
-    // If membershipId is present, find user using membershipId
-    if (membershipId) {
-      existingUser = await db.user.findUnique({
-        where: { membershipId: Number(membershipId) },
-      });
-      if (!existingUser) {
-        return NextResponse.json(
-          { error: "User with membershipId not found!" },
-          { status: 404 },
-        );
-      }
-    }
-    // Check if password field is empty and return the appropriate response
-    if (existingUser) {
-      const { password, name, email, membershipId, verificationStatus } =
-        existingUser;
-      if (verificationStatus === "PENDING") {
-        return NextResponse.json(
-          { error: "User is not yet verified! Cannot login." },
-          { status: 401 },
-        );
-      } else if (verificationStatus === "REJECTED") {
-        return NextResponse.json(
-          { error: "Membership request has been rejected! Cannot login." },
-          { status: 401 },
-        );
-      }
-      // Check if password is empty (if it is an empty string or null)
-      const firstLogin = !password;
 
-      // Return response with firstLogin field
-      return NextResponse.json({
-        user: { name, email, membershipId },
-        firstLogin,
-      });
-    }
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    } else {
+    if (email && membershipId) {
       return NextResponse.json(
-        { error: "Something went wrong" },
+        {
+          error:
+            "Please provide only one of 'email' or 'membershipId', not both.",
+        },
+        { status: 400 },
+      );
+    }
+
+    // Determine query criteria
+    const whereClause: { email?: string; membershipId?: number } = {};
+    if (email) {
+      whereClause.email = email;
+    } else if (membershipId) {
+      const id = parseInt(membershipId, 10);
+      if (isNaN(id)) {
+        return NextResponse.json(
+          { error: "Invalid 'membershipId'. It must be a numeric value." },
+          { status: 400 },
+        );
+      }
+      whereClause.membershipId = id;
+    }
+
+    // Fetch user from the database
+    const existingUser = await db.user.findUnique({ where: whereClause });
+    if (!existingUser) {
+      const field = email ? "email" : "membershipId";
+      return NextResponse.json(
+        { error: `User with provided ${field} not found.` },
+        { status: 404 },
+      );
+    }
+
+    // Handle verification status
+    switch (existingUser.verificationStatus) {
+      case "PENDING":
+        return NextResponse.json(
+          { error: "User is not yet verified and cannot log in." },
+          { status: 401 },
+        );
+      case "REJECTED":
+        return NextResponse.json(
+          { error: "Membership request has been rejected. Cannot log in." },
+          { status: 401 },
+        );
+    }
+
+    // Determine if this is the first login
+    const firstLogin = !existingUser.password;
+
+    // Return user details without sensitive fields
+    const {
+      name,
+      email: userEmail,
+      membershipId: userMembershipId,
+    } = existingUser;
+    return NextResponse.json({
+      user: { name, email: userEmail, membershipId: userMembershipId },
+      firstLogin,
+    });
+  } catch (error: unknown) {
+    console.error("Error in GET handler:", error);
+
+    // Enhanced error handling
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { error: "An internal server error occurred.", details: error.message },
         { status: 500 },
       );
     }
+
+    return NextResponse.json(
+      { error: "An unexpected error occurred." },
+      { status: 500 },
+    );
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
     const { searchParams } = request.nextUrl;
-    const { membershipId, password } = await request.json();
+    const { membershipId, password, question, answer } = await request.json();
     const firstLogin = searchParams.get("firstLogin");
 
+    // Validate firstLogin query parameter
     if (!firstLogin) {
-      return NextResponse.json({ error: "Invalid Request" }, { status: 404 });
-    }
-
-    // check if membershipId and password are present in request body
-    if (!membershipId || !password) {
       return NextResponse.json(
-        { error: "membershipId and password are required" },
+        { error: "Invalid Request. 'firstLogin' parameter is required." },
         { status: 400 },
       );
     }
-    // check if membershipId is valid
-    const existingUser = await db.user.findUnique({
-      where: { membershipId },
-    });
+
+    // Validate required fields
+    if (!membershipId || !password) {
+      return NextResponse.json(
+        { error: "Both 'membershipId' and 'password' are required." },
+        { status: 400 },
+      );
+    }
+
+    // Fetch user from the database (only once)
+    const existingUser = await db.user.findUnique({ where: { membershipId } });
     if (!existingUser) {
       return NextResponse.json(
-        { error: "User with membershipId not found!" },
+        { error: `User with membershipId ${membershipId} was not found.` },
         { status: 404 },
       );
     }
-    // check user verification status
+
+    // Check user verification status
     if (existingUser.verificationStatus === "PENDING") {
       return NextResponse.json(
-        { error: "User is not yet verified! Cannot login." },
-        { status: 401 },
-      );
-    } else if (existingUser.verificationStatus === "REJECTED") {
-      return NextResponse.json(
-        { error: "Membership request has been rejected! Cannot login." },
+        { error: "User is not yet verified and cannot log in." },
         { status: 401 },
       );
     }
+    if (existingUser.verificationStatus === "REJECTED") {
+      return NextResponse.json(
+        { error: "Membership request has been rejected. Cannot log in." },
+        { status: 401 },
+      );
+    }
+
+    // Create session user payload
     const sessionUser: SessionUser = {
       name: existingUser.name,
       email: existingUser.email,
       userRole: existingUser.userRole,
       membershipId: existingUser.membershipId!,
     };
-    // // check if password setting or password login
-    if (firstLogin === "true" && existingUser.password === null) {
-      // hash password
+
+    // Handle first login (password setting + security question)
+    if (firstLogin === "true") {
+      if (existingUser.password !== null) {
+        return NextResponse.json(
+          { error: "Password is already set. Cannot perform first login." },
+          { status: 400 },
+        );
+      }
+
+      // Ensure the user has selected a valid question and provided an answer
+      if (!question || !answer) {
+        return NextResponse.json(
+          {
+            error: "Security question and answer are required for first login.",
+          },
+          { status: 400 },
+        );
+      }
+
+      // Validate the question (example, using enum or predefined list)
+      if (!Object.values(SecurityQuestionType).includes(question)) {
+        return NextResponse.json(
+          { error: "Invalid security question." },
+          { status: 400 },
+        );
+      }
+
+      // Hash the answer and store the question-answer pair
+      const hashedAnswer = await bcrypt.hash(answer, 10);
+      await db.securityQuestion.create({
+        data: {
+          membershipId,
+          question,
+          answer: hashedAnswer,
+        },
+      });
+
+      // Hash the password and update the user record
       const hashedPassword = await bcrypt.hash(password, 10);
-      //   update db with new password
       await db.user.update({
         where: { membershipId },
         data: { password: hashedPassword },
       });
-      //   create Session
+
+      // Create a session and respond
       const session = await createSession(sessionUser);
-      //   Sending session token and sessionUser to app clients
-      if (
-        request.headers.get("User-Agent")?.includes("Expo") ||
-        request.headers.get("User-Agent")?.includes("okhttp") ||
-        request.headers.get("User-Agent")?.includes("Darwin")
-      ) {
-        return NextResponse.json({ success: true, sessionUser, session });
+      return generateSuccessResponse(request, sessionUser, session!);
+    }
+
+    // Handle regular login (password validation)
+    if (firstLogin === "false") {
+      if (existingUser.password === null) {
+        return NextResponse.json(
+          {
+            error:
+              "Password is not set for this user. First login is required.",
+          },
+          { status: 400 },
+        );
       }
-      //   returning sessionUser for web clients
-      return NextResponse.json({ success: true, sessionUser });
-    } else if (firstLogin === "false" && existingUser.password !== null) {
+
+      // Validate the password
       const isPasswordValid = await bcrypt.compare(
         password,
-        existingUser.password!,
+        existingUser.password,
       );
       if (!isPasswordValid) {
         return NextResponse.json(
-          { error: "Invalid credentials" },
+          { error: "Invalid credentials. Please try again." },
           { status: 401 },
         );
       }
-      //   create Session
+
+      // Create session and respond
       const session = await createSession(sessionUser);
-      //   Sending session token and sessionUser to app clients
-      if (
-        request.headers.get("User-Agent")?.includes("Expo") ||
-        request.headers.get("User-Agent")?.includes("okhttp") ||
-        request.headers.get("User-Agent")?.includes("Darwin")
-      ) {
-        return NextResponse.json({ success: true, sessionUser, session });
-      }
-      //   returning sessionUser for web clients
-      return NextResponse.json({ success: true, sessionUser });
-    } else {
-      return NextResponse.json(
-        { error: "Invalid login attempt" },
-        { status: 400 },
-      );
+      return generateSuccessResponse(request, sessionUser, session!);
     }
+
+    // Handle invalid firstLogin parameter
+    return NextResponse.json(
+      {
+        error:
+          "Invalid 'firstLogin' parameter value. Must be 'true' or 'false'.",
+      },
+      { status: 400 },
+    );
   } catch (error: unknown) {
+    console.error("Error in POST handler:", error);
+
+    // Enhanced error handling
     if (error instanceof Error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    } else {
       return NextResponse.json(
-        { error: "Something went wrong" },
+        { error: "Internal Server Error", details: error.message },
         { status: 500 },
       );
     }
+
+    return NextResponse.json(
+      { error: "Unexpected error occurred. Please try again later." },
+      { status: 500 },
+    );
   }
+}
+
+function isMobileClient(request: NextRequest): boolean {
+  const userAgent = request.headers.get("User-Agent") || "";
+  return /Expo|okhttp|Darwin/.test(userAgent);
+}
+
+function generateSuccessResponse(
+  request: NextRequest,
+  sessionUser: SessionUser,
+  session?: string,
+) {
+  const isMobile = isMobileClient(request);
+  const response = { success: true, sessionUser, ...(isMobile && { session }) };
+
+  return NextResponse.json(response);
 }
