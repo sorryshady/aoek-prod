@@ -31,19 +31,9 @@ export async function GET(request: NextRequest) {
     }
 
     // Determine query criteria
-    const whereClause: { email?: string; membershipId?: number } = {};
-    if (email) {
-      whereClause.email = email;
-    } else if (membershipId) {
-      const id = parseInt(membershipId, 10);
-      if (isNaN(id)) {
-        return NextResponse.json(
-          { error: "Invalid 'membershipId'. It must be a numeric value." },
-          { status: 400 },
-        );
-      }
-      whereClause.membershipId = id;
-    }
+    const whereClause = email
+      ? { email }
+      : { membershipId: Number(membershipId) }; // Assuming membershipId is always present if email isn't
 
     // Fetch user from the database
     const existingUser = await db.user.findUnique({ where: whereClause });

@@ -1,3 +1,13 @@
-import { frontendRegisterSchema, backendRegisterSchema } from "./register-schema";
+import {
+  frontendRegisterSchema,
+  backendRegisterSchema,
+} from "./register-schema";
+import { EmailIdSchema, LoginSchema, SignupSchema } from "./login-schema";
 
-export { frontendRegisterSchema, backendRegisterSchema };
+export {
+  frontendRegisterSchema,
+  backendRegisterSchema,
+  EmailIdSchema,
+  LoginSchema,
+  SignupSchema,
+};

@@ -113,9 +113,6 @@ export const frontendRegisterSchema = baseRegisterSchema
     message:
       "Invalid Data: If working enter department, designation, office address and work district.",
   });
-<<<<<<< HEAD
-=======
 
 export type FrontendRegisterSchema = z.infer<typeof frontendRegisterSchema>;
 export type BackendRegisterSchema = z.infer<typeof backendRegisterSchema>;
->>>>>>> feature/apiRoutes
