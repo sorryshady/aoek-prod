@@ -1,3 +1,3 @@
-export function News() {
+export default function News() {
   return <div>News</div>;
 }
