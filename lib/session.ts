@@ -21,7 +21,7 @@ export const createSession = async (user: SessionUser) => {
     return session;
   } catch (error) {
     console.log("Error: ", error);
-    return { error };
+    return null;
   }
 };
 
@@ -30,7 +30,7 @@ export const deleteSession = async () => {
   redirect("/login");
 };
 
-export const encrypt = (payload: SessionPayload) => {
+export const encrypt = async (payload: SessionPayload) => {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()

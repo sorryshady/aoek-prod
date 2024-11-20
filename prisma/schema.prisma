@@ -129,10 +129,31 @@ model User {
     verificationStatus VerificationStatus     @default(PENDING)
     razorpayId         String?                @unique
     password           String?
-    membershipId       Int?
+    membershipId       Int?                   @unique
     positionState      StatePositionTitle? // Optional: Only used if committeeType is STATE
     positionDistrict   DistrictPositionTitle? // Optional: Only used if committeeType is DISTRICT
     // MISC
     createdAt          DateTime               @default(now())
     updatedAt          DateTime               @updatedAt
+    SecurityQuestion   SecurityQuestion[]
+}
+
+// Security Questions for Reset Password
+enum SecurityQuestionType {
+    MOTHERS_MAIDEN_NAME
+    FIRST_PET
+    FIRST_SCHOOL
+    FAVOURITE_BOOK
+    FAVOURITE_CAR
+}
+
+model SecurityQuestion {
+    id           Int                  @id @default(autoincrement())
+    question     SecurityQuestionType // The selected question from the enum
+    answer       String // Hashed answer to the security question
+    membershipId Int // Foreign key to link with User
+    user         User                 @relation(fields: [membershipId], references: [membershipId], onDelete: Cascade) // Cascade delete on user delete
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
