@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { SecurityQuestionType, User } from "@prisma/client";
+import { SecurityQuestionType } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { createSession } from "@/lib/session";

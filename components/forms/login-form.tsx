@@ -16,7 +16,6 @@ import { EmailIdSchema, LoginSchema, SignupSchema } from "@/schemas";
 import { Input } from "../ui/input";
 import { useState } from "react";
 import { FormError } from "../custom/form-error";
-import { Button } from "../ui/button";
 import { LoginResponseUser } from "@/types/user-types";
 import { FormSuccess } from "../custom/form-success";
 import ShowPassword from "../custom/show-password";
@@ -197,7 +196,7 @@ const FirstLogin = ({ user }: LoginProps) => {
                     <SelectItem
                       value={SecurityQuestionType.MOTHERS_MAIDEN_NAME}
                     >
-                      Your mother's maiden name.
+                      Your mother&apos;s maiden name.
                     </SelectItem>
                     <SelectItem value={SecurityQuestionType.FAVOURITE_BOOK}>
                       Your favourite book.
