@@ -86,6 +86,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const login = async (identifier: string, isEmail: boolean = false) => {
     setIsLoading(true);
     setError(null);
+    setSuccess(null);
 
     try {
       const queryParam = isEmail
@@ -123,6 +124,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   ) => {
     setIsLoading(true);
     setError(null);
+    setSuccess(null);
 
     if (!user?.membershipId) {
       setError("No user context for first login");
@@ -152,6 +154,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setSuccess("Password set successfully.Logging you in...");
         setTimeout(() => {
           setAuthStage(AuthStage.AUTHENTICATED);
+          console.log("Redirect to: ", redirectUrl);
           router.push(redirectUrl);
         }, 1000);
       } else {
@@ -168,6 +171,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const enterPassword = async (password: string, redirectUrl: string) => {
     setIsLoading(true);
     setError(null);
+    setSuccess(null);
 
     if (!user?.membershipId) {
       setError("No user context for password entry");
@@ -195,6 +199,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setSuccess("Password verified. Logging you in...");
         setTimeout(() => {
           setAuthStage(AuthStage.AUTHENTICATED);
+          console.log("Redirect to: ", redirectUrl);
           router.push(redirectUrl);
         }, 1000);
       } else {
@@ -210,12 +215,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // Logout Handler
   const logout = async () => {
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/auth/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_URL}/api/auth/logout`,
+      );
+      const data = await response.json();
+      toast.success(data.success);
     } catch (err) {
-      console.error("Logout failed");
+      console.error("Logout failed", error);
     } finally {
       setUser(null);
       setAuthStage(AuthStage.INITIAL_LOGIN);

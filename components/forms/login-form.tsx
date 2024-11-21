@@ -34,7 +34,7 @@ import { AuthStage } from "@/types/session-types";
 
 const LoginForm = () => {
   const params = useSearchParams();
-  const redirectTo = params?.get("redirectTo") || "/";
+  const redirectTo = decodeURIComponent(params.get("redirectTo") || "/");
   const { error, user, authStage, login, isLoading } = useAuth();
   const form = useForm<z.infer<typeof EmailIdSchema>>({
     resolver: zodResolver(EmailIdSchema),

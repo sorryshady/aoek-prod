@@ -12,5 +12,5 @@ export async function GET() {
     );
   }
   (await cookies()).delete("session");
-  return NextResponse.json({ message: "Successfully logged out" });
+  return NextResponse.json({ success: "Successfully logged out" });
 }
