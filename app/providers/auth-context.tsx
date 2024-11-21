@@ -25,8 +25,9 @@ interface AuthContextType {
     password: string,
     securityQuestion: string,
     securityAnswer: string,
+    redirectUrl: string,
   ) => Promise<void>;
-  enterPassword: (password: string) => Promise<void>;
+  enterPassword: (password: string, redirectUrl: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -60,7 +61,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
-        const response = await fetch("/api/auth/user");
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_URL}/api/auth/user`,
+        );
         if (response.ok) {
           const data = await response.json();
           setUser({
@@ -91,7 +94,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const queryParam = isEmail
         ? `email=${identifier}`
         : `membershipId=${identifier}`;
-      const response = await fetch(`/api/auth/login?${queryParam}`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_URL}/api/auth/login?${queryParam}`,
+      );
       const data = await response.json();
 
       if (response.ok) {
@@ -117,6 +122,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     password: string,
     securityQuestion: string,
     securityAnswer: string,
+    redirectUrl: string,
   ) => {
     setIsLoading(true);
     setError(null);
@@ -128,16 +134,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     try {
-      const response = await fetch("/api/auth/login?firstLogin=true", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          membershipId: user.membershipId,
-          password,
-          question: securityQuestion,
-          answer: securityAnswer,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_URL}/api/auth/login?firstLogin=true`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            membershipId: user.membershipId,
+            password,
+            question: securityQuestion,
+            answer: securityAnswer,
+          }),
+        },
+      );
 
       const data = await response.json();
 
@@ -146,7 +155,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setSuccess("Password set successfully.Logging you in...");
         setTimeout(() => {
           setAuthStage(AuthStage.AUTHENTICATED);
-          router.push("/account");
+          router.push(redirectUrl);
         }, 1000);
       } else {
         setError(data.error || "Password Setup failed");
@@ -159,7 +168,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   // Password Entry for Existing Users
-  const enterPassword = async (password: string) => {
+  const enterPassword = async (password: string, redirectUrl: string) => {
     setIsLoading(true);
     setError(null);
 
@@ -170,14 +179,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     try {
-      const response = await fetch("/api/auth/login?firstLogin=false", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          membershipId: user.membershipId,
-          password,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_URL}/api/auth/login?firstLogin=false`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            membershipId: user.membershipId,
+            password,
+          }),
+        },
+      );
 
       const data = await response.json();
 
@@ -186,7 +198,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setSuccess("Password verified. Logging you in...");
         setTimeout(() => {
           setAuthStage(AuthStage.AUTHENTICATED);
-          router.push("/account");
+          console.log(redirectUrl);
+          router.push(redirectUrl);
         }, 1000);
       } else {
         setError(data.error || "Invalid password");
@@ -201,7 +214,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // Logout Handler
   const logout = async () => {
     try {
-      await fetch("/api/auth/logout", {
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/auth/logout`, {
         method: "POST",
         credentials: "include",
       });
@@ -242,52 +255,4 @@ export const useAuth = () => {
   }
 
   return context;
-};
-
-// Protected Route Component
-export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const { user, isLoading } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    // Redirect to login if not authenticated and not loading
-    if (!isLoading && !user) {
-      router.push("/login");
-    }
-  }, [user, isLoading, router]);
-
-  // Show loading state
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div>Loading...</div>
-      </div>
-    );
-  }
-
-  return <>{children}</>;
-};
-
-// Navbar Component
-export const Navbar: React.FC = () => {
-  const { user, logout } = useAuth();
-
-  if (!user) return null;
-
-  return (
-    <nav className="flex justify-between items-center p-4 bg-gray-100">
-      <div className="text-xl font-bold">My App</div>
-      <div className="flex items-center space-x-4">
-        <span>{user.name || `Member ${user.membershipId}`}</span>
-        <button
-          onClick={logout}
-          className="px-4 py-2 bg-red-500 text-white rounded"
-        >
-          Logout
-        </button>
-      </div>
-    </nav>
-  );
 };

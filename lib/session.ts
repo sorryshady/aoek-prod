@@ -1,6 +1,6 @@
 "use server";
 
-import { SessionPayload, SessionUser } from "@/types";
+import { ExtendedJWTPayload, SessionPayload, SessionUser } from "@/types";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -43,7 +43,7 @@ export const decrypt = async (session: string) => {
     const { payload } = await jwtVerify(session, encodedKey, {
       algorithms: ["HS256"],
     });
-    return payload;
+    return payload as ExtendedJWTPayload;
   } catch (error) {
     console.log("Error: ", error);
     return { error };
