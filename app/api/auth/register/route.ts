@@ -22,9 +22,8 @@ export async function POST(request: NextRequest) {
     const validatedFields = backendRegisterSchema.safeParse(formData);
     if (!validatedFields.success) {
       const { error } = validatedFields;
-      return NextResponse.json({ error: error.issues }, { status: 400 });
+      return NextResponse.json({ error: "Invalid Fields" }, { status: 400 });
     }
-
     const { email } = validatedFields.data;
 
     // trying to check if user already exists

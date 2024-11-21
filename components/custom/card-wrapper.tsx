@@ -23,7 +23,7 @@ export const CardWrapper = ({
   return (
     <Card
       className={cn(
-        "lg:w-[500px] md:w-[70vw] w-full shadow-md mx-auto",
+        "lg:w-[600px] md:w-[70vw] w-full shadow-md mx-auto",
         className,
       )}
     >

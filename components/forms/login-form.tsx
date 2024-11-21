@@ -125,7 +125,7 @@ const FirstLogin = ({ user, redirectTo }: LoginProps) => {
   };
   return (
     <>
-      <p className="text-base text-muted-foreground mb-5">
+      <p className="text-base text-muted-foreground mb-5 text-center">
         Welcome{" "}
         <span className="text-black font-bold text-center">{user.name}</span>.
         Set a password for your account.
@@ -265,7 +265,7 @@ const NormalLogin = ({ user, redirectTo }: LoginProps) => {
   };
   return (
     <>
-      <p className="text-base text-muted-foreground mb-5">
+      <p className="text-base text-muted-foreground mb-5 text-center">
         Welcome{" "}
         <span className="text-black font-bold text-center">{user.name}</span>.
         Enter your password to login.
