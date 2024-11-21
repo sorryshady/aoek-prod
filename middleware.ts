@@ -48,7 +48,7 @@ function isPublicRoute(path: string): boolean {
 // Redirect to login page
 function redirectToLogin(request: NextRequest) {
   const loginUrl = new URL("/login", request.url);
-  loginUrl.searchParams.set("redirectTo", request.url);
+  loginUrl.searchParams.set("redirectTo", encodeURIComponent(request.url));
   return NextResponse.redirect(loginUrl);
 }
 
