@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
 
     const { user } = (await decrypt(token)) as SessionPayload;
     const existingUser = await db.user.findUnique({
-      where: { membershipId: user.membershipId },
+      where: { membershipId: user.membershipId!},
     });
 
     if (!user || !existingUser || existingUser.userRole !== "ADMIN") {

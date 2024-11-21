@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { createSession } from "@/lib/session";
 import { SessionUser } from "@/types";
+import { excludeFields } from "@/lib/utils";
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = request.nextUrl;
@@ -63,19 +64,10 @@ export async function GET(request: NextRequest) {
     const firstLogin = !existingUser.password;
 
     // Return user details without sensitive fields
-    const {
-      name,
-      email: userEmail,
-      userRole,
-      membershipId: userMembershipId,
-    } = existingUser;
+    const safeUser = excludeFields(existingUser, ["password"]);
+
     return NextResponse.json({
-      user: {
-        name,
-        email: userEmail,
-        userRole,
-        membershipId: userMembershipId,
-      },
+      user: safeUser,
       firstLogin,
     });
   } catch (error: unknown) {
@@ -142,12 +134,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create session user payload
-    const sessionUser: SessionUser = {
-      name: existingUser.name,
-      email: existingUser.email,
-      userRole: existingUser.userRole,
-      membershipId: existingUser.membershipId!,
-    };
+    const sessionUser = excludeFields(existingUser, ["password"]);
 
     // Handle first login (password setting + security question)
     if (firstLogin === "true") {

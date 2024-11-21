@@ -1,11 +1,8 @@
-import { UserRole } from "@prisma/client";
+import { User } from "@prisma/client";
 import { JWTPayload } from "jose";
-export type SessionUser = {
-  name: string;
-  email: string;
-  userRole: UserRole;
-  membershipId: number;
-};
+
+export type SessionUser = Omit<User, "password" | "createdAt" | "updatedAt">;
+
 export type SessionPayload = {
   user: SessionUser;
   expiresAt: Date;

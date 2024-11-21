@@ -66,12 +66,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         );
         if (response.ok) {
           const data = await response.json();
-          setUser({
-            name: data.user.name,
-            email: data.user.email,
-            membershipId: data.user.membershipId,
-            userRole: data.user.userRole,
-          });
+          console.log("Here", data.user);
+          setUser(data.user);
           setAuthStage(AuthStage.AUTHENTICATED);
         }
       } catch (err) {
@@ -198,7 +194,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setSuccess("Password verified. Logging you in...");
         setTimeout(() => {
           setAuthStage(AuthStage.AUTHENTICATED);
-          console.log(redirectUrl);
           router.push(redirectUrl);
         }, 1000);
       } else {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useState } from "react";
 import { CardWrapper } from "../custom/card-wrapper";
@@ -9,7 +10,6 @@ import { useUploadThing } from "@/lib/uploadthing";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,9 +21,7 @@ import CustomDate from "../custom/custom-date";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
@@ -78,7 +76,7 @@ export const RegisterForm = () => {
       setSuccess("");
       setError("");
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_URL}/api/search?email=${data.email}`,
+        `${process.env.NEXT_PUBLIC_URL}/api/auth/register?email=${data.email}`,
       );
       const responseData = await response.json();
       if (responseData.error) {
@@ -93,7 +91,6 @@ export const RegisterForm = () => {
         }
         let submitData = { ...data, photoUrl: imgUrl };
         submitData = excludeFields(submitData, ["photo"]);
-        console.log("submitData: ", submitData);
 
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_URL}/api/auth/register`,

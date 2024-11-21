@@ -4,6 +4,25 @@ import { backendRegisterSchema } from "@/schemas";
 import { NextRequest, NextResponse } from "next/server";
 import { parse } from "date-fns";
 
+export async function GET(request: NextRequest) {
+  const { searchParams } = request.nextUrl;
+  const query = searchParams.get("email");
+  if (!query) {
+    return NextResponse.json({ error: "Email is required" }, { status: 400 });
+  }
+
+  const exisitingUser = await db.user.findUnique({
+    where: { email: query },
+  });
+  if (exisitingUser) {
+    return NextResponse.json(
+      { error: "User already exists!" },
+      { status: 400 },
+    );
+  } else {
+    return NextResponse.json({ success: true }, { status: 200 });
+  }
+}
 export async function POST(request: NextRequest) {
   try {
     let formData = await request.json();
@@ -21,7 +40,6 @@ export async function POST(request: NextRequest) {
     // checking if incoming form data is valid
     const validatedFields = backendRegisterSchema.safeParse(formData);
     if (!validatedFields.success) {
-      const { error } = validatedFields;
       return NextResponse.json({ error: "Invalid Fields" }, { status: 400 });
     }
     const { email } = validatedFields.data;
