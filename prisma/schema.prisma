@@ -135,7 +135,8 @@ model User {
     // MISC
     createdAt          DateTime               @default(now())
     updatedAt          DateTime               @updatedAt
-    SecurityQuestion   SecurityQuestion[]
+    // Security Question
+    securityQuestion   SecurityQuestion[]
 }
 
 // Security Questions for Reset Password
@@ -151,8 +152,8 @@ model SecurityQuestion {
     id           Int                  @id @default(autoincrement())
     question     SecurityQuestionType // The selected question from the enum
     answer       String // Hashed answer to the security question
-    membershipId Int // Foreign key to link with User
-    user         User                 @relation(fields: [membershipId], references: [membershipId], onDelete: Cascade) // Cascade delete on user delete
+    user         User?                @relation(fields: [membershipId], references: [membershipId], onDelete: Cascade)
+    membershipId Int?                 @unique // Ensures one-to-one relationship
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

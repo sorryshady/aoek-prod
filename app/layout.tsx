@@ -4,6 +4,7 @@ import "./globals.css";
 import ClientProvider from "./providers/query-client";
 import Navbar from "@/components/custom/navbar";
 import { Toaster } from "sonner";
+import { AuthProvider } from "./providers/auth-context";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -31,11 +32,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ClientProvider>
-          <Navbar />
-          {children}
-        </ClientProvider>
-
+        <AuthProvider>
+          <ClientProvider>
+            <Navbar />
+            {children}
+          </ClientProvider>
+        </AuthProvider>
         <Toaster />
       </body>
     </html>

@@ -16,7 +16,6 @@ import { EmailIdSchema, LoginSchema, SignupSchema } from "@/schemas";
 import { Input } from "../ui/input";
 import { useState } from "react";
 import { FormError } from "../custom/form-error";
-import { LoginResponseUser } from "@/types/user-types";
 import { FormSuccess } from "../custom/form-success";
 import ShowPassword from "../custom/show-password";
 import {
@@ -28,14 +27,10 @@ import {
 } from "../ui/select";
 import { SecurityQuestionType } from "@prisma/client";
 import SubmitButton from "../custom/submit-button";
+import { SessionUser } from "@/types";
+import { AuthStage, useAuth } from "@/app/providers/auth-context";
 const LoginForm = () => {
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
-  const [response, setResponse] = useState({
-    user: null as LoginResponseUser | null,
-    firstLogin: false,
-  });
-
+  const { error, user, authStage, login, isLoading } = useAuth();
   const form = useForm<z.infer<typeof EmailIdSchema>>({
     resolver: zodResolver(EmailIdSchema),
     defaultValues: {
@@ -44,24 +39,8 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof EmailIdSchema>) => {
-    try {
-      setError("");
-      setIsSubmitting(true);
-      const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.emailOrId);
-      const url = isEmail
-        ? `/api/login?email=${values.emailOrId}`
-        : `/api/login?membershipId=${values.emailOrId}`;
-      const response = await fetch(url);
-      const data = await response.json();
-      if (data.error) {
-        setError(data.error);
-      }
-      setResponse(data);
-    } catch (error) {
-      setError("An unexpected error occured!");
-    } finally {
-      setIsSubmitting(false);
-    }
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.emailOrId);
+    await login(values.emailOrId, isEmail);
   };
   return (
     <CardWrapper
@@ -69,7 +48,7 @@ const LoginForm = () => {
       backButtonLabel="Don't have an account?"
       backButtonHref="/register"
     >
-      {!response.user && (
+      {!user && (
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -77,6 +56,7 @@ const LoginForm = () => {
           >
             <FormField
               control={form.control}
+              disabled={isLoading}
               name="emailOrId"
               render={({ field }) => (
                 <FormItem>
@@ -94,18 +74,18 @@ const LoginForm = () => {
             <FormError message={error} />
             <SubmitButton
               title={"Submit"}
-              isSubmitting={isSubmitting}
+              isSubmitting={isLoading}
               className="w-full"
             />
           </form>
         </Form>
       )}
-      {response.user ? (
-        response.firstLogin ? (
-          <FirstLogin user={response.user} />
-        ) : (
-          <NormalLogin user={response.user} />
-        )
+      {user ? (
+        authStage === AuthStage.FIRST_LOGIN_PASSWORD_SETUP ? (
+          <FirstLogin user={user} />
+        ) : authStage === AuthStage.PASSWORD_ENTRY ? (
+          <NormalLogin user={user} />
+        ) : null
       ) : null}
     </CardWrapper>
   );
@@ -114,12 +94,10 @@ const LoginForm = () => {
 export default LoginForm;
 
 interface LoginProps {
-  user: LoginResponseUser;
+  user: SessionUser;
 }
 const FirstLogin = ({ user }: LoginProps) => {
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
-  const [success, setSuccess] = useState<string>("");
+  const { isLoading, success, error, setupFirstLogin } = useAuth();
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof SignupSchema>>({
@@ -133,37 +111,7 @@ const FirstLogin = ({ user }: LoginProps) => {
   });
 
   const onSubmit = async (values: z.infer<typeof SignupSchema>) => {
-    try {
-      setError("");
-      setSuccess("");
-      setIsSubmitting(true);
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_URL}/api/login?firstLogin=true`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            membershipId: user.membershipId,
-            question: values.question,
-            answer: values.answer,
-            password: values.password,
-          }),
-        },
-      );
-      const data = await response.json();
-      if (data.error) {
-        setError(data.error);
-      }
-      if (data.success) {
-        setSuccess("Successful login. Please wait while we redirect you.");
-      }
-    } catch (error) {
-      setError("An unexpected error occured!");
-    } finally {
-      setIsSubmitting(false);
-    }
+    await setupFirstLogin(values.password, values.question, values.answer);
   };
   return (
     <>
@@ -179,6 +127,7 @@ const FirstLogin = ({ user }: LoginProps) => {
         >
           <FormField
             control={form.control}
+            disabled={isLoading}
             name="question"
             render={({ field }) => (
               <FormItem>
@@ -218,7 +167,7 @@ const FirstLogin = ({ user }: LoginProps) => {
           />
           <FormField
             control={form.control}
-            disabled={isSubmitting}
+            disabled={isLoading}
             name="answer"
             render={({ field }) => (
               <FormItem>
@@ -240,7 +189,7 @@ const FirstLogin = ({ user }: LoginProps) => {
           />
           <FormField
             control={form.control}
-            disabled={isSubmitting}
+            disabled={isLoading}
             name="password"
             render={({ field }) => (
               <FormItem>
@@ -258,7 +207,7 @@ const FirstLogin = ({ user }: LoginProps) => {
           />
           <FormField
             control={form.control}
-            disabled={isSubmitting}
+            disabled={isLoading}
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
@@ -283,7 +232,7 @@ const FirstLogin = ({ user }: LoginProps) => {
           <FormSuccess message={success} />
           <SubmitButton
             title="Sign Up"
-            isSubmitting={isSubmitting}
+            isSubmitting={isLoading}
             className="w-full"
           />
         </form>
@@ -292,9 +241,7 @@ const FirstLogin = ({ user }: LoginProps) => {
   );
 };
 const NormalLogin = ({ user }: LoginProps) => {
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
-  const [success, setSuccess] = useState<string>("");
+  const { isLoading, success, error, enterPassword } = useAuth();
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -304,35 +251,7 @@ const NormalLogin = ({ user }: LoginProps) => {
     },
   });
   const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
-    try {
-      setError("");
-      setSuccess("");
-      setIsSubmitting(true);
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_URL}/api/login?firstLogin=false`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            membershipId: user.membershipId,
-            password: values.password,
-          }),
-        },
-      );
-      const data = await response.json();
-      if (data.error) {
-        setError(data.error);
-      }
-      if (data.success) {
-        setSuccess("Successful login. Please wait while we redirect you.");
-      }
-    } catch (error) {
-      setError("An unexpected error occured!");
-    } finally {
-      setIsSubmitting(false);
-    }
+    await enterPassword(values.password);
   };
   return (
     <>
@@ -348,7 +267,7 @@ const NormalLogin = ({ user }: LoginProps) => {
         >
           <FormField
             control={form.control}
-            disabled={isSubmitting}
+            disabled={isLoading}
             name="password"
             render={({ field }) => (
               <FormItem>
@@ -372,7 +291,7 @@ const NormalLogin = ({ user }: LoginProps) => {
           <FormSuccess message={success} />
           <SubmitButton
             title="Login"
-            isSubmitting={isSubmitting}
+            isSubmitting={isLoading}
             className="w-full"
           />
         </form>

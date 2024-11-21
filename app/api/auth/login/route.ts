@@ -66,10 +66,16 @@ export async function GET(request: NextRequest) {
     const {
       name,
       email: userEmail,
+      userRole,
       membershipId: userMembershipId,
     } = existingUser;
     return NextResponse.json({
-      user: { name, email: userEmail, membershipId: userMembershipId },
+      user: {
+        name,
+        email: userEmail,
+        userRole,
+        membershipId: userMembershipId,
+      },
       firstLogin,
     });
   } catch (error: unknown) {
@@ -174,7 +180,7 @@ export async function POST(request: NextRequest) {
       const hashedAnswer = await bcrypt.hash(answer, 10);
       await db.securityQuestion.create({
         data: {
-          membershipId,
+          membershipId: membershipId,
           question,
           answer: hashedAnswer,
         },

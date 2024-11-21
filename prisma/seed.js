@@ -11,16 +11,18 @@ import {
   StatePositionTitle,
   DistrictPositionTitle,
   District,
+  SecurityQuestionType,
 } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 import fs from "fs";
 import bcrypt from "bcrypt";
+
 const prisma = new PrismaClient();
 
 const testUsers = [];
 
 async function main() {
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < 3; i++) {
     const email = faker.internet.email();
     const password = faker.internet.password();
 
@@ -31,120 +33,43 @@ async function main() {
       min: 20,
       max: 60,
       mode: "age",
-    }); // Random date of birth within the past 30 years
-    const gender = faker.helpers.arrayElement([
-      Gender.MALE,
-      Gender.FEMALE,
-      Gender.OTHER,
-    ]);
-    const bloodGroup = faker.helpers.arrayElement([
-      BloodGroup.A_POS,
-      BloodGroup.A_NEG,
-      BloodGroup.B_POS,
-      BloodGroup.B_NEG,
-      BloodGroup.AB_POS,
-      BloodGroup.AB_NEG,
-      BloodGroup.O_POS,
-      BloodGroup.O_NEG,
-    ]);
-    const userStatus = faker.helpers.arrayElement([
-      UserStatus.WORKING,
-      UserStatus.RETIRED,
-      UserStatus.EXPIRED,
-    ]);
+    });
+    const gender = faker.helpers.arrayElement(Object.values(Gender));
+    const bloodGroup = faker.helpers.arrayElement(Object.values(BloodGroup));
+    const userStatus = faker.helpers.arrayElement(Object.values(UserStatus));
     const department =
       userStatus === UserStatus.WORKING
-        ? faker.helpers.arrayElement([
-            Department.LSGD,
-            Department.PWD,
-            Department.IRRIGATION,
-          ])
+        ? faker.helpers.arrayElement(Object.values(Department))
         : null;
     const designation =
       userStatus === UserStatus.WORKING
-        ? faker.helpers.arrayElement([
-            Designation.ASSISTANT_ENGINEER,
-            Designation.ASSISTANT_EXECUTIVE_ENGINEER,
-            Designation.EXECUTIVE_ENGINEER,
-            Designation.SUPERINTENDING_ENGINEER,
-            Designation.CHIEF_ENGINEER,
-          ])
+        ? faker.helpers.arrayElement(Object.values(Designation))
         : null;
     const officeAddress =
       userStatus === UserStatus.WORKING ? faker.location.streetAddress() : null;
     const workDistrict =
       userStatus === UserStatus.WORKING
-        ? faker.helpers.arrayElement([
-            District.KASARAGOD,
-            District.KANNUR,
-            District.WAYANAD,
-            District.KOZHIKODE,
-            District.MALAPPURAM,
-            District.PALAKKAD,
-            District.THRISSUR,
-            District.ERNAKULAM,
-            District.IDUKKI,
-            District.KOTTAYAM,
-            District.ALAPPUZHA,
-            District.PATHANAMTHITTA,
-            District.KOLLAM,
-            District.THIRUVANANTHAPURAM,
-          ])
+        ? faker.helpers.arrayElement(Object.values(District))
         : null;
 
-    const homeDistrict = faker.helpers.arrayElement([
-      District.KASARAGOD,
-      District.KANNUR,
-      District.WAYANAD,
-      District.KOZHIKODE,
-      District.MALAPPURAM,
-      District.PALAKKAD,
-      District.THRISSUR,
-      District.ERNAKULAM,
-      District.IDUKKI,
-      District.KOTTAYAM,
-      District.ALAPPUZHA,
-      District.PATHANAMTHITTA,
-      District.KOLLAM,
-      District.THIRUVANANTHAPURAM,
-    ]);
+    const homeDistrict = faker.helpers.arrayElement(Object.values(District));
 
-    const committeeType = faker.helpers.arrayElement([
-      CommitteeType.NONE,
-      CommitteeType.STATE,
-      CommitteeType.DISTRICT,
-    ]);
-    const userRole = faker.helpers.arrayElement([
-      UserRole.ADMIN,
-      UserRole.REGULAR,
-    ]);
-    const verificationStatus = faker.helpers.arrayElement([
-      VerificationStatus.VERIFIED,
-      VerificationStatus.PENDING,
-      VerificationStatus.REJECTED,
-    ]);
+    const committeeType = faker.helpers.arrayElement(
+      Object.values(CommitteeType),
+    );
+    const userRole = faker.helpers.arrayElement(Object.values(UserRole));
+    const verificationStatus = faker.helpers.arrayElement(
+      Object.values(VerificationStatus),
+    );
 
     // Optional fields based on committeeType
     const positionState =
       committeeType === CommitteeType.STATE
-        ? faker.helpers.arrayElement([
-            StatePositionTitle.PRESIDENT,
-            StatePositionTitle.VICE_PRESIDENT,
-            StatePositionTitle.GENERAL_SECRETARY,
-            StatePositionTitle.JOINT_SECRETARY,
-            StatePositionTitle.TREASURER,
-            StatePositionTitle.EDITOR,
-            StatePositionTitle.EXECUTIVE_COMMITTEE_MEMBER,
-            StatePositionTitle.IMMEDIATE_PAST_PRESIDENT,
-            StatePositionTitle.IMMEDIATE_PAST_SECRETARY,
-          ])
+        ? faker.helpers.arrayElement(Object.values(StatePositionTitle))
         : null;
     const positionDistrict =
       committeeType === CommitteeType.DISTRICT
-        ? faker.helpers.arrayElement([
-            DistrictPositionTitle.DISTRICT_PRESIDENT,
-            DistrictPositionTitle.DISTRICT_SECRETARY,
-          ])
+        ? faker.helpers.arrayElement(Object.values(DistrictPositionTitle))
         : null;
 
     // Check if user is VERIFIED and assign membershipId
@@ -157,50 +82,80 @@ async function main() {
       });
       membershipId = verifiedCount + 1; // Set membershipId to number of verified users + 1
     }
-    const data = {
+
+    // Create user data
+    const userData = {
       name: faker.person.fullName(),
-      dob: dob,
-      gender: gender,
-      bloodGroup: bloodGroup,
-      userStatus: userStatus,
-      department: department,
-      designation: designation,
-      officeAddress: officeAddress,
-      workDistrict: workDistrict,
+      dob,
+      gender,
+      bloodGroup,
+      userStatus,
+      department,
+      designation,
+      officeAddress,
+      workDistrict,
       personalAddress: faker.location.streetAddress(),
-      homeDistrict: homeDistrict,
-      email: email,
+      homeDistrict,
+      email,
       phoneNumber: faker.phone.number("##########"),
       mobileNumber: faker.phone.number("##########"),
       photoUrl: faker.image.avatar(),
-      committeeType: verificationStatus === "VERIFIED" ? committeeType : "NONE",
-      userRole: verificationStatus === "VERIFIED" ? userRole : "REGULAR",
-      verificationStatus: verificationStatus,
+      committeeType:
+        verificationStatus === VerificationStatus.VERIFIED
+          ? committeeType
+          : "NONE",
+      userRole:
+        verificationStatus === VerificationStatus.VERIFIED
+          ? userRole
+          : "REGULAR",
+      verificationStatus,
       password: verificationStatus === "VERIFIED" ? hashedPassword : null,
-      membershipId: membershipId, // Only set for verified users
+      membershipId,
       positionState: verificationStatus === "VERIFIED" ? positionState : null,
       positionDistrict:
         verificationStatus === "VERIFIED" ? positionDistrict : null,
-      photoUrl: faker.image.avatar(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
+    // Create user in the database
+    const user = await prisma.user.create({
+      data: userData,
+    });
+
+    // Add security question
+    const securityQuestionType = faker.helpers.arrayElement(
+      Object.values(SecurityQuestionType),
+    );
+    const securityAnswer = faker.person.firstName(); // Random answer
+    const hashedAnswer = await bcrypt.hash(securityAnswer, 10);
+    if (verificationStatus === "VERIFIED") {
+      await prisma.securityQuestion.create({
+        data: {
+          question: securityQuestionType,
+          answer: hashedAnswer,
+          membershipId: user.membershipId, // Associate with the created user
+        },
+      });
+    }
+
+    // Save user credentials and security answer for reference
     testUsers.push({
       email,
       password: verificationStatus === "VERIFIED" ? password : null,
-    });
-
-    // Create user record in the database
-    await prisma.user.create({
-      data,
+      securityQuestion:
+        verificationStatus === "VERIFIED" ? securityQuestionType : null,
+      securityAnswer: verificationStatus === "VERIFIED" ? securityAnswer : null,
     });
   }
-  // Save the test users (emails and passwords) to a JSON file for reference
+
+  // Save test users to a JSON file
   fs.writeFileSync("testUsers.json", JSON.stringify(testUsers, null, 2));
 }
 
 main()
   .then(() => {
-    console.log("Users added");
+    console.log("Users and security questions added");
   })
   .catch((e) => {
     console.error(e);

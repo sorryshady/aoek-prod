@@ -31,6 +31,9 @@ CREATE TYPE "StatePositionTitle" AS ENUM ('PRESIDENT', 'VICE_PRESIDENT', 'GENERA
 -- CreateEnum
 CREATE TYPE "DistrictPositionTitle" AS ENUM ('DISTRICT_PRESIDENT', 'DISTRICT_SECRETARY');
 
+-- CreateEnum
+CREATE TYPE "SecurityQuestionType" AS ENUM ('MOTHERS_MAIDEN_NAME', 'FIRST_PET', 'FIRST_SCHOOL', 'FAVOURITE_BOOK', 'FAVOURITE_CAR');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
@@ -38,7 +41,7 @@ CREATE TABLE "User" (
     "dob" TIMESTAMP(3) NOT NULL,
     "gender" "Gender" NOT NULL,
     "bloodGroup" "BloodGroup" NOT NULL,
-    "userStatus" "UserStatus" NOT NULL DEFAULT 'WORKING',
+    "userStatus" "UserStatus" NOT NULL DEFAULT 'RETIRED',
     "department" "Department",
     "designation" "Designation",
     "officeAddress" TEXT,
@@ -63,8 +66,29 @@ CREATE TABLE "User" (
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "SecurityQuestion" (
+    "id" SERIAL NOT NULL,
+    "question" "SecurityQuestionType" NOT NULL,
+    "answer" TEXT NOT NULL,
+    "membershipId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "SecurityQuestion_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_razorpayId_key" ON "User"("razorpayId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_membershipId_key" ON "User"("membershipId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "SecurityQuestion_membershipId_key" ON "SecurityQuestion"("membershipId");
+
+-- AddForeignKey
+ALTER TABLE "SecurityQuestion" ADD CONSTRAINT "SecurityQuestion_membershipId_fkey" FOREIGN KEY ("membershipId") REFERENCES "User"("membershipId") ON DELETE CASCADE ON UPDATE CASCADE;
