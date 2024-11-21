@@ -4,6 +4,8 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { SessionUser } from "@/types";
+import { useUploadThing } from "@/lib/uploadthing";
+import { toast } from "sonner";
 
 // Enum for Authentication Stages
 export enum AuthStage {
@@ -29,6 +31,11 @@ interface AuthContextType {
   ) => Promise<void>;
   enterPassword: (password: string, redirectUrl: string) => Promise<void>;
   logout: () => void;
+  updatePhoto: (
+    photoUrl: string | null,
+    photoId: string | null,
+    file: File,
+  ) => Promise<string>;
 }
 
 // Create Authentication Context
@@ -42,12 +49,14 @@ const AuthContext = createContext<AuthContextType>({
   setupFirstLogin: async () => {},
   enterPassword: async () => {},
   logout: () => {},
+  updatePhoto: async () => "",
 });
 
 // Authentication Provider Component
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const { startUpload } = useUploadThing("imageUploader");
   const [user, setUser] = useState<SessionUser | null>(null);
   const [authStage, setAuthStage] = useState<AuthStage>(
     AuthStage.INITIAL_LOGIN,
@@ -66,7 +75,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         );
         if (response.ok) {
           const data = await response.json();
-          console.log("Here", data.user);
           setUser(data.user);
           setAuthStage(AuthStage.AUTHENTICATED);
         }
@@ -222,6 +230,62 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const updatePhoto = async (
+    photoUrl: string | null,
+    photoId: string | null,
+    file: File,
+  ) => {
+    try {
+      setIsLoading(true);
+      if (photoUrl && photoId) {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_URL}/api/auth/user/photo?fileId=${photoId}`,
+          {
+            method: "DELETE",
+          },
+        );
+        const data = await res.json();
+        if (res.ok) {
+          toast.success("Photo deleted!", {
+            description:
+              "Previous photo deleted successfully. Uploading new photo...",
+          });
+        } else {
+          throw new Error(data.error);
+        }
+      }
+      const res = await startUpload([file], {});
+
+      if (res) {
+        const uploadedPhoto = res[0];
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_URL}/api/auth/user/photo`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              membershipId: user!.membershipId,
+              photoUrl: uploadedPhoto.url,
+              photoId: uploadedPhoto.key,
+            }),
+          },
+        );
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error);
+        }
+        setUser(data.safeUser);
+        toast.success("Photo uploaded!", {
+          description: "Photo uploaded successfully",
+        });
+        return data.photoUrl;
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -234,6 +298,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setupFirstLogin,
         enterPassword,
         logout,
+        updatePhoto,
       }}
     >
       {children}

@@ -45,7 +45,7 @@ const Navbar = () => {
             <Link
               href={"/news"}
               className={cn(
-                { "font-semibold underline": pathname.includes("/news") },
+                { "font-semibold underline": pathname === "/news" },
                 "hover:text-gray-200",
               )}
             >
@@ -76,9 +76,9 @@ const Navbar = () => {
           </li>
           <li>
             <Link
-              href={"/news-letter"}
+              href={"/newsLetter"}
               className={cn(
-                { "font-semibold underline": pathname === "/news-letter" },
+                { "font-semibold underline": pathname === "/newsLetter" },
                 "hover:text-gray-200",
               )}
             >

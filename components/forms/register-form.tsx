@@ -83,13 +83,15 @@ export const RegisterForm = () => {
         setError(responseData.error);
       } else if (response.ok) {
         let imgUrl = "";
+        let photoId = "";
         if (data.photo) {
           const res = await startUpload([data.photo!], {});
           if (res) {
+            photoId = res[0].key;
             imgUrl = res[0].url;
           }
         }
-        let submitData = { ...data, photoUrl: imgUrl };
+        let submitData = { ...data, photoUrl: imgUrl, photoId: photoId };
         submitData = excludeFields(submitData, ["photo"]);
 
         const response = await fetch(

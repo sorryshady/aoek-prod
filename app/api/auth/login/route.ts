@@ -240,18 +240,19 @@ export async function POST(request: NextRequest) {
   }
 }
 
-function isMobileClient(request: NextRequest): boolean {
+export async function isMobileClient(request: NextRequest): Promise<boolean> {
   const userAgent = request.headers.get("User-Agent") || "";
   return /Expo|okhttp|Darwin/.test(userAgent);
 }
 
-function generateSuccessResponse(
+export async function generateSuccessResponse(
   request: NextRequest,
   sessionUser: SessionUser,
   session?: string,
+  photoUrl?: string,
 ) {
-  const isMobile = isMobileClient(request);
-  const response = { success: true, sessionUser, ...(isMobile && { session }) };
+  const isMobile = await isMobileClient(request);
+  const response = { success: true, sessionUser, photoUrl, ...(isMobile && { session }) };
 
   return NextResponse.json(response);
 }

@@ -21,9 +21,7 @@ const baseRegisterSchema = z.object({
   userStatus: z.nativeEnum(UserStatus),
   department: z.nativeEnum(Department).optional(),
   designation: z.nativeEnum(Designation).optional(),
-  officeAddress: z
-    .string()
-    .optional(),
+  officeAddress: z.string().optional(),
   workDistrict: z.nativeEnum(District).optional(),
   // Personal Contact Address
   personalAddress: z
@@ -60,6 +58,7 @@ const baseRegisterSchema = z.object({
       },
     )
     .optional(),
+  photoId: z.string().optional(),
 });
 
 // function to validate address fields only if WORKING else all fields are optional
