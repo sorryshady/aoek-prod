@@ -4,7 +4,8 @@ import UserProfilePhoto from "@/components/custom/user-profile-photo";
 import { auth } from "@/lib/auth";
 
 export default async function Account() {
-  const user = await auth();
+  const { user } = await auth();
+  if (!user) return null;
 
   return (
     <Wrapper className="flex flex-col">

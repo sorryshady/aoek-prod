@@ -6,14 +6,7 @@ import { useRouter } from "next/navigation";
 import { SessionUser } from "@/types";
 import { useUploadThing } from "@/lib/uploadthing";
 import { toast } from "sonner";
-
-// Enum for Authentication Stages
-export enum AuthStage {
-  INITIAL_LOGIN,
-  FIRST_LOGIN_PASSWORD_SETUP,
-  PASSWORD_ENTRY,
-  AUTHENTICATED,
-}
+import { AuthStage } from "@/types/session-types";
 
 // Authentication Context Interface
 interface AuthContextType {

@@ -1,3 +1,3 @@
-export default async function NewsLetter() {
+export default async function Newsletter() {
   return <div>NewsLetter</div>;
 }

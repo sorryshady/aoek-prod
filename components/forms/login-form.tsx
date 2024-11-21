@@ -28,8 +28,9 @@ import {
 import { SecurityQuestionType } from "@prisma/client";
 import SubmitButton from "../custom/submit-button";
 import { SessionUser } from "@/types";
-import { AuthStage, useAuth } from "@/app/providers/auth-context";
+import { useAuth } from "@/app/providers/auth-context";
 import { useSearchParams } from "next/navigation";
+import { AuthStage } from "@/types/session-types";
 
 const LoginForm = () => {
   const params = useSearchParams();

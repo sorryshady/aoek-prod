@@ -2,13 +2,13 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import { AuthStage, useAuth } from "@/app/providers/auth-context";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { AuthStage } from "@/types/session-types";
+import ActiveLinks from "./active-links";
+import { useAuth } from "@/app/providers/auth-context";
 
 const Navbar = () => {
   const { user, authStage } = useAuth();
-  const pathname = usePathname();
+
   return (
     <div className="w-full bg-[#35718E] fixed top-0 left-0 right-0">
       <nav className="flex justify-between items-center max-w-7xl mx-auto p-4">
@@ -20,81 +20,25 @@ const Navbar = () => {
         </Link>
         <ul className="flex items-center flex-[1.5] justify-around text-white text-base font-medium">
           <li>
-            <Link
-              href={"/"}
-              className={cn(
-                { "font-semibold underline": pathname === "/" },
-                "hover:text-gray-200",
-              )}
-            >
-              Home
-            </Link>
+            <ActiveLinks title="Home" href="/" />
           </li>
           <li>
-            <Link
-              href={"/committee"}
-              className={cn(
-                { "font-semibold underline": pathname.includes("/committee") },
-                "hover:text-gray-200",
-              )}
-            >
-              Committee
-            </Link>
+            <ActiveLinks title="Committee" href="/committee" />
           </li>
           <li>
-            <Link
-              href={"/news"}
-              className={cn(
-                { "font-semibold underline": pathname === "/news" },
-                "hover:text-gray-200",
-              )}
-            >
-              News
-            </Link>
+            <ActiveLinks title="News" href="/news" />
           </li>
           <li>
-            <Link
-              href={"/events"}
-              className={cn(
-                { "font-semibold underline": pathname === "/events" },
-                "hover:text-gray-200",
-              )}
-            >
-              Events
-            </Link>
+            <ActiveLinks title="Events" href="/events" />
           </li>
           <li>
-            <Link
-              href={"/gallery"}
-              className={cn(
-                { "font-semibold underline": pathname.includes("/gallery") },
-                "hover:text-gray-200",
-              )}
-            >
-              Gallery
-            </Link>
+            <ActiveLinks title="Gallery" href="/gallery" />
           </li>
           <li>
-            <Link
-              href={"/newsLetter"}
-              className={cn(
-                { "font-semibold underline": pathname === "/newsLetter" },
-                "hover:text-gray-200",
-              )}
-            >
-              Newsletter
-            </Link>
+            <ActiveLinks title="Newsletter" href={"/newsletter"} />
           </li>
           <li>
-            <Link
-              href={"/updates"}
-              className={cn(
-                { "font-semibold underline": pathname.includes("/updates") },
-                "hover:text-gray-200",
-              )}
-            >
-              Updates
-            </Link>
+            <ActiveLinks title="Updates" href="/updates" />
           </li>
           <li>
             {authStage !== AuthStage.AUTHENTICATED && (
