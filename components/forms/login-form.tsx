@@ -29,7 +29,11 @@ import { SecurityQuestionType } from "@prisma/client";
 import SubmitButton from "../custom/submit-button";
 import { SessionUser } from "@/types";
 import { AuthStage, useAuth } from "@/app/providers/auth-context";
+import { useSearchParams } from "next/navigation";
+
 const LoginForm = () => {
+  const params = useSearchParams();
+  const redirectTo = params?.get("redirectTo") || "/";
   const { error, user, authStage, login, isLoading } = useAuth();
   const form = useForm<z.infer<typeof EmailIdSchema>>({
     resolver: zodResolver(EmailIdSchema),
@@ -82,9 +86,9 @@ const LoginForm = () => {
       )}
       {user ? (
         authStage === AuthStage.FIRST_LOGIN_PASSWORD_SETUP ? (
-          <FirstLogin user={user} />
+          <FirstLogin user={user} redirectTo={redirectTo} />
         ) : authStage === AuthStage.PASSWORD_ENTRY ? (
-          <NormalLogin user={user} />
+          <NormalLogin user={user} redirectTo={redirectTo} />
         ) : null
       ) : null}
     </CardWrapper>
@@ -95,8 +99,9 @@ export default LoginForm;
 
 interface LoginProps {
   user: SessionUser;
+  redirectTo: string;
 }
-const FirstLogin = ({ user }: LoginProps) => {
+const FirstLogin = ({ user, redirectTo }: LoginProps) => {
   const { isLoading, success, error, setupFirstLogin } = useAuth();
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -111,11 +116,16 @@ const FirstLogin = ({ user }: LoginProps) => {
   });
 
   const onSubmit = async (values: z.infer<typeof SignupSchema>) => {
-    await setupFirstLogin(values.password, values.question, values.answer);
+    await setupFirstLogin(
+      values.password,
+      values.question,
+      values.answer,
+      redirectTo,
+    );
   };
   return (
     <>
-      <p className="text-base text-muted-foreground mb-5">
+      <p className="text-base text-muted-foreground mb-5 text-center">
         Welcome{" "}
         <span className="text-black font-bold text-center">{user.name}</span>.
         Set a password for your account.
@@ -240,7 +250,7 @@ const FirstLogin = ({ user }: LoginProps) => {
     </>
   );
 };
-const NormalLogin = ({ user }: LoginProps) => {
+const NormalLogin = ({ user, redirectTo }: LoginProps) => {
   const { isLoading, success, error, enterPassword } = useAuth();
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -251,11 +261,11 @@ const NormalLogin = ({ user }: LoginProps) => {
     },
   });
   const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
-    await enterPassword(values.password);
+    await enterPassword(values.password, redirectTo);
   };
   return (
     <>
-      <p className="text-base text-muted-foreground mb-5">
+      <p className="text-base text-muted-foreground mb-5 text-center">
         Welcome{" "}
         <span className="text-black font-bold text-center">{user.name}</span>.
         Enter your password to login.

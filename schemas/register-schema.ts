@@ -23,7 +23,6 @@ const baseRegisterSchema = z.object({
   designation: z.nativeEnum(Designation).optional(),
   officeAddress: z
     .string()
-    .min(1, { message: "Office address is required" })
     .optional(),
   workDistrict: z.nativeEnum(District).optional(),
   // Personal Contact Address
@@ -35,7 +34,6 @@ const baseRegisterSchema = z.object({
   email: z.string().email(),
   phoneNumber: z
     .string()
-    .min(10)
     .optional()
     .refine((value) => !value || /^(\+91)?\d{10}$/.test(value), {
       message:
@@ -92,7 +90,7 @@ export const backendRegisterSchema = baseRegisterSchema
   .omit({ photo: true })
   .extend({
     dob: z.date(),
-    photoUrl: z.string().url("Invalid URL").optional(),
+    photoUrl: z.union([z.string().url(), z.literal("")]),
   })
   .refine(validateFields, {
     message:
