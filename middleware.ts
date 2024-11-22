@@ -16,78 +16,66 @@ const PUBLIC_ROUTES = [
   "/public", // Add any other public routes
 ];
 
+// Middleware entry point
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const session = (await cookies()).get("session")?.value;
 
-  // If the user is logged in and tries to access /login or /register, redirect them to the homepage
+  console.log(`[Middleware] Path: ${path}, Session Exists: ${!!session}`);
+
+  // Redirect logged-in users away from login/register
   if (session && (path === "/login" || path === "/register")) {
+    console.log(
+      "[Middleware] Logged-in user accessing /login or /register. Redirecting to /",
+    );
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // Check if the route is public
+  // Allow access to public routes
   if (isPublicRoute(path)) {
+    console.log("[Middleware] Public route. Allowing access.");
     return NextResponse.next();
   }
 
-  // No session, redirect to login
+  // Protected route: Require session
   if (!session) {
+    console.log("[Middleware] No session found. Redirecting to login.");
     return redirectToLogin(request);
   }
 
-  // Verify session (you'll need to implement this server-side verification)
-  return verifySession(request, session);
+  // Assume session is valid for protected routes
+  console.log("[Middleware] Protected route. Session found. Proceeding.");
+  return NextResponse.next();
 }
 
-// Helper to check if a route is public
+// Helper: Check if a route is public
 function isPublicRoute(path: string): boolean {
   return PUBLIC_ROUTES.some(
     (route) => path === route || path.startsWith(route + "/"),
   );
 }
 
-// Redirect to login page
+// Redirect to login with redirectTo query parameter
 function redirectToLogin(request: NextRequest) {
   const loginUrl = new URL("/login", request.url);
   loginUrl.searchParams.set("redirectTo", encodeURIComponent(request.url));
+  console.log(
+    "[Middleware] Will redirect to: ",
+    decodeURIComponent(new URL(request.url).href),
+  );
   return NextResponse.redirect(loginUrl);
 }
 
-// Verify session and check route permissions
-async function verifySession(request: NextRequest, session: string) {
-  try {
-    // Server-side session verification
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_URL}/api/auth/user`,
-      {
-        headers: {
-          cookie: `session=${session}`,
-        },
-      },
-    );
-
-    // If session verification fails, redirect to login
-    if (!response.ok) {
-      console.log("Session verification failed, redirecting to login");
-      return redirectToLogin(request);
-    }
-
-    return NextResponse.next();
-  } catch (error) {
-    console.error("Session verification error:", error);
-    return redirectToLogin(request);
-  }
-}
-
-// Configure which routes this middleware applies to
+// Middleware configuration
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public routes
+     * Match all paths except:
+     * - API routes
+     * - Static files (_next/static)
+     * - Image optimization files (_next/image)
+     * - Favicon and robots.txt
+     * - Public routes
      */
     "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
   ],
