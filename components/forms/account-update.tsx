@@ -407,7 +407,11 @@ export const AccountUpdate = ({ user }: { user: SessionUser }) => {
                 />
                 <Button
                   variant="outline"
-                  onClick={() => setEdit(false)}
+                  onClick={() => {
+                    reset(initialData);
+                    setEmploymentStatus(user.userStatus);
+                    setEdit(false);
+                  }}
                   className="flex-1"
                 >
                   Cancel
