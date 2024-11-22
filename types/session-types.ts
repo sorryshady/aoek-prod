@@ -11,3 +11,10 @@ export type SessionPayload = {
 export interface ExtendedJWTPayload extends JWTPayload {
   user: SessionUser;
 }
+
+export enum AuthStage {
+  INITIAL_LOGIN,
+  FIRST_LOGIN_PASSWORD_SETUP,
+  PASSWORD_ENTRY,
+  AUTHENTICATED,
+}

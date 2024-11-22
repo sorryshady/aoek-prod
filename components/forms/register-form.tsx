@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useState } from "react";
@@ -39,6 +40,7 @@ import { FormSuccess } from "../custom/form-success";
 import { FormError } from "../custom/form-error";
 import { excludeFields } from "@/lib/utils";
 import Link from "next/link";
+import { FrontendRegisterSchema } from "@/schemas/register-schema";
 
 export const RegisterForm = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -50,7 +52,7 @@ export const RegisterForm = () => {
 
   const { startUpload } = useUploadThing("imageUploader");
 
-  const form = useForm<z.infer<typeof frontendRegisterSchema>>({
+  const form = useForm<FrontendRegisterSchema>({
     resolver: zodResolver(frontendRegisterSchema),
     defaultValues: {
       name: "",
@@ -70,7 +72,7 @@ export const RegisterForm = () => {
       photo: undefined,
     },
   });
-  const onSubmit = async (data: z.infer<typeof frontendRegisterSchema>) => {
+  const onSubmit = async (data: FrontendRegisterSchema) => {
     try {
       setIsSubmitting(true);
       setSuccess("");
@@ -83,13 +85,15 @@ export const RegisterForm = () => {
         setError(responseData.error);
       } else if (response.ok) {
         let imgUrl = "";
+        let photoId = "";
         if (data.photo) {
           const res = await startUpload([data.photo!], {});
           if (res) {
+            photoId = res[0].key;
             imgUrl = res[0].url;
           }
         }
-        let submitData = { ...data, photoUrl: imgUrl };
+        let submitData = { ...data, photoUrl: imgUrl, photoId: photoId };
         submitData = excludeFields(submitData, ["photo"]);
 
         const response = await fetch(

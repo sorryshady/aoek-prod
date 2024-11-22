@@ -4,18 +4,15 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { SessionUser } from "@/types";
-
-// Enum for Authentication Stages
-export enum AuthStage {
-  INITIAL_LOGIN,
-  FIRST_LOGIN_PASSWORD_SETUP,
-  PASSWORD_ENTRY,
-  AUTHENTICATED,
-}
+import { useUploadThing } from "@/lib/uploadthing";
+import { toast } from "sonner";
+import { AuthStage } from "@/types/session-types";
+import { UpdateProfileSchema } from "@/schemas/update-profile-schema";
 
 // Authentication Context Interface
 interface AuthContextType {
   user: SessionUser | null;
+  isSubmitting: boolean;
   authStage: AuthStage;
   isLoading: boolean;
   success: string | null;
@@ -29,12 +26,18 @@ interface AuthContextType {
   ) => Promise<void>;
   enterPassword: (password: string, redirectUrl: string) => Promise<void>;
   logout: () => void;
+  updatePhoto: (
+    photoUrl: string | null,
+    photoId: string | null,
+    file: File,
+  ) => Promise<string>;
 }
 
 // Create Authentication Context
 const AuthContext = createContext<AuthContextType>({
   user: null,
   authStage: AuthStage.INITIAL_LOGIN,
+  isSubmitting: false,
   isLoading: true,
   success: null,
   error: null,
@@ -42,12 +45,15 @@ const AuthContext = createContext<AuthContextType>({
   setupFirstLogin: async () => {},
   enterPassword: async () => {},
   logout: () => {},
+  updatePhoto: async () => "",
 });
 
 // Authentication Provider Component
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const { startUpload } = useUploadThing("imageUploader");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [user, setUser] = useState<SessionUser | null>(null);
   const [authStage, setAuthStage] = useState<AuthStage>(
     AuthStage.INITIAL_LOGIN,
@@ -66,7 +72,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         );
         if (response.ok) {
           const data = await response.json();
-          console.log("Here", data.user);
           setUser(data.user);
           setAuthStage(AuthStage.AUTHENTICATED);
         }
@@ -83,8 +88,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Login Handler
   const login = async (identifier: string, isEmail: boolean = false) => {
-    setIsLoading(true);
+    setIsSubmitting(true);
     setError(null);
+    setSuccess(null);
 
     try {
       const queryParam = isEmail
@@ -109,7 +115,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } catch (err) {
       setError("An error occurred during login");
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -120,12 +126,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     securityAnswer: string,
     redirectUrl: string,
   ) => {
-    setIsLoading(true);
+    setIsSubmitting(true);
     setError(null);
+    setSuccess(null);
 
     if (!user?.membershipId) {
       setError("No user context for first login");
-      setIsLoading(false);
+      setIsSubmitting(false);
       return;
     }
 
@@ -151,6 +158,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setSuccess("Password set successfully.Logging you in...");
         setTimeout(() => {
           setAuthStage(AuthStage.AUTHENTICATED);
+          console.log("Redirect to: ", redirectUrl);
+          router.refresh();
           router.push(redirectUrl);
         }, 1000);
       } else {
@@ -159,18 +168,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } catch (err) {
       setError("An error occurred during first login setup");
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
   // Password Entry for Existing Users
   const enterPassword = async (password: string, redirectUrl: string) => {
-    setIsLoading(true);
+    setIsSubmitting(true);
     setError(null);
+    setSuccess(null);
 
     if (!user?.membershipId) {
       setError("No user context for password entry");
-      setIsLoading(false);
+      setIsSubmitting(false);
       return;
     }
 
@@ -194,6 +204,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setSuccess("Password verified. Logging you in...");
         setTimeout(() => {
           setAuthStage(AuthStage.AUTHENTICATED);
+          console.log("Redirect to: ", redirectUrl);
+          router.refresh();
           router.push(redirectUrl);
         }, 1000);
       } else {
@@ -202,23 +214,80 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } catch (err) {
       setError("An error occurred during password verification");
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
   // Logout Handler
   const logout = async () => {
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/auth/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_URL}/api/auth/logout`,
+      );
+      const data = await response.json();
+      toast.success(data.success);
     } catch (err) {
-      console.error("Logout failed");
+      console.error("Logout failed", error);
     } finally {
       setUser(null);
       setAuthStage(AuthStage.INITIAL_LOGIN);
       router.push("/login");
+    }
+  };
+
+  const updatePhoto = async (
+    photoUrl: string | null,
+    photoId: string | null,
+    file: File,
+  ) => {
+    try {
+      setIsSubmitting(true);
+      if (photoUrl && photoId) {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_URL}/api/auth/user/photo?fileId=${photoId}`,
+          {
+            method: "DELETE",
+          },
+        );
+        const data = await res.json();
+        if (res.ok) {
+          toast.success("Photo deleted!", {
+            description:
+              "Previous photo deleted successfully. Uploading new photo...",
+          });
+        } else {
+          throw new Error(data.error);
+        }
+      }
+      const res = await startUpload([file], {});
+
+      if (res) {
+        const uploadedPhoto = res[0];
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_URL}/api/auth/user/photo`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              membershipId: user!.membershipId,
+              photoUrl: uploadedPhoto.url,
+              photoId: uploadedPhoto.key,
+            }),
+          },
+        );
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error);
+        }
+        setUser(data.safeUser);
+        toast.success("Photo uploaded!", {
+          description: "Photo uploaded successfully",
+        });
+        return data.photoUrl;
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -228,12 +297,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         success,
         user,
         authStage,
+        isSubmitting,
         isLoading,
         error,
         login,
         setupFirstLogin,
         enterPassword,
         logout,
+        updatePhoto,
       }}
     >
       {children}
