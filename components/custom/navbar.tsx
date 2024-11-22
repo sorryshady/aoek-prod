@@ -10,7 +10,7 @@ const Navbar = () => {
   const { user, authStage } = useAuth();
   const pathname = usePathname();
   return (
-    <div className="w-full bg-[#35718E] fixed top-0 left-0 right-0">
+    <div className="w-full bg-[#20333C] fixed top-0 left-0 right-0 z-[999]">
       <nav className="flex justify-between items-center max-w-7xl mx-auto p-4">
         <Link href="/" className="flex items-center gap-3 flex-1">
           <Image src="/logo.png" alt="logo" width={60} height={60} />
@@ -24,7 +24,7 @@ const Navbar = () => {
               href={"/"}
               className={cn(
                 { "font-semibold underline": pathname === "/" },
-                "hover:text-gray-200",
+                "hover:text-gray-200"
               )}
             >
               Home
@@ -35,7 +35,7 @@ const Navbar = () => {
               href={"/committee"}
               className={cn(
                 { "font-semibold underline": pathname.includes("/committee") },
-                "hover:text-gray-200",
+                "hover:text-gray-200"
               )}
             >
               Committee
@@ -46,7 +46,7 @@ const Navbar = () => {
               href={"/news"}
               className={cn(
                 { "font-semibold underline": pathname.includes("/news") },
-                "hover:text-gray-200",
+                "hover:text-gray-200"
               )}
             >
               News
@@ -57,7 +57,7 @@ const Navbar = () => {
               href={"/events"}
               className={cn(
                 { "font-semibold underline": pathname === "/events" },
-                "hover:text-gray-200",
+                "hover:text-gray-200"
               )}
             >
               Events
@@ -68,7 +68,7 @@ const Navbar = () => {
               href={"/gallery"}
               className={cn(
                 { "font-semibold underline": pathname.includes("/gallery") },
-                "hover:text-gray-200",
+                "hover:text-gray-200"
               )}
             >
               Gallery
@@ -79,7 +79,7 @@ const Navbar = () => {
               href={"/news-letter"}
               className={cn(
                 { "font-semibold underline": pathname === "/news-letter" },
-                "hover:text-gray-200",
+                "hover:text-gray-200"
               )}
             >
               Newsletter
@@ -90,7 +90,7 @@ const Navbar = () => {
               href={"/updates"}
               className={cn(
                 { "font-semibold underline": pathname.includes("/updates") },
-                "hover:text-gray-200",
+                "hover:text-gray-200"
               )}
             >
               Updates

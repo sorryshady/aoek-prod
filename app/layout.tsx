@@ -5,6 +5,7 @@ import ClientProvider from "./providers/query-client";
 import Navbar from "@/components/custom/navbar";
 import { Toaster } from "sonner";
 import { AuthProvider } from "./providers/auth-context";
+import Footer from "@/components/custom/footer";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -36,6 +37,7 @@ export default function RootLayout({
           <ClientProvider>
             <Navbar />
             {children}
+            <Footer />
           </ClientProvider>
         </AuthProvider>
         <Toaster />
