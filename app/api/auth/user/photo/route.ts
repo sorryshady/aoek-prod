@@ -1,7 +1,6 @@
 import { db } from "@/db";
 import { utapi } from "@/lib/utapi";
 import { excludeFields } from "@/lib/utils";
-import { SessionUser } from "@/types";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 

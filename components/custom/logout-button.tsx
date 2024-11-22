@@ -1,8 +1,6 @@
 "use client";
 import React from "react";
 import { Button, ButtonProps } from "../ui/button";
-import { logout } from "@/lib/auth";
-import { useRouter } from "next/router";
 import { useAuth } from "@/app/providers/auth-context";
 
 interface LogoutButtonProps extends ButtonProps {
