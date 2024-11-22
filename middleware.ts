@@ -11,6 +11,7 @@ const PUBLIC_ROUTES = [
   "/login",
   "/register",
   "/updates",
+  "/newsletter",
   "/forgot-password",
   "/public", // Add any other public routes
 ];
