@@ -38,15 +38,6 @@ export default async function Account() {
           </div>
           <Separator />
           <AccountUpdate user={user} />
-          <div className="space-y-5">
-            <h2 className="text-xl font-bold">Other Information</h2>
-            <div className="grid grid-cols-2 capitalize gap-3">
-              <div>Committee Member</div>
-              <div>{user.committeeType.toLowerCase()}</div>
-              <div>Committee Position</div>
-              <div>{user.positionState || user.positionDistrict || "NA"}</div>
-            </div>
-          </div>
         </div>
         <UserProfilePhoto name={user.name} photoUrl={user.photoUrl || ""} />
       </div>

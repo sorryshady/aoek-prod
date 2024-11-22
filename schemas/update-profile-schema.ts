@@ -27,32 +27,5 @@ export const updateProfileSchema = z
           "Phone number must be exactly 10 digits or start with +91 followed by 10 digits",
       }),
   })
-  .refine(
-    (data) => {
-      if (data.userStatus === UserStatus.WORKING) {
-        return (
-          data.department &&
-          data.designation &&
-          data.officeAddress &&
-          data.workDistrict
-        );
-      } else if (
-        data.userStatus === UserStatus.RETIRED ||
-        data.userStatus === UserStatus.EXPIRED
-      ) {
-        return (
-          !data.department &&
-          !data.designation &&
-          !data.officeAddress &&
-          !data.workDistrict
-        );
-      }
-      return true;
-    },
-    {
-      message:
-        "Invalid Data: If working enter department, designation, office address and work district.",
-    },
-  );
 
 export type UpdateProfileSchema = z.infer<typeof updateProfileSchema>;
