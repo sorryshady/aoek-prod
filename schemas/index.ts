@@ -4,6 +4,7 @@ import {
 } from "./register-schema";
 import { EmailIdSchema, LoginSchema, SignupSchema } from "./login-schema";
 import { photoSchema } from "./photo-schema";
+import { updateProfileSchema } from "./update-profile-schema";
 export {
   frontendRegisterSchema,
   backendRegisterSchema,
@@ -11,4 +12,5 @@ export {
   LoginSchema,
   SignupSchema,
   photoSchema,
+  updateProfileSchema,
 };

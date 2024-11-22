@@ -40,6 +40,7 @@ import { FormSuccess } from "../custom/form-success";
 import { FormError } from "../custom/form-error";
 import { excludeFields } from "@/lib/utils";
 import Link from "next/link";
+import { FrontendRegisterSchema } from "@/schemas/register-schema";
 
 export const RegisterForm = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -51,7 +52,7 @@ export const RegisterForm = () => {
 
   const { startUpload } = useUploadThing("imageUploader");
 
-  const form = useForm<z.infer<typeof frontendRegisterSchema>>({
+  const form = useForm<FrontendRegisterSchema>({
     resolver: zodResolver(frontendRegisterSchema),
     defaultValues: {
       name: "",
@@ -71,7 +72,7 @@ export const RegisterForm = () => {
       photo: undefined,
     },
   });
-  const onSubmit = async (data: z.infer<typeof frontendRegisterSchema>) => {
+  const onSubmit = async (data: FrontendRegisterSchema) => {
     try {
       setIsSubmitting(true);
       setSuccess("");
