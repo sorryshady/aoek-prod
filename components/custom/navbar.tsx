@@ -6,9 +6,10 @@ import { AuthStage } from "@/types/session-types";
 import ActiveLinks from "./active-links";
 import { useAuth } from "@/app/providers/auth-context";
 import { LogOut } from "lucide-react";
+import LogoutButton from "./logout-button";
 
 const Navbar = () => {
-  const { user, authStage, logout } = useAuth();
+  const { user, authStage } = useAuth();
 
   return (
     <div className="w-full bg-[#35718E] fixed top-0 left-0 right-0 z-[999]">
@@ -56,9 +57,9 @@ const Navbar = () => {
                 <Link href={"/account"} className=" text-base">
                   Welcome, {user.name}
                 </Link>
-                <Button size={"icon"} onClick={logout}>
+                <LogoutButton size={"icon"}>
                   <LogOut />
-                </Button>
+                </LogoutButton>
               </div>
             )}
           </li>

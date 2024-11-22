@@ -159,6 +159,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setTimeout(() => {
           setAuthStage(AuthStage.AUTHENTICATED);
           console.log("Redirect to: ", redirectUrl);
+          router.refresh();
           router.push(redirectUrl);
         }, 1000);
       } else {
@@ -204,6 +205,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setTimeout(() => {
           setAuthStage(AuthStage.AUTHENTICATED);
           console.log("Redirect to: ", redirectUrl);
+          router.refresh();
           router.push(redirectUrl);
         }, 1000);
       } else {

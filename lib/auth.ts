@@ -2,10 +2,10 @@
 "use server";
 
 import { SessionUser } from "@/types";
-import { AuthStage } from '@/types/session-types'
+import { AuthStage } from "@/types/session-types";
 import { cookies } from "next/headers";
 
-export async function auth() {
+const verifyToken = async () => {
   const token = (await cookies()).get("session")?.value;
   if (!token) {
     return { user: null, authStage: AuthStage.INITIAL_LOGIN };
@@ -25,7 +25,19 @@ export async function auth() {
       return { user: null, authStage: AuthStage.INITIAL_LOGIN };
     }
     return { user, authStage: AuthStage.AUTHENTICATED };
-  } catch (error) {
+  } catch (err) {
     return { user: null, authStage: AuthStage.INITIAL_LOGIN };
+  }
+};
+export async function auth() {
+  const response = await verifyToken();
+  return response;
+}
+
+// Logout function to delete the session cookie
+export async function logout() {
+  const response = await verifyToken();
+  if (response.user) {
+    (await cookies()).delete("session");
   }
 }

@@ -81,6 +81,7 @@ export const AccountUpdate = ({ user }: { user: SessionUser }) => {
           values[key as keyof UpdateProfileSchema],
       );
       if (!hasChanges) {
+        setError("");
         toast.error("No changes made");
         return;
       }
@@ -90,6 +91,19 @@ export const AccountUpdate = ({ user }: { user: SessionUser }) => {
         delete values.department;
         delete values.designation;
         delete values.workDistrict;
+      } else {
+        if (
+          !values.officeAddress ||
+          !values.workDistrict ||
+          !values.department ||
+          !values.designation
+        ) {
+          setError(
+            "Designation, department, work district and office address fields are required if working",
+          );
+          toast.error("All employment fields are required if user is working");
+          return;
+        }
       }
       const submissionData = {
         ...values,
@@ -98,29 +112,30 @@ export const AccountUpdate = ({ user }: { user: SessionUser }) => {
         department: values.department ? values.department : null,
         designation: values.designation ? values.designation : null,
       };
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_URL}/api/auth/user`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              membershipId: user.membershipId,
-              ...submissionData,
-            }),
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_URL}/api/auth/user`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
           },
-        );
-        const data = await response.json();
+          body: JSON.stringify({
+            membershipId: user.membershipId,
+            ...submissionData,
+          }),
+        },
+      );
+      const data = await response.json();
 
-        if (data.error) {
-          console.log("error encountered");
-          throw new Error(data.error);
-        }
+      if (data.error) {
+        console.log("error encountered");
+        throw new Error(data.error);
+      }
 
       reset(values);
       toast.success("Profile updated successfully");
       setEdit(false);
+      setError("");
       router.refresh();
     } catch (error) {
       setError("An error occurred while submitting the form");
@@ -221,7 +236,7 @@ export const AccountUpdate = ({ user }: { user: SessionUser }) => {
                                 {Object.values(Designation).map((item) => (
                                   <SelectItem key={item} value={item}>
                                     <span className="capitalize">
-                                      {item.toLowerCase().replace("_", " ")}
+                                      {item.toLowerCase().split("_").join(" ")}
                                     </span>
                                   </SelectItem>
                                 ))}
