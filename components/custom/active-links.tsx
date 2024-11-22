@@ -7,11 +7,12 @@ import React from "react";
 interface ActiveLinkProps extends LinkProps {
   title: string;
 }
-const ActiveLinks = ({ title, href }: ActiveLinkProps) => {
+const ActiveLinks = ({ title, href, onClick }: ActiveLinkProps) => {
   const pathname = usePathname();
   return (
     <Link
       href={href}
+      onClick={onClick}
       className={cn(
         { "font-semibold underline": pathname === href },
         "hover:text-gray-200",

@@ -5,6 +5,7 @@ import { useAuth } from "@/app/providers/auth-context";
 
 interface LogoutButtonProps extends ButtonProps {
   title?: string;
+  handleClick?: () => void;
 }
 const LogoutButton = ({
   title,
@@ -12,9 +13,11 @@ const LogoutButton = ({
   className,
   size,
   children,
+  handleClick,
 }: LogoutButtonProps) => {
   const { logout } = useAuth();
   const logoutHandler = () => {
+    handleClick && handleClick();
     logout();
   };
   return (
