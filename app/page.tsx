@@ -1,17 +1,24 @@
 import AoekBanner from "@/components/custom/aoek-ios-android";
-import { CarouselPlugin } from "@/components/custom/carousel";
 import EventsHome from "@/components/custom/event-card-home";
 import NewsHome from "@/components/custom/news-card-home";
 import Wrapper from "@/components/custom/wrapper";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import logo from "../public/aoek-logo.png";
-
+import whitebridge from "../public/white-bridge.png";
+import DistrictCommittee from "@/components/custom/district-committee";
+import { Carousel } from "@/components/ui/carousel";
+import { StateCommittee } from "@/components/custom/state-members";
 export default function Home() {
   return (
     <div className="w-full bg-gradient-to-b from-blue-300 to-blue-500 min-h-screen pt-20 ">
       <div className="absolute">
-        <img src="/white-bridge.png" alt="white-bridge" className="w-20 h-20" />
+        <Image
+          src={whitebridge}
+          alt="white bridge"
+          objectFit="cover"
+          layout="fill"
+        />
       </div>
       <Wrapper>
         <div className="flex flex-col lg:flex-row items-center justify-between h-full gap-12">
@@ -40,8 +47,8 @@ export default function Home() {
               <EventsHome />
             </div>
           </div> */}
-          <div className="lg:w-1/2">
-            <Image src={logo} alt="aoek logo" width={100} height={100} />
+          <div className="lg:w-1/2 flex items-center justify-end">
+            <Image src={logo} alt="aoek logo" width={400} height={400} />
             {/* <img src="/logo.png" alt="aoek logo" width={50} height={50} /> */}
           </div>
         </div>
@@ -49,7 +56,7 @@ export default function Home() {
       </Wrapper>
       <AoekBanner />
       <Wrapper>
-        <CarouselPlugin />
+        <StateCommittee />
       </Wrapper>
     </div>
   );

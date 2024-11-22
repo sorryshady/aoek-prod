@@ -57,7 +57,7 @@ export default async function NewsHome() {
               )}
             </div>
             <CardContent className="p-3">
-              <h2 className="text-lg font-bold">{post.title}</h2>
+              <h2 className="text-base font-bold">{post.title}</h2>
               {/* <p className="text-muted-foreground mb-4 line-clamp-3">
                 {post.description}
               </p> */}

@@ -1,10 +1,22 @@
 import Wrapper from "@/components/custom/wrapper";
 import Image from "next/image";
 import logo from "../../../public/aoek-logo.png";
+import whitebridge from "../../../public/white-bridge.png";
 
 export default function About() {
   return (
-    <div className="bg-yellow-200">
+    <div className="relative bg-white">
+      {/* Background Image */}
+      {/* <div className="absolute inset-0 ">
+        <Image
+          src={whitebridge}
+          alt="white bridge"
+          layout="fill"
+          objectFit="cover"
+        />
+      </div> */}
+
+      {/* Content */}
       <Wrapper>
         <div className="py-8">
           <h1 className="text-center text-2xl font-bold text-black leading-tight">

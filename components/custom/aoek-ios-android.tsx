@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button"; // Assuming ShadCN button is set up
 import Image from "next/image";
 import Link from "next/link";
+import appDownload from "../../public/app-download.png";
 
 export default function AoekBanner() {
   return (
@@ -15,14 +16,17 @@ export default function AoekBanner() {
         {/* Images Section */}
         <div className="flex justify-center items-center space-x-6 mb-10">
           <Image
-            src="/imageslider_1.webp"
+            src={appDownload}
             alt="android-icon"
-            width={100}
-            height={100}
+            width={800}
+            height={600}
           />
         </div>
 
         {/* Buttons Section */}
+        <div>
+          <h1 className="text-2xl font-semibold">Download Now</h1>
+        </div>
         <div className="flex justify-center space-x-4">
           <Link
             href={"https://play.google.com/store/apps/details?id=com.aoek.app"}
