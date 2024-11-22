@@ -26,7 +26,7 @@ const UserNav = ({ user }: UserNavProps) => {
           </AvatarFallback>
         </Avatar>
       </PopoverTrigger>
-      <PopoverContent className="w-60 z-[1000] mr-20">
+      <PopoverContent className="w-60 z-[1000] mr-4">
         <div className="flex flex-col gap-5">
           <Button
             variant={"ghost"}

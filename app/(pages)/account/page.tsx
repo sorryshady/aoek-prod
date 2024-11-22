@@ -9,9 +9,9 @@ export default async function Account() {
   if (!user) return null;
 
   return (
-    <Wrapper className="flex flex-col">
-      <h1 className="text-3xl font-bold mt-10">Account Details</h1>
-      <div className="flex w-full gap-20">
+    <Wrapper className="flex flex-col items-center">
+      <h1 className="text-3xl font-bold mt-5 lg:mt-10">Account Details</h1>
+      <div className="flex w-full gap-14 md:max-w-[90%] lg:flex-row flex-col-reverse">
         <div className="flex flex-col gap-10 flex-[1.5]">
           <div className="space-y-5">
             <h2 className="text-xl font-bold">Personal Information</h2>
@@ -37,7 +37,7 @@ export default async function Account() {
             </div>
           </div>
           <Separator />
-          <AccountUpdate user={user}/>
+          <AccountUpdate user={user} />
         </div>
         <UserProfilePhoto name={user.name} photoUrl={user.photoUrl || ""} />
       </div>
