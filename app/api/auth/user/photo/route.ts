@@ -1,5 +1,6 @@
 import { db } from "@/db";
 import { utapi } from "@/lib/utapi";
+import { excludeFields } from "@/lib/utils";
 import { SessionUser } from "@/types";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -46,7 +47,11 @@ export async function POST(request: NextRequest) {
       where: { membershipId },
       data: { photoUrl, photoId },
     });
-    const safeUser = user as SessionUser;
+    const safeUser = excludeFields(user, [
+      "password",
+      "createdAt",
+      "updatedAt",
+    ]);
     return NextResponse.json(
       { success: "Image has been updated!", photoUrl, safeUser },
       { status: 200 },

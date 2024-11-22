@@ -37,7 +37,7 @@ export default async function Account() {
             </div>
           </div>
           <Separator />
-          <AccountUpdate user={user} />
+          <AccountUpdate user={user}/>
         </div>
         <UserProfilePhoto name={user.name} photoUrl={user.photoUrl || ""} />
       </div>

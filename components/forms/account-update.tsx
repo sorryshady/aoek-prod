@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { SessionUser } from "@/types";
@@ -36,10 +37,15 @@ import { Department, Designation, District, UserStatus } from "@prisma/client";
 import { Input } from "../ui/input";
 import SubmitButton from "../custom/submit-button";
 import { Edit } from "lucide-react";
+import { useAuth } from "@/app/providers/auth-context";
+import { FormError } from "../custom/form-error";
+import { useRouter } from "next/navigation";
 
 export const AccountUpdate = ({ user }: { user: SessionUser }) => {
-  const [edit, setEdit] = useState(false);
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [edit, setEdit] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [employmentStatus, setEmploymentStatus] = useState<
     UserStatus | undefined
@@ -66,39 +72,64 @@ export const AccountUpdate = ({ user }: { user: SessionUser }) => {
   });
   const { reset } = form;
 
-  const onSubmit = (values: UpdateProfileSchema) => {
-    const hasChanges = Object.keys(initialData).some(
-      (key) =>
-        initialData[key as keyof UpdateProfileSchema] !==
-        values[key as keyof UpdateProfileSchema],
-    );
-    setIsSubmitting(true);
-    if (!hasChanges) {
-      toast.error("No changes made");
-      setIsSubmitting(false);
-      //   setEdit(false);
-      return;
-    }
-    if (values.userStatus === "RETIRED") {
-      // Remove officeAddress when status is RETIRED
-      delete values.officeAddress;
-      delete values.department;
-      delete values.designation;
-      delete values.workDistrict;
-    }
+  const onSubmit = async (values: UpdateProfileSchema) => {
+    try {
+      setIsSubmitting(true);
+      const hasChanges = Object.keys(initialData).some(
+        (key) =>
+          initialData[key as keyof UpdateProfileSchema] !==
+          values[key as keyof UpdateProfileSchema],
+      );
+      if (!hasChanges) {
+        toast.error("No changes made");
+        return;
+      }
+      if (values.userStatus === "RETIRED") {
+        // Remove officeAddress when status is RETIRED
+        delete values.officeAddress;
+        delete values.department;
+        delete values.designation;
+        delete values.workDistrict;
+      }
+      const submissionData = {
+        ...values,
+        officeAddress: values.officeAddress ? values.officeAddress : null,
+        workDistrict: values.workDistrict ? values.workDistrict : null,
+        department: values.department ? values.department : null,
+        designation: values.designation ? values.designation : null,
+      };
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_URL}/api/auth/user`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              membershipId: user.membershipId,
+              ...submissionData,
+            }),
+          },
+        );
+        const data = await response.json();
 
-    // Display toast with submitted values
-    toast("Form Submitted", {
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      ),
-    });
-    reset(values);
-    setEdit(false);
-    setIsSubmitting(false);
+        if (data.error) {
+          console.log("error encountered");
+          throw new Error(data.error);
+        }
+
+      reset(values);
+      toast.success("Profile updated successfully");
+      setEdit(false);
+      router.refresh();
+    } catch (error) {
+      setError("An error occurred while submitting the form");
+      reset(initialData);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
   return (
     <>
       <div className="relative">
@@ -352,6 +383,7 @@ export const AccountUpdate = ({ user }: { user: SessionUser }) => {
                   </div>
                 </div>
               </div>
+              <FormError message={error} />
               <div className="flex w-[50%] gap-5 mt-10">
                 <SubmitButton
                   title="Update details"

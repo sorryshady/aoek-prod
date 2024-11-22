@@ -13,7 +13,7 @@ interface UserProfilePhotoProps {
   name: string;
 }
 const UserProfilePhoto = ({ photoUrl, name }: UserProfilePhotoProps) => {
-  const { user, updatePhoto, isLoading } = useAuth();
+  const { user, updatePhoto, isSubmitting } = useAuth();
   const [photo, setPhoto] = useState(photoUrl);
   const handlePhotoChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -53,7 +53,7 @@ const UserProfilePhoto = ({ photoUrl, name }: UserProfilePhotoProps) => {
           alt={name}
           width={500}
           height={500}
-          className={`${isLoading ? "animate-pulse" : ""} object-cover object-top`}
+          className={`${isSubmitting ? "animate-pulse" : ""} object-cover object-top`}
         />
       </div>
       <Input
@@ -66,7 +66,7 @@ const UserProfilePhoto = ({ photoUrl, name }: UserProfilePhotoProps) => {
       <SubmitButton
         className="mt-5"
         title="Upload"
-        isSubmitting={isLoading}
+        isSubmitting={isSubmitting}
         onClick={() => document.getElementById("photo-upload")!.click()}
       />
     </div>

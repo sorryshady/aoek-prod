@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
     const firstLogin = !existingUser.password;
 
     // Return user details without sensitive fields
-    const safeUser = excludeFields(existingUser, ["password"]);
+    const safeUser = excludeFields(existingUser, ["password", "createdAt", "updatedAt"]);
 
     return NextResponse.json({
       user: safeUser,

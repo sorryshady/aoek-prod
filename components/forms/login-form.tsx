@@ -35,7 +35,7 @@ import { AuthStage } from "@/types/session-types";
 const LoginForm = () => {
   const params = useSearchParams();
   const redirectTo = decodeURIComponent(params.get("redirectTo") || "/");
-  const { error, user, authStage, login, isLoading } = useAuth();
+  const { error, user, authStage, login, isSubmitting } = useAuth();
   const form = useForm<z.infer<typeof EmailIdSchema>>({
     resolver: zodResolver(EmailIdSchema),
     defaultValues: {
@@ -61,7 +61,7 @@ const LoginForm = () => {
           >
             <FormField
               control={form.control}
-              disabled={isLoading}
+              disabled={isSubmitting}
               name="emailOrId"
               render={({ field }) => (
                 <FormItem>
@@ -79,7 +79,7 @@ const LoginForm = () => {
             <FormError message={error} />
             <SubmitButton
               title={"Submit"}
-              isSubmitting={isLoading}
+              isSubmitting={isSubmitting}
               className="w-full"
             />
           </form>
@@ -103,7 +103,7 @@ interface LoginProps {
   redirectTo: string;
 }
 const FirstLogin = ({ user, redirectTo }: LoginProps) => {
-  const { isLoading, success, error, setupFirstLogin } = useAuth();
+  const { isSubmitting, success, error, setupFirstLogin } = useAuth();
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof SignupSchema>>({
@@ -138,7 +138,7 @@ const FirstLogin = ({ user, redirectTo }: LoginProps) => {
         >
           <FormField
             control={form.control}
-            disabled={isLoading}
+            disabled={isSubmitting}
             name="question"
             render={({ field }) => (
               <FormItem>
@@ -178,7 +178,7 @@ const FirstLogin = ({ user, redirectTo }: LoginProps) => {
           />
           <FormField
             control={form.control}
-            disabled={isLoading}
+            disabled={isSubmitting}
             name="answer"
             render={({ field }) => (
               <FormItem>
@@ -200,7 +200,7 @@ const FirstLogin = ({ user, redirectTo }: LoginProps) => {
           />
           <FormField
             control={form.control}
-            disabled={isLoading}
+            disabled={isSubmitting}
             name="password"
             render={({ field }) => (
               <FormItem>
@@ -218,7 +218,7 @@ const FirstLogin = ({ user, redirectTo }: LoginProps) => {
           />
           <FormField
             control={form.control}
-            disabled={isLoading}
+            disabled={isSubmitting}
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
@@ -243,7 +243,7 @@ const FirstLogin = ({ user, redirectTo }: LoginProps) => {
           <FormSuccess message={success} />
           <SubmitButton
             title="Sign Up"
-            isSubmitting={isLoading}
+            isSubmitting={isSubmitting}
             className="w-full"
           />
         </form>
@@ -252,7 +252,7 @@ const FirstLogin = ({ user, redirectTo }: LoginProps) => {
   );
 };
 const NormalLogin = ({ user, redirectTo }: LoginProps) => {
-  const { isLoading, success, error, enterPassword } = useAuth();
+  const { isSubmitting, success, error, enterPassword } = useAuth();
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -278,7 +278,7 @@ const NormalLogin = ({ user, redirectTo }: LoginProps) => {
         >
           <FormField
             control={form.control}
-            disabled={isLoading}
+            disabled={isSubmitting}
             name="password"
             render={({ field }) => (
               <FormItem>
@@ -302,7 +302,7 @@ const NormalLogin = ({ user, redirectTo }: LoginProps) => {
           <FormSuccess message={success} />
           <SubmitButton
             title="Login"
-            isSubmitting={isLoading}
+            isSubmitting={isSubmitting}
             className="w-full"
           />
         </form>
