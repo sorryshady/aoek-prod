@@ -209,7 +209,7 @@ const MobileNavbar = ({
                         >
                           Account
                         </Button>
-                        {user.userRole !== "ADMIN" && (
+                        {user.userRole === "ADMIN" && (
                           <Button
                             variant={"ghost"}
                             className="text-black"

@@ -37,7 +37,7 @@ const UserNav = ({ user }: UserNavProps) => {
           >
             Account
           </Button>
-          {user.userRole !== "ADMIN" && (
+          {user.userRole === "ADMIN" && (
             <Button
               variant={"ghost"}
               onClick={() => {
