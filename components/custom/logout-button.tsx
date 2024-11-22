@@ -14,12 +14,15 @@ const LogoutButton = ({
   children,
 }: LogoutButtonProps) => {
   const { logout } = useAuth();
+  const logoutHandler = () => {
+    logout();
+  };
   return (
     <Button
       variant={variant}
       className={className}
       size={size}
-      onClick={logout}
+      onClick={logoutHandler}
     >
       {children || title}
     </Button>

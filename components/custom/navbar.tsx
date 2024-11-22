@@ -5,8 +5,9 @@ import Image from "next/image";
 import { AuthStage } from "@/types/session-types";
 import ActiveLinks from "./active-links";
 import { useAuth } from "@/app/providers/auth-context";
-import { LogOut } from "lucide-react";
+import { LogOut, User } from "lucide-react";
 import LogoutButton from "./logout-button";
+import UserNav from "./user-nav";
 
 const Navbar = () => {
   const { user, authStage } = useAuth();
@@ -53,14 +54,7 @@ const Navbar = () => {
               </Button>
             )}
             {user && authStage === AuthStage.AUTHENTICATED && (
-              <div className="flex items-center gap-3">
-                <Link href={"/account"} className=" text-base">
-                  Welcome, {user.name}
-                </Link>
-                <LogoutButton size={"icon"}>
-                  <LogOut />
-                </LogoutButton>
-              </div>
+              <UserNav user={user} />
             )}
           </li>
         </ul>
