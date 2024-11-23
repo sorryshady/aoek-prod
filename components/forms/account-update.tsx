@@ -355,7 +355,9 @@ export const AccountUpdate = ({ user }: { user: SessionUser }) => {
                 <h2 className="text-xl font-bold">Contact Info</h2>
                 <div className="grid grid-cols-2 capitalize gap-5">
                   <div>Email</div>
-                  <div className="lowercase">{user.email}</div>
+                  <div className="lowercase w-full overflow-hidden text-ellipsis">
+                    {user.email}
+                  </div>
                   <div>Phone Number</div>
                   <FormField //office address
                     control={form.control}
@@ -399,7 +401,7 @@ export const AccountUpdate = ({ user }: { user: SessionUser }) => {
                 </div>
               </div>
               <FormError message={error} />
-              <div className="flex w-[50%] gap-5 mt-10">
+              <div className="flex w-full gap-5 mt-10">
                 <SubmitButton
                   title="Update details"
                   isSubmitting={isSubmitting}
@@ -472,7 +474,9 @@ export const AccountUpdate = ({ user }: { user: SessionUser }) => {
               <h2 className="text-xl font-bold">Contact Info</h2>
               <div className="grid grid-cols-2 capitalize gap-5">
                 <div>Email</div>
-                <div className="lowercase">{user.email}</div>
+                <div className="lowercase w-full overflow-hidden text-ellipsis">
+                  {user.email}
+                </div>
                 <div>Phone Number</div>
                 <div>{user.phoneNumber || "NA"}</div>
                 <div>Mobile Number</div>

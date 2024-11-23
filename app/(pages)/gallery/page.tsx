@@ -1,7 +1,4 @@
-import { auth } from "@/lib/auth";
-
+export const revalidate = 0;
 export default async function Gallery() {
-  const { user } = await auth();
-  if (!user) return;
-  return <div>Gallery {user.name}</div>;
+  return <div>Gallery</div>;
 }

@@ -67,6 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
+        console.log("From auth context");
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_URL}/api/auth/user`,
         );
