@@ -14,6 +14,7 @@ const PUBLIC_ROUTES = [
   "/newsletter",
   "/forgot-password",
   "/public",
+  "/gallery",
   "/about", // Add any other public routes
 ];
 
@@ -78,6 +79,7 @@ export const config = {
      * - Favicon and robots.txt
      * - Public routes
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+    "/account",
+    "/admin"
   ],
 };

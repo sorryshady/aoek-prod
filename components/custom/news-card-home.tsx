@@ -5,7 +5,6 @@ import { client, urlFor } from "@/lib/sanity";
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { Button } from "../ui/button";
 
 async function getData() {
   const query = `*[_type == "news"]| order(date desc) [0..2] {

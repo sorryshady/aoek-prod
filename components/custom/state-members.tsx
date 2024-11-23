@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import * as React from "react";
@@ -13,6 +15,7 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 import { useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const committeeMembers = [
   {
@@ -66,7 +69,7 @@ export function StateCommittee() {
   }, [api]);
 
   const autoplay = React.useRef(
-    Autoplay({ delay: 1500, stopOnInteraction: true })
+    Autoplay({ delay: 1500, stopOnInteraction: true }),
   );
 
   return (
@@ -89,7 +92,9 @@ export function StateCommittee() {
                 >
                   <div className="flex flex-col items-center p-2">
                     <div className="w-full aspect-square mb-2">
-                      <img
+                      <Image
+                        width={600}
+                        height={600}
                         src={member.image}
                         alt={member.name}
                         className="w-full h-full object-cover rounded-md"

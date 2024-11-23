@@ -1,91 +1,96 @@
-import React from "react";
-import Wrapper from "./wrapper";
 import Link from "next/link";
+import Wrapper from "./wrapper";
+import Image from "next/image";
+import { FaFacebookSquare as Facebook } from "react-icons/fa";
 
-export default function Footer() {
+const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-white py-10">
-      <Wrapper>
-        <div className="container mx-auto px-6">
-          {/* Footer Main Section */}
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-8">
-            {/* Logo Section */}
-            <div className="flex flex-col items-start">
-              <img src="/logo.png" alt="AOEK Logo" className="w-12 h-12 mb-3" />
-              <h3 className="text-lg font-bold">AOEK</h3>
-            </div>
-            {/* About Section */}
-            <div>
-              <Link href="/about" className="hover:underline">
-                <h3 className="text-lg font-semibold mb-3">About</h3>
-              </Link>
-            </div>
-
-            {/* Parent Links */}
-            <div>
-              <h3 className="text-lg font-semibold mb-3">Parent Links</h3>
-              <ul className="space-y-2">
-                <li>
-                  <a href="#" className="hover:underline">
-                    Kerala PWD
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    Kerala LSGD
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    Kerala Irrigation Dept.
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Useful Links */}
-            <div>
-              <h3 className="text-lg font-semibold mb-3">Useful Links</h3>
-              <ul className="space-y-2">
-                <li>
-                  <a href="#" className="hover:underline">
-                    Tenders Kerala
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    Spark
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    Price
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    Kerala Highway Research Institute
-                  </a>
-                </li>
-              </ul>
-            </div>
-            {/*Socails*/}
-            <div>
-              <h1>Socials</h1>
-            </div>
-          </div>
-
-          {/* Footer Bottom Section */}
-          <div className="mt-10 border-t border-gray-700 pt-6 text-center">
-            <p className="text-sm">
-              AOEK©2024 - Powered by{" "}
-              <a href="#" className="text-blue-500 hover:underline">
-                Ervinor
-              </a>
-            </p>
-          </div>
+    <footer className="bg-[#20333C] space-y-10">
+      <div className="h-[0.5px] bg-gray-500 mx-auto max-w-7xl" />
+      <Wrapper className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 text-white gap-5">
+        <div>
+          <Link href="/" className="flex items-center gap-3">
+            <Image src="/logo.png" alt="logo" width={60} height={60} />
+            <span className="text-2xl font-bold text-white tracking-wider">
+              AOEK
+            </span>
+          </Link>
+        </div>
+        <div className="flex flex-col gap-5">
+          <h3 className="underline font-bold text-xl">Parent Links</h3>
+          <Link
+            href={"https://www.pwd.kerala.gov.in/IMF_website/index/"}
+            className="text-base w-fit hover:text-[#FACE30]"
+            target="_blank"
+          >
+            Kerala PWD
+          </Link>
+          <Link
+            href={"http://www.lsgkerala.gov.in"}
+            className="text-base w-fit hover:text-[#FACE30]"
+            target="_blank"
+          >
+            Kerala LSGD
+          </Link>
+          <Link
+            href={"https://www.irrigation.kerala.gov.in"}
+            className="text-base w-fit hover:text-[#FACE30]"
+            target="_blank"
+          >
+            Kerala Irrigation Dept.
+          </Link>
+        </div>
+        <div className="flex flex-col gap-5">
+          <h3 className="underline font-bold text-xl">Userful Links</h3>
+          <Link
+            href={"https://www.etenders.kerala.gov.in/nicgep/app"}
+            className="text-base w-fit hover:text-[#FACE30]"
+            target="_blank"
+          >
+            Tenders Kerala
+          </Link>
+          <Link
+            href={
+              "https://www.spark.gov.in/webspark/(S(hzae3zw3gds1sbhw5rulsk2p))/sparklogin.aspx"
+            }
+            className="text-base w-fit hover:text-[#FACE30]"
+            target="_blank"
+          >
+            Spark
+          </Link>
+          <Link
+            href={"https://www.price.kerala.gov.in/price3_pmu/"}
+            className="text-base w-fit hover:text-[#FACE30]"
+            target="_blank"
+          >
+            PRICE
+          </Link>
+          <Link
+            href={"https://khri.kerala.gov.in/"}
+            className="text-base w-fit hover:text-[#FACE30]"
+            target="_blank"
+          >
+            Kerala Highway Research Institute
+          </Link>
+        </div>
+        <div className="flex flex-col gap-5">
+          <h3 className="underline font-bold text-xl">Socials</h3>
+          <Link
+            href={"https://www.facebook.com/aoek"}
+            className=" block"
+            target="_blank"
+          >
+            <Facebook size={32} className="text-white" />
+          </Link>
         </div>
       </Wrapper>
+      <div className="h-[0.5px] bg-gray-500 mx-auto max-w-7xl" />
+      <div className="w-full text-center text-white pb-5">
+        <span className="font-bold">AOEK</span> &copy;{" "}
+        {new Date().getFullYear()} - Powered by Ervinor
+      </div>
     </footer>
   );
-}
+};
+
+export default Footer;

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from "next/image";
 
 const districts = [
   { name: "Thiruvananthapuram", url: "/district/thiruvananthapuram" },
@@ -94,7 +95,9 @@ export default function DistrictCommittee() {
               >
                 <CardContent className="p-4">
                   <div className="aspect-square w-48 mx-auto mb-4 overflow-hidden rounded-md">
-                    <img
+                    <Image
+                      width={600}
+                      height={600}
                       src={member.image}
                       alt={member.name}
                       className="w-full h-full object-cover"
