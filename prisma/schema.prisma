@@ -135,6 +135,7 @@ model User {
     // MISC
     createdAt          DateTime               @default(now())
     updatedAt          DateTime               @updatedAt
+    photoId            String?                @unique
     // Security Question
     securityQuestion   SecurityQuestion[]
 }

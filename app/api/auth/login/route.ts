@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
     const firstLogin = !existingUser.password;
 
     // Return user details without sensitive fields
-    const safeUser = excludeFields(existingUser, ["password"]);
+    const safeUser = excludeFields(existingUser, ["password", "createdAt", "updatedAt"]);
 
     return NextResponse.json({
       user: safeUser,
@@ -249,9 +249,15 @@ function generateSuccessResponse(
   request: NextRequest,
   sessionUser: SessionUser,
   session?: string,
+  photoUrl?: string,
 ) {
   const isMobile = isMobileClient(request);
-  const response = { success: true, sessionUser, ...(isMobile && { session }) };
+  const response = {
+    success: true,
+    sessionUser,
+    photoUrl,
+    ...(isMobile && { session }),
+  };
 
   return NextResponse.json(response);
 }

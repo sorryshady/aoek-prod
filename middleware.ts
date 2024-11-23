@@ -11,6 +11,7 @@ const PUBLIC_ROUTES = [
   "/login",
   "/register",
   "/updates",
+  "/newsletter",
   "/forgot-password",
   "/public",
   "/about", // Add any other public routes
@@ -49,7 +50,7 @@ function isPublicRoute(path: string): boolean {
 // Redirect to login page
 function redirectToLogin(request: NextRequest) {
   const loginUrl = new URL("/login", request.url);
-  loginUrl.searchParams.set("redirectTo", request.url);
+  loginUrl.searchParams.set("redirectTo", encodeURIComponent(request.url));
   return NextResponse.redirect(loginUrl);
 }
 
@@ -65,7 +66,10 @@ async function verifySession(request: NextRequest, session: string) {
         },
       }
     );
+
+    // If session verification fails, redirect to login
     if (!response.ok) {
+      console.log("Session verification failed, redirecting to login");
       return redirectToLogin(request);
     }
 

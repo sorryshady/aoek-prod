@@ -9,6 +9,7 @@ import whitebridge from "../public/white-bridge.png";
 import DistrictCommittee from "@/components/custom/district-committee";
 import { Carousel } from "@/components/ui/carousel";
 import { StateCommittee } from "@/components/custom/state-members";
+
 export default function Home() {
   return (
     <div className="w-full bg-gradient-to-b from-blue-300 to-blue-500 min-h-screen pt-20 ">

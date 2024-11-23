@@ -1,4 +1,5 @@
 import Wrapper from "@/components/custom/wrapper";
+<<<<<<< HEAD
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { homeEventsCard } from "@/lib/interface";
@@ -6,6 +7,12 @@ import { client, urlFor } from "@/lib/sanity";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+=======
+import { client } from "@/lib/sanity";
+import { simpleNewsCard } from "@/types";
+
+export const revalidate = 0;
+>>>>>>> 5ad193298d3a2acd09c865f3fc05a897c0e57550
 async function getData() {
   const query = `*[_type == "news"]| order(_createdAt desc) {
         title,
@@ -17,6 +24,20 @@ async function getData() {
       }`;
   const data = await client.fetch(query);
   return data;
+<<<<<<< HEAD
+=======
+}
+export default async function News() {
+  const data: simpleNewsCard[] = await getData();
+  return (
+    <Wrapper>
+      <h1>News Page</h1>
+      <div>
+        No of article: <span className="font-bold">{data.length}</span>
+      </div>
+    </Wrapper>
+  );
+>>>>>>> 5ad193298d3a2acd09c865f3fc05a897c0e57550
 }
 export default async function News() {
   const data: homeEventsCard[] = await getData();
