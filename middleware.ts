@@ -13,7 +13,8 @@ const PUBLIC_ROUTES = [
   "/updates",
   "/newsletter",
   "/forgot-password",
-  "/public", // Add any other public routes
+  "/public",
+  "/about", // Add any other public routes
 ];
 
 export async function middleware(request: NextRequest) {
@@ -42,7 +43,7 @@ export async function middleware(request: NextRequest) {
 // Helper to check if a route is public
 function isPublicRoute(path: string): boolean {
   return PUBLIC_ROUTES.some(
-    (route) => path === route || path.startsWith(route + "/"),
+    (route) => path === route || path.startsWith(route + "/")
   );
 }
 
@@ -63,7 +64,7 @@ async function verifySession(request: NextRequest, session: string) {
         headers: {
           cookie: `session=${session}`,
         },
-      },
+      }
     );
 
     // If session verification fails, redirect to login
