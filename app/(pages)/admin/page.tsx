@@ -11,7 +11,7 @@ export default async function Admin() {
     redirect("/account");
   }
   return (
-    <Wrapper className="flex flex-col gap-5">
+    <Wrapper className="flex flex-col my-[5rem] gap-5">
       <h1 className="text-4xl font-bold mt-5 lg:mt-10">
         Welcome Admin, {user.name.split(" ")[0]}
       </h1>

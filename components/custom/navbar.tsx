@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { AuthStage, SessionUser } from "@/types/session-types";
-import ActiveLinks from "./active-links";
 import { useAuth } from "@/app/providers/auth-context";
 import UserNav from "./user-nav";
 import {
@@ -24,12 +23,13 @@ import {
 } from "../ui/accordion";
 import LogoutButton from "./logout-button";
 import { useRouter } from "next/navigation";
+import ActiveLinks from "./active-links";
 
 const Navbar = () => {
   const { user, authStage } = useAuth();
 
   return (
-    <div className="w-full bg-[#35718E] fixed top-0 left-0 right-0 z-[999]">
+    <div className="w-full bg-[#20333C] fixed top-0 left-0 right-0 z-[999]">
       <DesktopNavbar user={user!} authStage={authStage} />
       <MobileNavbar user={user!} authStage={authStage} />
     </div>
@@ -118,14 +118,14 @@ const MobileNavbar = ({
       </Link>
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
-          <Button size="icon" variant="outline" className="bg-[#35718E]">
+          <Button size="icon" variant="outline" className="bg-[#20333C]">
             <MenuIcon className="text-white" size={48} />
             <span className="sr-only">Toggle menu</span>
           </Button>
         </SheetTrigger>
         <SheetContent
           side="right"
-          className="w-[300px] sm:w-[400px] pt-10 bg-[#35718E] border-none text-white overflow-auto z-[1000]"
+          className="w-[300px] sm:w-[400px] pt-10 bg-[#20333C] border-none text-white overflow-auto z-[1000]"
         >
           <SheetHeader>
             <SheetTitle className="text-left w-full text-white mt-10 px-4 border-b-2">

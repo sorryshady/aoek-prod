@@ -14,8 +14,8 @@ const ActiveLinks = ({ title, href, onClick }: ActiveLinkProps) => {
       href={href}
       onClick={onClick}
       className={cn(
-        { "font-semibold underline": pathname === href },
-        "hover:text-gray-200",
+        { "font-semibold underline text-[#FACE30]": pathname === href },
+        "hover:text-[#FACE30]",
       )}
     >
       {title}
