@@ -11,7 +11,7 @@ export default async function Admin() {
     redirect("/account");
   }
   return (
-    <Wrapper className="flex flex-col my-[5rem] gap-5">
+    <Wrapper className="flex flex-col my-[5rem] gap-5 min-h-[70vh]">
       <h1 className="text-4xl font-bold mt-5 lg:mt-10">
         Welcome Admin, {user.name.split(" ")[0]}
       </h1>
@@ -27,16 +27,16 @@ export default async function Admin() {
           </TabsList>
           <TabsContent value="general">
             <Card className="p-4 pt-8">
-              <div>General Members</div>
+              <div>UPDATE UNDERWAY</div>
             </Card>
           </TabsContent>
           <TabsContent value="pending">
             <Card className="p-4 pt-8">
-              <div>Pending Members</div>
+              <div>UPDATE UNDERWAY</div>
             </Card>
           </TabsContent>
           <TabsContent value="cms">
-            <Card className="p-4 pt-8">CMS Stuff appears here</Card>
+            <Card className="p-4 pt-8">UPDATE UNDERWAY</Card>
           </TabsContent>
         </Tabs>
       </div>
