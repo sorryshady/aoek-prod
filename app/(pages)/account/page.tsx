@@ -9,7 +9,7 @@ export default async function Account() {
   if (!user) return null;
 
   return (
-    <Wrapper className="flex flex-col items-center">
+    <Wrapper className="flex flex-col my-[5rem] justify-center items-center">
       <h1 className="text-3xl font-bold mt-5 lg:mt-10">Account Details</h1>
       <div className="flex w-full gap-14 md:max-w-[90%] lg:flex-row flex-col-reverse">
         <div className="flex flex-col gap-10 flex-[1.5]">

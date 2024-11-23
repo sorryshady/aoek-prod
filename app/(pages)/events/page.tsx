@@ -3,7 +3,6 @@ import { upcomingEvent } from "@/lib/interface";
 import { client, urlFor } from "@/lib/sanity";
 import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { CalendarIcon } from "lucide-react";
 
 function isEventOver(eventDate: string): boolean {
@@ -27,7 +26,7 @@ export default async function UpcomingEventsPage() {
   const events: upcomingEvent[] = await getData();
 
   return (
-    <Wrapper>
+    <Wrapper className=" my-[5rem] space-y-5">
       <h1 className="text-4xl font-bold text-center my-8">Events</h1>
       <div className="grid gap-8 lg:grid-cols-1 grid-cols-1">
         {events.map((event, index) => {

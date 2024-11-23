@@ -1,7 +1,7 @@
 import Wrapper from "@/components/custom/wrapper";
 import Image from "next/image";
 import logo from "../../../public/aoek-logo.png";
-import whitebridge from "../../../public/white-bridge.png";
+// import whitebridge from "../../../public/white-bridge.png";
 
 export default function About() {
   return (

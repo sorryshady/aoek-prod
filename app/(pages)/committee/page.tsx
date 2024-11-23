@@ -5,7 +5,7 @@ import Wrapper from "@/components/custom/wrapper";
 export default function Committee() {
   return (
     <div>
-      <Wrapper>
+      <Wrapper className="my-[5rem]">
         <StateCommittee />
         <DistrictCommittee />
       </Wrapper>
