@@ -17,7 +17,9 @@ const LogoutButton = ({
 }: LogoutButtonProps) => {
   const { logout } = useAuth();
   const logoutHandler = () => {
-    handleClick && handleClick();
+    if (handleClick) {
+      handleClick();
+    }
     logout();
   };
   return (

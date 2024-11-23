@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import React, { useState } from "react";
 import LogoutButton from "./logout-button";
 import { LogOut } from "lucide-react";
