@@ -28,7 +28,7 @@ export default function Home() {
               WELCOME TO THE ASSOCIATION OF ENGINEERS KERALA
             </h1>
             <p className="text-white max-w-lg mx-auto lg:mx-0">
-              The Association of Engineers Kerala is a non-profit politically
+              The Association of Engineer Kerala is a non-profit politically
               neutral organization representing working as well as retired
               engineers from the Public Works, Irrigation and Local Self
               Government Departments of the Government of Kerala.
