@@ -1,4 +1,5 @@
 import Wrapper from "@/components/custom/wrapper";
+import DataTable from "@/components/data-table/data-table";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { auth } from "@/lib/auth";
@@ -27,12 +28,12 @@ export default async function Admin() {
           </TabsList>
           <TabsContent value="general">
             <Card className="p-4 pt-8">
-              <div>UPDATE UNDERWAY</div>
+              <DataTable />
             </Card>
           </TabsContent>
           <TabsContent value="pending">
             <Card className="p-4 pt-8">
-              <div>UPDATE UNDERWAY</div>
+              <DataTable />
             </Card>
           </TabsContent>
           <TabsContent value="cms">
