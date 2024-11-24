@@ -14,14 +14,14 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import React from "react";
+import React, { useEffect } from "react";
 import { columns } from "./verified-columns";
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { Loader2 } from "lucide-react";
 import { TableData } from "@/types/user-types";
 
-const DataTable = () => {
+const DataTable = ({ tab }: { tab: "general" | "pending" }) => {
   const {
     data,
     isLoading,
@@ -33,7 +33,12 @@ const DataTable = () => {
     setRoleFilter,
     committeeFilter,
     setCommitteeFilter,
+    setStatusFilter,
   } = useUserTable();
+
+  useEffect(() => {
+    setStatusFilter(tab === "general" ? "VERIFIED" : "PENDING");
+  }, [setStatusFilter, tab]);
 
   const table = useReactTable({
     data: (data?.users as TableData[]) || [],

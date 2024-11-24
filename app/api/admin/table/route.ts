@@ -11,6 +11,7 @@ export async function POST(req: NextRequest) {
       search = "",
       userRole = [], // Now expects an array
       committeeType = [], // Now expects an array
+      status = "VERIFIED",
     } = body;
 
     // Construct dynamic where clause
@@ -31,6 +32,7 @@ export async function POST(req: NextRequest) {
         committeeType.length > 0
           ? { in: committeeType as CommitteeType[] } // Use 'in' operator for array of values
           : undefined,
+      verificationStatus: status,
     };
 
     // Fetch users with pagination and filtering

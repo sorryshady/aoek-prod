@@ -35,12 +35,15 @@ export function useUserTable() {
   const [searchInput, setSearchInput] = useState("");
   const [roleFilter, setRoleFilter] = useState<string[]>([]);
   const [committeeFilter, setCommitteeFilter] = useState<string[]>([]);
+  const [statusFilter, setStatusFilter] = useState<"VERIFIED" | "PENDING">(
+    "VERIFIED",
+  );
 
   const debouncedSearch = useDebounce(searchInput, 300);
 
   useEffect(() => {
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [debouncedSearch, roleFilter, committeeFilter]);
+  }, [debouncedSearch, roleFilter, committeeFilter, statusFilter]);
 
   const fetchUsers = async () => {
     const { data } = await axios.post<APIResponse>("/api/admin/table", {
@@ -49,6 +52,7 @@ export function useUserTable() {
       search: debouncedSearch,
       userRole: roleFilter,
       committeeType: committeeFilter,
+      status: statusFilter,
     });
 
     return {
@@ -66,6 +70,7 @@ export function useUserTable() {
       debouncedSearch,
       roleFilter,
       committeeFilter,
+      statusFilter,
     ],
     queryFn: fetchUsers,
     placeholderData: (previousData) => previousData,
@@ -81,5 +86,7 @@ export function useUserTable() {
     setRoleFilter,
     committeeFilter,
     setCommitteeFilter,
+    statusFilter,
+    setStatusFilter,
   };
 }
