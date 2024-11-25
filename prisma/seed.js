@@ -22,7 +22,7 @@ const prisma = new PrismaClient();
 const testUsers = [];
 
 async function main() {
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 100; i++) {
     const email = faker.internet.email();
     const password = faker.internet.password();
 
@@ -58,9 +58,10 @@ async function main() {
       Object.values(CommitteeType),
     );
     const userRole = faker.helpers.arrayElement(Object.values(UserRole));
-    const verificationStatus = faker.helpers.arrayElement(
-      Object.values(VerificationStatus),
-    );
+    const verificationStatus = faker.helpers.arrayElement([
+      "VERIFIED",
+      "PENDING",
+    ]);
 
     // Optional fields based on committeeType
     const positionState =
