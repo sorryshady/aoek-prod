@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
           committeeType: true,
         },
         orderBy: {
-          createdAt: "desc",
+          membershipId: "desc",
         },
       }),
       db.user.count({ where }),

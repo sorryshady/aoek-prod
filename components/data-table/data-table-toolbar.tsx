@@ -25,10 +25,8 @@ export function DataTableToolbar<TData>({
   showRoleFilter = true,
   showCommitteeFilter = true,
 }: DataTableToolbarProps<TData>) {
-  const isFiltered =
-    filters.role.length > 0 ||
-    filters.committee.length > 0 ||
-    filters.search !== "";
+  const isFiltered = filters.role.length > 0 || filters.committee.length > 0;
+  // filters.search !== "";
 
   const handleReset = () => {
     onFilterChange("search", "");

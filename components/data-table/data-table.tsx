@@ -109,8 +109,8 @@ const DataTable = ({ tab }: { tab: "general" | "pending" }) => {
           </Table>
         ) : (
           <div className="h-24 w-full flex justify-center items-center">
-            <Loader2 className="w-10 h-10 animate-spin mr-2" />
-            <span className="font-semibold text-lg">Loading...</span>
+            <Loader2 className="w-5 h-5 animate-spin mr-2" />
+            <span className="text-base">Loading...</span>
           </div>
         )}
       </div>
