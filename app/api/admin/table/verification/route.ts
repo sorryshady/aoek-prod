@@ -8,7 +8,6 @@ export async function POST(req: NextRequest) {
       where: { verificationStatus: "VERIFIED" },
     });
     const membershipId = numberOfUsers + 1;
-    console.log(status, membershipId);
     const updatedUser = await db.user.update({
       where: { email },
       data: {
