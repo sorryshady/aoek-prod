@@ -2,11 +2,21 @@
 import DataTable from "@/components/data-table/data-table";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
+import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 
 const AdminTabs = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const activeTab = searchParams.get("tab") || "general";
+  const handleTabChange = (tab: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tab", tab);
+    router.push(`?${params.toString()}`);
+  };
   return (
-    <Tabs defaultValue="general">
+    <Tabs value={activeTab} onValueChange={handleTabChange}>
       <TabsList className="grid w-full grid-cols-3">
         <TabsTrigger value="general">General</TabsTrigger>
         <TabsTrigger value="pending">Pending</TabsTrigger>

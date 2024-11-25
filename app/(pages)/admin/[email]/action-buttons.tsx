@@ -1,5 +1,5 @@
 "use client";
-import { queryClient } from "@/app/providers/query-client";
+
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -27,14 +27,12 @@ const ActionButtons = ({ email }: { email: string }) => {
           email,
           status: "VERIFIED",
         });
-        queryClient.invalidateQueries({ queryKey: ["users"] });
         toast.success("User request approved!");
       } else if (action === "reject") {
         await axios.post("/api/admin/table/verification", {
           email,
           status: "REJECTED",
         });
-        queryClient.invalidateQueries({ queryKey: ["users"] });
         toast.success("User request rejected!");
       }
       router.back();
@@ -47,8 +45,8 @@ const ActionButtons = ({ email }: { email: string }) => {
     <div className="flex gap-3 mt-5">
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button variant={"outline"} size={"icon"}>
-            <CircleCheck className="h-5 w-5" />
+          <Button variant={"outline"} className="flex-1">
+            <CircleCheck className="h-5 w-5" /> Approve User
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
@@ -70,8 +68,8 @@ const ActionButtons = ({ email }: { email: string }) => {
       </AlertDialog>
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button variant={"destructive"} size={"icon"}>
-            <CircleX />
+          <Button variant={"destructive"} className="flex-1">
+            <CircleX /> Reject User
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>

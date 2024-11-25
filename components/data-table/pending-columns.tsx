@@ -91,7 +91,7 @@ export const getPendingColumns = ({
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href={`/admin/${email}`}>
+              <Link href={`/admin/${email}?status=pending`}>
                 <User className="mr-2" /> See Profile
               </Link>
             </DropdownMenuItem>
