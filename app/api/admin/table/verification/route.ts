@@ -7,6 +7,16 @@ export async function POST(req: NextRequest) {
     const numberOfUsers = await db.user.count({
       where: { verificationStatus: "VERIFIED" },
     });
+    const existingUser = await db.user.findUnique({ where: { email } });
+    if (!existingUser) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+    if (existingUser.membershipId) {
+      return NextResponse.json(
+        { error: "User already verified" },
+        { status: 400 },
+      );
+    }
     const membershipId = numberOfUsers + 1;
     const updatedUser = await db.user.update({
       where: { email },
