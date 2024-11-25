@@ -5,35 +5,35 @@ import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
-import { CommitteeType, UserRole } from "@prisma/client";
 import { committeeType, userRole } from "./data/data";
+import { FilterState } from "@/hooks/use-user-table";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
-  search: string;
-  onSearchChange: (value: string) => void;
-  roleFilter: string[];
-  onRoleFilterChange: (value: string[]) => void;
-  committeeFilter: string[];
-  onCommitteeFilterChange: (value: string[]) => void;
+  filters: FilterState;
+  onFilterChange: <K extends keyof FilterState>(
+    key: K,
+    value: FilterState[K],
+  ) => void;
+  showRoleFilter?: boolean;
+  showCommitteeFilter?: boolean;
 }
-
 export function DataTableToolbar<TData>({
   table,
-  search,
-  onSearchChange,
-  roleFilter,
-  onRoleFilterChange,
-  committeeFilter,
-  onCommitteeFilterChange,
+  filters,
+  onFilterChange,
+  showRoleFilter = true,
+  showCommitteeFilter = true,
 }: DataTableToolbarProps<TData>) {
   const isFiltered =
-    roleFilter.length > 0 || committeeFilter.length > 0 || search !== "";
+    filters.role.length > 0 ||
+    filters.committee.length > 0 ||
+    filters.search !== "";
 
   const handleReset = () => {
-    onSearchChange("");
-    onRoleFilterChange([]);
-    onCommitteeFilterChange([]);
+    onFilterChange("search", "");
+    onFilterChange("role", []);
+    onFilterChange("committee", []);
     table.resetColumnFilters();
   };
 
@@ -42,23 +42,23 @@ export function DataTableToolbar<TData>({
       <div className="flex flex-col flex-1 items-start space-y-2">
         <Input
           placeholder="Search using name or email..."
-          value={search}
-          onChange={(event) => onSearchChange(event.target.value)}
+          value={filters.search}
+          onChange={(event) => onFilterChange("search", event.target.value)}
           className="h-8 w-[150px] lg:w-[250px]"
         />
         <div className="flex flex-1 flex-wrap gap-2">
-          {table.getColumn("userRole") && (
+          {showRoleFilter && table.getColumn("userRole") && (
             <DataTableFacetedFilter
-              value={roleFilter}
-              onValueChange={onRoleFilterChange}
+              value={filters.role}
+              onValueChange={(value) => onFilterChange("role", value)}
               title="Role"
               options={userRole}
             />
           )}
-          {table.getColumn("committeeType") && (
+          {showCommitteeFilter && table.getColumn("committeeType") && (
             <DataTableFacetedFilter
-              value={committeeFilter}
-              onValueChange={onCommitteeFilterChange}
+              value={filters.committee}
+              onValueChange={(value) => onFilterChange("committee", value)}
               title="Committee"
               options={committeeType}
             />

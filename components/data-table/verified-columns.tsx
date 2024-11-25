@@ -22,7 +22,7 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import { TableData } from "@/types/user-types";
-export const columns: ColumnDef<TableData>[] = [
+export const verifiedColumns: ColumnDef<TableData>[] = [
   {
     accessorKey: "membershipId",
     header: "Membership ID",

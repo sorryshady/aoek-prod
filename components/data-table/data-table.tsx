@@ -14,12 +14,13 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import React, { useEffect } from "react";
-import { columns } from "./verified-columns";
+import React from "react";
+import { verifiedColumns } from "./verified-columns";
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { Loader2 } from "lucide-react";
 import { TableData } from "@/types/user-types";
+import { getPendingColumns } from "./pending-columns";
 
 const DataTable = ({ tab }: { tab: "general" | "pending" }) => {
   const {
@@ -27,18 +28,15 @@ const DataTable = ({ tab }: { tab: "general" | "pending" }) => {
     isLoading,
     pagination,
     setPagination,
-    search,
-    setSearch,
-    roleFilter,
-    setRoleFilter,
-    committeeFilter,
-    setCommitteeFilter,
-    setStatusFilter,
-  } = useUserTable();
-
-  useEffect(() => {
-    setStatusFilter(tab === "general" ? "VERIFIED" : "PENDING");
-  }, [setStatusFilter, tab]);
+    filters,
+    updateFilter,
+    updateStatus,
+    isUpdating,
+  } = useUserTable(tab === "general" ? "VERIFIED" : "PENDING");
+  const columns =
+    tab === "general"
+      ? verifiedColumns
+      : getPendingColumns({ updateStatus, isUpdating });
 
   const table = useReactTable({
     data: (data?.users as TableData[]) || [],
@@ -56,12 +54,10 @@ const DataTable = ({ tab }: { tab: "general" | "pending" }) => {
     <div className="space-y-4">
       <DataTableToolbar
         table={table}
-        search={search}
-        onSearchChange={setSearch}
-        roleFilter={roleFilter}
-        onRoleFilterChange={setRoleFilter}
-        committeeFilter={committeeFilter}
-        onCommitteeFilterChange={setCommitteeFilter}
+        filters={filters}
+        onFilterChange={updateFilter}
+        showRoleFilter={tab === "general"}
+        showCommitteeFilter={tab === "general"}
       />
       <div className="rounded-md border">
         {!isLoading ? (
