@@ -3,7 +3,7 @@ import Wrapper from "@/components/custom/wrapper";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { db } from "@/db";
-import { changeTypeToText, excludeFields } from "@/lib/utils";
+import { changeTypeToText } from "@/lib/utils";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -88,13 +88,14 @@ export default async function ProfilePage({
     <Wrapper className="my-[5rem] min-h-[70vh] flex justify-center items-center">
       <div className="max-w-6xl mx-auto pt-10">
         <div className="space-y-8">
-          <div className="flex flex-col md:flex-row items-center md:items-start mb-8">
+          <div className="flex flex-col  md:flex-row items-center md:items-start mb-8">
             <Image
               src={user.photoUrl || "/fall-back.webp"}
               alt={user.name}
               width={150}
               height={150}
-              className="rounded-full mb-4 md:mb-0 md:mr-8"
+              priority
+              className="rounded-full mb-4 md:mb-0 md:mr-8 object-cover w-56 h-56"
             />
             <div className="text-center md:text-left">
               <h1 className="text-3xl font-bold mb-2">{user.name}</h1>

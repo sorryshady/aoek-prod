@@ -26,3 +26,18 @@ export const committeeType = [
     label: "None",
   },
 ];
+
+export const departmentType = [
+  {
+    value: "LSGD",
+    label: "LSGD",
+  },
+  {
+    value: "PWD",
+    label: "PWD",
+  },
+  {
+    value: "IRRIGATION",
+    label: "IRRIGATION",
+  },
+];

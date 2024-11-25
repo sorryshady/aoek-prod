@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { CommitteeType, Prisma, UserRole } from "@prisma/client";
+import { CommitteeType, Department, Prisma, UserRole } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -11,6 +11,7 @@ export async function POST(req: NextRequest) {
       search = "",
       userRole = [], // Now expects an array
       committeeType = [], // Now expects an array
+      department = [],
       status = "VERIFIED",
     } = body;
 
@@ -32,6 +33,8 @@ export async function POST(req: NextRequest) {
         committeeType.length > 0
           ? { in: committeeType as CommitteeType[] } // Use 'in' operator for array of values
           : undefined,
+      department:
+        department.length > 0 ? { in: department as Department[] } : undefined,
       verificationStatus: status,
     };
 
