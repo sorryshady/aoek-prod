@@ -1,61 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
+import {
+  BloodGroup,
+  Designation,
+  District,
+  DistrictPositionTitle,
+} from "@prisma/client";
 
-const districts = [
-  { name: "Thiruvananthapuram", url: "/district/thiruvananthapuram" },
-  { name: "Kollam", url: "/district/kollam" },
-  { name: "Pathanamthitta", url: "/district/pathanamthitta" },
-  { name: "Alappuzha", url: "/district/alappuzha" },
-  { name: "Kottayam", url: "/district/kottayam" },
-  { name: "Idukki", url: "/district/idukki" },
-  { name: "Ernakulam", url: "/district/ernakulam" },
-  { name: "Thrissur", url: "/district/thrissur" },
-  { name: "Palakkad", url: "/district/palakkad" },
-  { name: "Malappuram", url: "/district/malappuram" },
-  { name: "Kozhikode", url: "/district/kozhikode" },
-  { name: "Wayanad", url: "/district/wayanad" },
-  { name: "Kannur", url: "/district/kannur" },
-  { name: "Kasaragod", url: "/district/kasaragod" },
-];
+interface Member {
+  name: string;
+  designation: Designation;
+  membershipId: number;
+  bloodGroup: BloodGroup;
+  mobileNumer: string;
+  personalAddress: string;
+  positionDistrict: DistrictPositionTitle;
+  photoUrl: string;
+  workDistrict: District;
+}
 
-const committeeMembers = {
-  Thiruvananthapuram: [
-    {
-      name: "Member 1 TVM",
-      role: "District Secretary",
-      designation: "Assistant Engineer",
-      image: "/placeholder.svg?height=200&width=200",
-    },
-    {
-      name: "Member 2 TVM",
-      role: "District President",
-      designation: "Assistant Executive Engineer",
-      image: "/placeholder.svg?height=200&width=200",
-    },
-  ],
-  Kollam: [
-    {
-      name: "Member 1 Kollam",
-      role: "District Secretary",
-      designation: "Assistant Engineer",
-      image: "/placeholder.svg?height=200&width=200",
-    },
-    {
-      name: "Member 2 Kollam",
-      role: "District President",
-      designation: "Assistant Executive Engineer",
-      image: "/placeholder.svg?height=200&width=200",
-    },
-  ],
-  // Add more districts and their respective committee members here
-};
-
-export default function DistrictCommittee() {
-  const [selectedDistrict, setSelectedDistrict] =
-    useState("Thiruvananthapuram");
+export default function DistrictCommittee({
+  members,
+}: {
+  members: Record<string, Member[]>;
+}) {
+  const [selectedDistrict, setSelectedDistrict] = useState("KASARAGOD");
 
   const handleDistrictClick = (districtName: string) => {
     setSelectedDistrict(districtName);
@@ -69,26 +41,24 @@ export default function DistrictCommittee() {
             District Committee
           </CardTitle>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 text-center">
-            {districts.map((district) => (
+            {Object.values(District).map((district) => (
               <button
-                key={district.name}
-                onClick={() => handleDistrictClick(district.name)}
-                className={`px-2 py-1 text-sm sm:text-base text-white hover:text-gray-300 transition-colors ${
-                  district.name === selectedDistrict
+                key={district}
+                onClick={() => handleDistrictClick(district)}
+                className={`px-2 py-1 text-sm sm:text-base text-white hover:text-gray-300 transition-colors capitalize ${
+                  district === selectedDistrict
                     ? "text-yellow-300 hover:text-yellow-200"
                     : ""
                 }`}
               >
-                {district.name}
+                {district.toLowerCase()}
               </button>
             ))}
           </div>
         </CardHeader>
         <CardContent className="bg-sky-100/50 p-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
-            {committeeMembers[
-              selectedDistrict as keyof typeof committeeMembers
-            ]?.map((member, index) => (
+          <div className="flex flex-wrap gap-10 justify-items-center">
+            {members[selectedDistrict]?.map((member, index) => (
               <Card
                 key={index}
                 className="w-full max-w-[250px] border-0 shadow text-center"
@@ -98,14 +68,14 @@ export default function DistrictCommittee() {
                     <Image
                       width={600}
                       height={600}
-                      src={member.image}
+                      src={member.photoUrl}
                       alt={member.name}
                       className="w-full h-full object-cover"
                     />
                   </div>
                   <h3 className="font-semibold text-lg mb-1">{member.name}</h3>
                   <p className="text-sm text-muted-foreground mb-1">
-                    {member.role}
+                    {member.positionDistrict}
                   </p>
                   <p className="text-sm text-muted-foreground">
                     {member.designation}
@@ -113,6 +83,11 @@ export default function DistrictCommittee() {
                 </CardContent>
               </Card>
             ))}
+            {!members[selectedDistrict] && (
+              <p className="text-gray-500 text-center w-full">
+                No members found for this district.
+              </p>
+            )}
           </div>
         </CardContent>
       </Card>
