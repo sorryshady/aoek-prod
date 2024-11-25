@@ -69,12 +69,14 @@ export function StateCommittee() {
   }, [api]);
 
   const autoplay = React.useRef(
-    Autoplay({ delay: 1500, stopOnInteraction: true }),
+    Autoplay({ delay: 1500, stopOnInteraction: true })
   );
 
   return (
     <div className="w-full  mx-auto px-4 py-8">
-      <h1 className="text-center text-2xl font-bold mb-8">State Committee</h1>
+      <h1 className="text-center text-3xl font-extrabold mb-8">
+        State Committee
+      </h1>
       <Card className="bg-[#1a2634] p-8 rounded-lg">
         <CardContent className="p-0">
           <Carousel
@@ -114,7 +116,7 @@ export function StateCommittee() {
             <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2" />
           </Carousel>
           <div className="flex justify-center mt-6">
-            <Link href="/committee">
+            <Link href="committee/state-members">
               <Button
                 variant="secondary"
                 className="bg-[#2d4153] text-white hover:bg-[#375169]"
