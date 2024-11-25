@@ -1,10 +1,13 @@
 import Wrapper from "@/components/custom/wrapper";
+import axios from "axios";
 
+export const dynamic = "force-dynamic";
 async function getData() {
-  const response = await fetch(
+  const response = await axios.get(
     `${process.env.NEXT_PUBLIC_URL}/api/general?committee=state&include=true`,
   );
-  const members = await response.json();
+
+  const members = response.data;
   return { members };
 }
 export default async function StateCommitteePage() {
