@@ -4,7 +4,6 @@ import { AdminUpdate } from "@/components/forms/admin-update";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { db } from "@/db";
-import { changeTypeToText } from "@/lib/utils";
 import { SessionUser } from "@/types";
 import Image from "next/image";
 import { notFound } from "next/navigation";

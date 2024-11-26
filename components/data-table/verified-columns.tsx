@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
-import { Ellipsis, Pencil, Trash, User, UserPen } from "lucide-react";
+import { Ellipsis, Trash, UserPen } from "lucide-react";
 import Link from "next/link";
 import {
   AlertDialog,
