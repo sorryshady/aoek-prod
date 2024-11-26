@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -37,7 +37,6 @@ import { Department, Designation, District, UserStatus } from "@prisma/client";
 import { Input } from "../ui/input";
 import SubmitButton from "../custom/submit-button";
 import { Edit } from "lucide-react";
-import { useAuth } from "@/app/providers/auth-context";
 import { FormError } from "../custom/form-error";
 import { useRouter } from "next/navigation";
 

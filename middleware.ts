@@ -80,7 +80,7 @@ export const config = {
      * - Public routes
      */
     "/account",
-    "/admin",
+    "/admin/:path*",
     "/protected/:path*",
   ],
 };
