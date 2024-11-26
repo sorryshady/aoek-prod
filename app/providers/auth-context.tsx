@@ -67,7 +67,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
-        console.log("From auth context");
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_URL}/api/auth/user`,
         );
@@ -159,8 +158,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setSuccess("Password set successfully.Logging you in...");
         setTimeout(() => {
           setAuthStage(AuthStage.AUTHENTICATED);
-          console.log("Redirect to: ", redirectUrl);
-          router.refresh();
           router.push(redirectUrl);
         }, 1000);
       } else {
@@ -205,8 +202,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setSuccess("Password verified. Logging you in...");
         setTimeout(() => {
           setAuthStage(AuthStage.AUTHENTICATED);
-          console.log("Redirect to: ", redirectUrl);
-          router.refresh();
           router.push(redirectUrl);
         }, 1000);
       } else {

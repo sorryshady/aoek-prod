@@ -13,3 +13,9 @@ export const excludeFields = <T, Key extends keyof T>(
   keys.forEach((key) => delete newObj[key]);
   return newObj;
 };
+
+export const changeTypeToText = (value: string) => {
+  const lower = value.toLowerCase().split("_").join(" ");
+  const returnValue = lower.charAt(0).toUpperCase() + lower.slice(1);
+  return returnValue;
+};

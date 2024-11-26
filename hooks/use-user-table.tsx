@@ -9,6 +9,7 @@ export interface FilterState {
   search: string;
   role: string[];
   committee: string[];
+  department: string[];
   status: "VERIFIED" | "PENDING";
   // Add future filters here
   // department?: string[];
@@ -51,13 +52,20 @@ export function useUserTable(initialStatus: "VERIFIED" | "PENDING") {
     search: "",
     role: [],
     committee: [],
+    department: [],
     status: initialStatus,
   });
 
   const debouncedSearch = useDebounce(filters.search, 300);
   useEffect(() => {
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [debouncedSearch, filters.role, filters.committee, filters.status]);
+  }, [
+    debouncedSearch,
+    filters.role,
+    filters.committee,
+    filters.department,
+    filters.status,
+  ]);
 
   const fetchUsers = async () => {
     const { data } = await axios.post<APIResponse>("/api/admin/table", {
@@ -66,6 +74,7 @@ export function useUserTable(initialStatus: "VERIFIED" | "PENDING") {
       search: debouncedSearch,
       userRole: filters.role,
       committeeType: filters.committee,
+      department: filters.department,
       status: filters.status,
     });
 
@@ -84,6 +93,7 @@ export function useUserTable(initialStatus: "VERIFIED" | "PENDING") {
       debouncedSearch,
       filters.role,
       filters.committee,
+      filters.department,
       filters.status,
     ],
     queryFn: fetchUsers,

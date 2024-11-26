@@ -5,7 +5,7 @@ import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
-import { committeeType, userRole } from "./data/data";
+import { committeeType, departmentType, userRole } from "./data/data";
 import { FilterState } from "@/hooks/use-user-table";
 
 interface DataTableToolbarProps<TData> {
@@ -25,13 +25,17 @@ export function DataTableToolbar<TData>({
   showRoleFilter = true,
   showCommitteeFilter = true,
 }: DataTableToolbarProps<TData>) {
-  const isFiltered = filters.role.length > 0 || filters.committee.length > 0;
+  const isFiltered =
+    filters.role.length > 0 ||
+    filters.committee.length > 0 ||
+    filters.department.length > 0;
   // filters.search !== "";
 
   const handleReset = () => {
     onFilterChange("search", "");
     onFilterChange("role", []);
     onFilterChange("committee", []);
+    onFilterChange("department", []);
     table.resetColumnFilters();
   };
 
@@ -61,6 +65,12 @@ export function DataTableToolbar<TData>({
               options={committeeType}
             />
           )}
+          <DataTableFacetedFilter
+            value={filters.department}
+            onValueChange={(value) => onFilterChange("department", value)}
+            title="Department"
+            options={departmentType}
+          />
 
           {isFiltered && (
             <Button
