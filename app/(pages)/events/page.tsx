@@ -3,8 +3,7 @@ import { upcomingEvent } from "@/lib/interface";
 import { client, urlFor } from "@/lib/sanity";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { CalendarIcon, MapPin } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import {
   Pagination,
   PaginationContent,

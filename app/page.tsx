@@ -1,4 +1,3 @@
-import CustomCarousel from "@/components/custom/custom-carousel";
 import { StateCommittee } from "@/components/custom/state-members";
 import Wrapper from "@/components/custom/wrapper";
 import { Button } from "@/components/ui/button";

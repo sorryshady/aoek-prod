@@ -4,7 +4,6 @@ import { AdminUpdate } from "@/components/forms/admin-update";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { db } from "@/db";
-import { changeTypeToText } from "@/lib/utils";
 import { SessionUser } from "@/types";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -12,7 +11,7 @@ import React from "react";
 
 async function getData(
   email: string,
-  status: "verified" | "pending",
+  status: "verified" | "pending"
 ): Promise<{ user: any }> {
   if (status === "verified") {
     const existingUser = await db.user.findUnique({
@@ -87,7 +86,7 @@ export default async function ProfilePage({
   const { status } = await searchParams;
   const { user }: { user: SessionUser } = await getData(
     decodeURIComponent(email),
-    status,
+    status
   );
   return (
     <Wrapper className="my-[5rem] min-h-[70vh] flex justify-center items-center">

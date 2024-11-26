@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { Download, Eye, FileDown } from "lucide-react";
+import { Download, Eye } from "lucide-react";
 import { CardFooter } from "../ui/card";
 
 interface FileActionsProps {
@@ -28,18 +28,6 @@ const FileActions = ({ fileUrl, title }: FileActionsProps) => {
   };
 
   return (
-    // <div className="flex gap-2">
-    //   <Button asChild>
-    //     <Link href={fileUrl} target="_blank">
-    //       <Eye size={20} />
-    //       <span>View</span>
-    //     </Link>
-    //   </Button>
-    //   <Button onClick={handleDownload}>
-    //     <FileDown size={20} />
-    //     <span>Download</span>
-    //   </Button>
-    // </div>
     <CardFooter className="flex justify-center gap-4 p-6">
       <Button asChild variant="ghost" size="icon">
         <Link href={fileUrl} target="_blank">

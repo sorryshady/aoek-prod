@@ -1,13 +1,5 @@
-import { Download, Eye } from "lucide-react";
 import Image from "next/image";
-
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Pagination,
   PaginationContent,
@@ -64,20 +56,7 @@ export default async function Newsletter() {
                   })}
                 </p>
               </CardContent>
-              {/* <CardFooter className="flex justify-center gap-4 p-6">
-                <Button variant="ghost" size="icon">
-                  <Eye className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  as="a"
-                  href={newsletter.file}
-                  download
-                >
-                  <Download className="h-4 w-4" />
-                </Button>
-              </CardFooter> */}
+
               <FileActions
                 fileUrl={newsletter.fileUrl}
                 title={newsletter.title}
