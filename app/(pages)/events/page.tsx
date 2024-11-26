@@ -64,34 +64,6 @@ export default async function UpcomingEventsPage() {
             ))}
           </div>
         </section>
-
-        {/* Pagination */}
-        <div className="mt-8 flex justify-center">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious href="#" />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#" isActive>
-                  1
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">2</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">3</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext href="#" />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
       </Wrapper>
     </div>
   );
@@ -147,14 +119,6 @@ const EventCard = ({ event, isPast = false }: EventCardProps) => {
                   })}
                 </time>
               </div>
-              {/* {event.venue && (
-                <div
-                  className={`flex items-center ${isPast ? "text-gray-400" : "text-muted-foreground"}`}
-                >
-                  <MapPin className="mr-2 h-4 w-4" />
-                  <span>{event.venue}</span>
-                </div>
-              )} */}
               <p className={`mt-4 `}>{event.description}</p>
             </div>
           </div>

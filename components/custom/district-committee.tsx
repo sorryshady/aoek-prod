@@ -38,9 +38,9 @@ export default function DistrictCommittee({
     <div className="w-full  mx-auto p-4">
       <Card className="border-0 shadow-lg">
         <CardHeader className="bg-gradient-to-b from-slate-700 to-slate-800 rounded-t-lg">
-          <CardTitle className="text-center text-2xl text-white mb-6">
+          {/* <CardTitle className="text-center text-2xl text-white mb-6">
             District Committee
-          </CardTitle>
+          </CardTitle> */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 text-center">
             {Object.values(District).map((district) => (
               <button

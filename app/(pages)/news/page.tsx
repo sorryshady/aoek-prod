@@ -1,37 +1,52 @@
 import Wrapper from "@/components/custom/wrapper";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 import { homeEventsCard } from "@/lib/interface";
 import { client, urlFor } from "@/lib/sanity";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import placeholder from "../../../public/news-placeholder.webp";
 
-async function getData() {
-  const query = `*[_type == "news"]| order(_createdAt desc) {
-    title,
-    image,
-    description,
-    content,
-    date,
-    "currentSlug": slug.current
+// Pagination constants
+const PAGE_SIZE = 12;
+
+async function getData(page: number = 1) {
+  // Calculate the start index based on the current page
+  const start = (page - 1) * PAGE_SIZE;
+
+  // Query to fetch paginated news with total count
+  const query = `{
+    "posts": *[_type == "news"] | order(_createdAt desc) [${start}...${start + PAGE_SIZE}] {
+      title,
+      image,
+      description,
+      content,
+      date,
+      "currentSlug": slug.current
+    },
+    "totalPosts": count(*[_type == "news"])
   }`;
+
   const data = await client.fetch(query);
-  return data;
+  return {
+    posts: data.posts,
+    totalPosts: data.totalPosts,
+    currentPage: page,
+    totalPages: Math.ceil(data.totalPosts / PAGE_SIZE),
+  };
 }
 
-export default async function News() {
-  const data: homeEventsCard[] = await getData();
+export default async function News({
+  searchParams,
+}: {
+  searchParams: { page?: string };
+}) {
+  // Convert page to number, default to 1 if not provided
+  const currentPage = searchParams.page ? parseInt(searchParams.page) : 1;
+
+  const { posts, totalPosts, totalPages } = await getData(currentPage);
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-[#464A66] to-[#2E6589] py-24">
@@ -40,36 +55,49 @@ export default async function News() {
         <h1 className="text-4xl md:text-5xl font-bold text-center text-white mb-12">
           View the latest news
         </h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {data.map((post) => (
+
+        {/* News Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {posts.map((post: homeEventsCard) => (
             <NewsCard key={post.currentSlug} post={post} />
           ))}
         </div>
-        <div className="mt-8 flex justify-center">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious href="#" />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#" isActive>
-                  1
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">2</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">3</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext href="#" />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+
+        {/* Pagination Controls */}
+        <div className="flex justify-center items-center space-x-4">
+          {currentPage > 1 && (
+            <Button
+              variant="outline"
+              asChild
+              className="bg-white/20 text-white hover:bg-white/30"
+            >
+              <Link
+                href={
+                  currentPage === 2
+                    ? "/news" // For page 2, link back to clean URL
+                    : `/news?page=${currentPage - 1}` // For other pages, use query param
+                }
+              >
+                <ChevronLeft className="mr-2" /> Previous
+              </Link>
+            </Button>
+          )}
+
+          <span className="text-white">
+            Page {currentPage} of {totalPages}
+          </span>
+
+          {currentPage < totalPages && (
+            <Button
+              variant="outline"
+              asChild
+              className="bg-white/20 text-white hover:bg-white/30"
+            >
+              <Link href={`/news?page=${currentPage + 1}`}>
+                Next <ChevronRight className="ml-2" />
+              </Link>
+            </Button>
+          )}
         </div>
       </Wrapper>
     </div>

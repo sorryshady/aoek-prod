@@ -1,14 +1,5 @@
 import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import Wrapper from "@/components/custom/wrapper";
 import { client } from "@/lib/sanity";
 import { newsLetter } from "@/types/sanity-types";
@@ -40,7 +31,7 @@ export default async function Newsletter() {
             <Card key={index} className="overflow-hidden">
               <CardHeader className="flex items-center justify-center p-6">
                 <Image
-                  src="/placeholder.svg?height=40&width=120"
+                  src="/abridge.png"
                   alt="Abridge Logo"
                   width={120}
                   height={40}
@@ -63,32 +54,6 @@ export default async function Newsletter() {
               />
             </Card>
           ))}
-        </div>
-        <div className="mt-8 flex justify-center relative z-10">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious href="#" />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#" isActive>
-                  1
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">2</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">3</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext href="#" />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
         </div>
       </Wrapper>
     </div>

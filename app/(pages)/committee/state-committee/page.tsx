@@ -1,14 +1,5 @@
 import Wrapper from "@/components/custom/wrapper";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { changeTypeToText } from "@/lib/utils";
 import { commiteeUser } from "@/types/user-types";
 import axios from "axios";
@@ -27,7 +18,8 @@ export default async function StateCommitteePage() {
   const { members } = await getData();
   console.log(members);
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-800 to-teal-700 py-12 px-4">
+    <div className="relative min-h-screen py-24 bg-gradient-to-r from-[#464A66] to-[#2E6589]">
+      <div className="absolute inset-0 bg-cover bg-body_img opacity-30 bg-top z-0"></div>
       <Wrapper className="min-h-[70vh] my-[5rem]">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-4xl font-bold text-white text-center mb-12">
@@ -59,33 +51,6 @@ export default async function StateCommitteePage() {
                 </CardContent>
               </Card>
             ))}
-          </div>
-
-          <div className="mt-8 flex justify-center">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious href="#" />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#" isActive>
-                    1
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">2</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">3</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext href="#" />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
           </div>
         </div>
       </Wrapper>

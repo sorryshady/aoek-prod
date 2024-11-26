@@ -24,6 +24,9 @@ export default async function Committee() {
       <Wrapper className="my-[5rem]">
         <h1 className="text-center font-bold text-3xl mt-8">State Committee</h1>
         <StateCommittee members={stateCommittee} />
+        <h1 className="text-center font-bold text-3xl mt-8">
+          District Committee
+        </h1>
         <DistrictCommittee members={districtCommittee} />
       </Wrapper>
     </div>

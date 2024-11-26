@@ -14,3 +14,9 @@ export type newsLetter = {
   fileUrl: string;
   date: string;
 };
+export type gallery = {
+  title: string;
+  category: string;
+  fileUrl: string;
+  date: string;
+};
