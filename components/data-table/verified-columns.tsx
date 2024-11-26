@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
-import { Ellipsis, Pencil, Trash, User } from "lucide-react";
+import { Ellipsis, Pencil, Trash, User, UserPen } from "lucide-react";
 import Link from "next/link";
 import {
   AlertDialog,
@@ -91,12 +91,7 @@ export const verifiedColumns: ColumnDef<TableData>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link href={`/admin/${email}?status=verified`}>
-                <User className="mr-2" /> See Profile
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href={"#"}>
-                <Pencil className="mr-2" /> Edit Details
+                <UserPen className="mr-2" /> View/Edit Profile
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>

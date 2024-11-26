@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -37,9 +37,9 @@ import { Department, Designation, District, UserStatus } from "@prisma/client";
 import { Input } from "../ui/input";
 import SubmitButton from "../custom/submit-button";
 import { Edit } from "lucide-react";
-import { useAuth } from "@/app/providers/auth-context";
 import { FormError } from "../custom/form-error";
 import { useRouter } from "next/navigation";
+import { changeTypeToText } from "@/lib/utils";
 
 export const AccountUpdate = ({ user }: { user: SessionUser }) => {
   const router = useRouter();
@@ -206,7 +206,7 @@ export const AccountUpdate = ({ user }: { user: SessionUser }) => {
                                 {Object.values(Department).map((item) => (
                                   <SelectItem key={item} value={item}>
                                     <span className="capitalize">
-                                      {item.toLowerCase().replace("_", " ")}
+                                      {changeTypeToText(item)}
                                     </span>
                                   </SelectItem>
                                 ))}
@@ -236,7 +236,7 @@ export const AccountUpdate = ({ user }: { user: SessionUser }) => {
                                 {Object.values(Designation).map((item) => (
                                   <SelectItem key={item} value={item}>
                                     <span className="capitalize">
-                                      {item.toLowerCase().split("_").join(" ")}
+                                      {changeTypeToText(item)}
                                     </span>
                                   </SelectItem>
                                 ))}
@@ -283,7 +283,7 @@ export const AccountUpdate = ({ user }: { user: SessionUser }) => {
                                 {Object.values(District).map((item) => (
                                   <SelectItem key={item} value={item}>
                                     <span className="capitalize">
-                                      {item.toLowerCase().replace("_", " ")}
+                                      {changeTypeToText(item)}
                                     </span>
                                   </SelectItem>
                                 ))}
@@ -338,7 +338,7 @@ export const AccountUpdate = ({ user }: { user: SessionUser }) => {
                             {Object.values(District).map((item) => (
                               <SelectItem key={item} value={item}>
                                 <span className="capitalize">
-                                  {item.toLowerCase().replace("_", " ")}
+                                  {changeTypeToText(item)}
                                 </span>
                               </SelectItem>
                             ))}
@@ -393,10 +393,12 @@ export const AccountUpdate = ({ user }: { user: SessionUser }) => {
                 <h2 className="text-xl font-bold">Other Information</h2>
                 <div className="grid grid-cols-2 capitalize gap-5">
                   <div>Committee Member</div>
-                  <div>{user.committeeType.toLowerCase()}</div>
+                  <div>{changeTypeToText(user.committeeType)}</div>
                   <div>Committee Position</div>
                   <div>
-                    {user.positionState || user.positionDistrict || "NA"}
+                    {changeTypeToText(
+                      user.positionState || user.positionDistrict || "-",
+                    )}
                   </div>
                 </div>
               </div>
@@ -448,13 +450,11 @@ export const AccountUpdate = ({ user }: { user: SessionUser }) => {
                     <div>Department</div>
                     <div>{user.department!.toLowerCase()}</div>
                     <div>Designation</div>
-                    <div>
-                      {user.designation!.toLowerCase().split("_").join(" ")}
-                    </div>
+                    <div>{changeTypeToText(user.designation!)}</div>
                     <div>Office Address</div>
-                    <div>{user.officeAddress!.toLowerCase()}</div>
+                    <div>{user.officeAddress!}</div>
                     <div>Work District</div>
-                    <div>{user.workDistrict!.toLowerCase()}</div>
+                    <div>{changeTypeToText(user.workDistrict!)}</div>
                   </>
                 )}
               </div>
@@ -464,9 +464,9 @@ export const AccountUpdate = ({ user }: { user: SessionUser }) => {
               <h2 className="text-xl font-bold">Permanent Address</h2>
               <div className="grid grid-cols-2 capitalize gap-5">
                 <div>Permanent Address</div>
-                <div>{user.personalAddress.toLowerCase()}</div>
+                <div>{user.personalAddress}</div>
                 <div>Home District</div>
-                <div>{user.homeDistrict.toLowerCase()}</div>
+                <div>{changeTypeToText(user.homeDistrict)}</div>
               </div>
             </div>
             <Separator />
@@ -478,7 +478,7 @@ export const AccountUpdate = ({ user }: { user: SessionUser }) => {
                   {user.email}
                 </div>
                 <div>Phone Number</div>
-                <div>{user.phoneNumber || "NA"}</div>
+                <div>{user.phoneNumber || "-"}</div>
                 <div>Mobile Number</div>
                 <div>{user.mobileNumber}</div>
               </div>
@@ -488,9 +488,13 @@ export const AccountUpdate = ({ user }: { user: SessionUser }) => {
               <h2 className="text-xl font-bold">Other Information</h2>
               <div className="grid grid-cols-2 capitalize gap-5">
                 <div>Committee Member</div>
-                <div>{user.committeeType.toLowerCase()}</div>
+                <div>{changeTypeToText(user.committeeType)}</div>
                 <div>Committee Position</div>
-                <div>{user.positionState || user.positionDistrict || "NA"}</div>
+                <div>
+                  {changeTypeToText(
+                    user.positionState || user.positionDistrict || "-",
+                  )}
+                </div>
               </div>
             </div>
           </div>

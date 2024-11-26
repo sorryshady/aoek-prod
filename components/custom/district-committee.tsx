@@ -9,6 +9,7 @@ import {
   District,
   DistrictPositionTitle,
 } from "@prisma/client";
+import { changeTypeToText } from "@/lib/utils";
 
 interface Member {
   name: string;
@@ -75,10 +76,10 @@ export default function DistrictCommittee({
                   </div>
                   <h3 className="font-semibold text-lg mb-1">{member.name}</h3>
                   <p className="text-sm text-muted-foreground mb-1">
-                    {member.positionDistrict}
+                    {changeTypeToText(member.positionDistrict)}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {member.designation}
+                    {changeTypeToText(member.designation)}
                   </p>
                 </CardContent>
               </Card>

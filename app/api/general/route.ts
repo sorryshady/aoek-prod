@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
           name: true,
           designation: true,
           photoUrl: true,
-          positionState: true,
+          positionDistrict: true,
           membershipId: true,
           mobileNumber: true,
           personalAddress: true,
