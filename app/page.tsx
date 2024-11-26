@@ -1,10 +1,22 @@
 import CustomCarousel from "@/components/custom/custom-carousel";
+import { StateCommittee } from "@/components/custom/state-members";
 import Wrapper from "@/components/custom/wrapper";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+async function getData() {
+  const stateRes = await axios.get(
+    `${process.env.NEXT_PUBLIC_URL}/api/general?committee=state&include=false`
+  );
+  const stateCommittee = stateRes.data;
+  return { stateCommittee };
+}
+
+export default async function Home() {
+  const { stateCommittee } = await getData();
   return (
     <>
       <main className="w-full relative min-h-screen">
@@ -55,7 +67,7 @@ export default function Home() {
               />
             </div>
           </div>
-          <div className="flex gap-10 text-white border-l-2 border-r-2 border-white px-10 py-5 w-fit mx-auto">
+          <div className="hidden md:flex gap-10 text-white border-l-2 border-r-2 border-white px-10 py-5 w-fit mx-auto ">
             <div className="flex flex-col gap-3 items-center">
               <h4 className="text-3xl lg:text-4xl font-medium">3</h4>
               <p className="text-base lg:text-lg">Departments</p>
@@ -106,7 +118,9 @@ export default function Home() {
         <h2 className="text-white text-4xl font-semibold text-center py-12">
           Meet Our State Committee Members
         </h2>
-        <CustomCarousel />
+        <Wrapper>
+          <StateCommittee members={stateCommittee} />
+        </Wrapper>
       </div>
     </>
   );

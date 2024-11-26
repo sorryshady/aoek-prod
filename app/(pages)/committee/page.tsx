@@ -23,6 +23,7 @@ export default async function Committee() {
   return (
     <div className="bg-hero_img inset-0 bg-cover overflow-hidden">
       <Wrapper className="my-[5rem]">
+        <h1 className="text-center font-bold text-3xl mt-8">State Committee</h1>
         <StateCommittee members={stateCommittee} />
         <DistrictCommittee members={districtCommittee} />
       </Wrapper>

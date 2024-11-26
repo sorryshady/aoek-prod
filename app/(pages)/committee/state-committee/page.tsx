@@ -9,6 +9,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { changeTypeToText } from "@/lib/utils";
+import { commiteeUser } from "@/types/user-types";
 import axios from "axios";
 import Image from "next/image";
 
@@ -18,7 +20,7 @@ async function getData() {
     `${process.env.NEXT_PUBLIC_URL}/api/general?committee=state&include=true`
   );
 
-  const members = response.data;
+  const members: commiteeUser[] = response.data;
   return { members };
 }
 export default async function StateCommitteePage() {
@@ -35,10 +37,10 @@ export default async function StateCommitteePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {members.map((member, index) => (
               <Card key={index} className="bg-white/95 backdrop-blur">
-                <CardContent className="p-4 text-center">
+                <CardContent className="p-4 text-center capitalize">
                   <div className="aspect-square w-48 mx-auto mb-4 overflow-hidden rounded-lg">
                     <Image
-                      src={member.imageUrl}
+                      src={member.photoUrl}
                       alt={`${member.name}'s photo`}
                       width={200}
                       height={200}
@@ -48,9 +50,11 @@ export default async function StateCommitteePage() {
                   <h3 className="font-semibold text-lg text-gray-900">
                     {member.name}
                   </h3>
-                  <p className="text-primary font-medium">{member.role}</p>
+                  <p className="text-primary font-medium">
+                    {changeTypeToText(member.designation)}
+                  </p>
                   <p className="text-sm text-muted-foreground">
-                    {member.title}
+                    {changeTypeToText(member.positionState)}
                   </p>
                 </CardContent>
               </Card>

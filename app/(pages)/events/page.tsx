@@ -107,7 +107,7 @@ const EventCard = ({ event, isPast = false }: EventCardProps) => {
   return (
     <Card
       className={`w-full min-h-60 overflow-hidden transition-all duration-300 ${
-        isPast ? "opacity-60" : ""
+        isPast ? "opacity-90" : ""
       }`}
     >
       <CardContent className="p-0">
@@ -125,7 +125,7 @@ const EventCard = ({ event, isPast = false }: EventCardProps) => {
                   : `Placeholder image for ${event.title}`
               }
               fill
-              className={`object-cover ${isPast ? "grayscale" : ""}`}
+              className={`object-cover `}
             />
             {isPast && (
               <div className="absolute top-2 right-2 bg-gray-800 text-white px-2 py-1 text-sm font-semibold rounded">
@@ -134,14 +134,10 @@ const EventCard = ({ event, isPast = false }: EventCardProps) => {
             )}
           </div>
           <div className="flex-1 p-6">
-            <h3
-              className={`text-2xl font-bold mb-4 ${isPast ? "text-gray-500" : ""}`}
-            >
-              {event.title}
-            </h3>
+            <h3 className={`text-2xl font-bold mb-4`}>{event.title}</h3>
             <div className="space-y-4">
               <div
-                className={`flex items-center ${isPast ? "text-gray-400" : "text-muted-foreground"}`}
+                className={`flex items-center ${isPast ? "" : "text-muted-foreground"}`}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 <time dateTime={event.date}>
@@ -160,9 +156,7 @@ const EventCard = ({ event, isPast = false }: EventCardProps) => {
                   <span>{event.venue}</span>
                 </div>
               )} */}
-              <p className={`mt-4 ${isPast ? "text-gray-500" : ""}`}>
-                {event.description}
-              </p>
+              <p className={`mt-4 `}>{event.description}</p>
             </div>
           </div>
         </div>
