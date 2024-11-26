@@ -53,7 +53,7 @@ export async function middleware(request: NextRequest) {
 // Helper: Check if a route is public
 function isPublicRoute(path: string): boolean {
   return PUBLIC_ROUTES.some(
-    (route) => path === route || path.startsWith(route + "/")
+    (route) => path === route || path.startsWith(route + "/"),
   );
 }
 
@@ -80,6 +80,7 @@ export const config = {
      * - Public routes
      */
     "/account",
-    "/admin"
+    "/admin",
+    "/protected/:path*",
   ],
 };

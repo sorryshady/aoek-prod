@@ -19,12 +19,14 @@ import {
 } from "@/components/ui/pagination";
 import Wrapper from "@/components/custom/wrapper";
 import { client } from "@/lib/sanity";
+import { newsLetter } from "@/types/sanity-types";
+import FileActions from "@/components/custom/file-actions";
 
 async function getData() {
   const query = `*[_type == "downloads"] | order(date desc) {
     title,
     category,
-    file,
+    "fileUrl": file.asset->url,
     date,
   }`;
   const data = await client.fetch(query);
@@ -32,7 +34,7 @@ async function getData() {
 }
 
 export default async function Newsletter() {
-  const newsletters = await getData();
+  const newsletters: newsLetter[] = await getData();
 
   return (
     <div className="relative min-h-screen bg-gradient-to-r from-[#464A66] to-[#2E6589] py-32 px-4">
@@ -62,7 +64,7 @@ export default async function Newsletter() {
                   })}
                 </p>
               </CardContent>
-              <CardFooter className="flex justify-center gap-4 p-6">
+              {/* <CardFooter className="flex justify-center gap-4 p-6">
                 <Button variant="ghost" size="icon">
                   <Eye className="h-4 w-4" />
                 </Button>
@@ -75,7 +77,11 @@ export default async function Newsletter() {
                 >
                   <Download className="h-4 w-4" />
                 </Button>
-              </CardFooter>
+              </CardFooter> */}
+              <FileActions
+                fileUrl={newsletter.fileUrl}
+                title={newsletter.title}
+              />
             </Card>
           ))}
         </div>

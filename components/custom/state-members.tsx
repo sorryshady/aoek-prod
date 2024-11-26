@@ -16,41 +16,21 @@ import Autoplay from "embla-carousel-autoplay";
 import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { BloodGroup, Designation, StatePositionTitle } from "@prisma/client";
 
-const committeeMembers = [
-  {
-    name: "Sajish R",
-    role: "President",
-    image: "/placeholder.svg?height=200&width=200",
-  },
-  {
-    name: "Sudheel V",
-    role: "Vice President",
-    image: "/placeholder.svg?height=200&width=200",
-  },
-  {
-    name: "Devakumar FK",
-    role: "General Secretary",
-    image: "/placeholder.svg?height=200&width=200",
-  },
-  {
-    name: "Alexander K Thomas",
-    role: "Joint Secretary",
-    image: "/placeholder.svg?height=200&width=200",
-  },
-  {
-    name: "Alexander K Thomas",
-    role: "Joint Secretary",
-    image: "/placeholder.svg?height=200&width=200",
-  },
-  {
-    name: "Alexander K Thomas",
-    role: "Joint Secretary",
-    image: "/placeholder.svg?height=200&width=200",
-  },
-];
-
-export function StateCommittee() {
+interface StateCommitteeProps {
+  members: {
+    name: string;
+    designation: Designation;
+    membershipId: number;
+    bloodGroup: BloodGroup;
+    mobileNumer: string;
+    personalAddress: string;
+    positionState: StatePositionTitle;
+    photoUrl: string;
+  }[];
+}
+export function StateCommittee({ members }: StateCommitteeProps) {
   const [api, setApi] = React.useState<any>();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
@@ -87,7 +67,7 @@ export function StateCommittee() {
             setApi={setApi}
           >
             <CarouselContent className="-ml-2 md:-ml-4">
-              {committeeMembers.map((member, index) => (
+              {members.map((member, index) => (
                 <CarouselItem
                   key={index}
                   className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/4"
@@ -97,7 +77,7 @@ export function StateCommittee() {
                       <Image
                         width={600}
                         height={600}
-                        src={member.image}
+                        src={member.photoUrl}
                         alt={member.name}
                         className="w-full h-full object-cover rounded-md"
                       />
@@ -105,8 +85,8 @@ export function StateCommittee() {
                     <h3 className="text-white font-medium text-center">
                       {member.name}
                     </h3>
-                    <p className="text-gray-400 text-sm text-center">
-                      {member.role}
+                    <p className="text-gray-400 text-sm text-center capitalize">
+                      {member.positionState.toLowerCase().split("_").join(" ")}
                     </p>
                   </div>
                 </CarouselItem>
@@ -116,14 +96,13 @@ export function StateCommittee() {
             <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2" />
           </Carousel>
           <div className="flex justify-center mt-6">
-            <Link href="committee/state-members">
-              <Button
-                variant="secondary"
-                className="bg-[#2d4153] text-white hover:bg-[#375169]"
-              >
-                View all members
-              </Button>
-            </Link>
+            <Button
+              asChild
+              variant="secondary"
+              className="bg-[#2d4153] text-white hover:bg-[#375169]"
+            >
+              <Link href="/committee/state-committee">View all members</Link>
+            </Button>
           </div>
         </CardContent>
       </Card>

@@ -39,9 +39,9 @@ export default async function UpcomingEventsPage() {
   const pastEvents = events.filter((event) => isEventOver(event.date));
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-[#464A66] to-[#2E6589] py-24">
+    <div className="relative min-h-screen bg-gradient-to-r from-[#464A66] to-[#2E6589] py-24">
       <div className="absolute inset-0 bg-cover bg-body_img opacity-30 bg-top z-0"></div>
-      <Wrapper>
+      <Wrapper className="relative z-20">
         {/* Upcoming Events Section */}
         <section className="mb-16">
           <h2 className="text-4xl font-bold text-center text-white mb-8">
