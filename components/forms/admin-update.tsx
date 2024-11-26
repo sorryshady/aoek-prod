@@ -110,7 +110,6 @@ export const AdminUpdate = ({ user }: { user: SessionUser }) => {
           return;
         }
       }
-      console.log(values);
       const submissionData = {
         ...values,
         positionState: values.positionState ? values.positionState : null,
