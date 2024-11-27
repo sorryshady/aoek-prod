@@ -5,6 +5,9 @@ import { cookies } from "next/headers";
 import { decrypt } from "@/lib/session";
 import { SessionPayload } from "@/types";
 
+function isValidStatus(status: any): status is VerificationStatus {
+  return Object.values(VerificationStatus).includes(status);
+}
 export async function PUT(request: NextRequest) {
   try {
     const token = (await cookies()).get("session")?.value;
@@ -26,11 +29,7 @@ export async function PUT(request: NextRequest) {
         { status: 400 },
       );
     }
-
-    if (
-      status !== VerificationStatus.VERIFIED ||
-      status !== VerificationStatus.REJECTED
-    ) {
+    if (!isValidStatus(status)) {
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
     // Fetch the existing request
