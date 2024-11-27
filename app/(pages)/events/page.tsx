@@ -3,16 +3,7 @@ import { upcomingEvent } from "@/lib/interface";
 import { client, urlFor } from "@/lib/sanity";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
-import { CalendarIcon } from "lucide-react";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import { CalendarIcon, Fullscreen } from "lucide-react";
 
 function isEventOver(eventDate: string): boolean {
   const currentDate = new Date();
@@ -46,7 +37,7 @@ export default async function UpcomingEventsPage() {
           <h2 className="text-4xl font-bold text-center text-white mb-8">
             Upcoming Events
           </h2>
-          <div className="space-y-6">
+          <div className="grid grid-cols-2 gap-5">
             {upcomingEvents.map((event, index) => (
               <EventCard key={index} event={event} />
             ))}
@@ -58,7 +49,7 @@ export default async function UpcomingEventsPage() {
           <h2 className="text-4xl font-bold text-center text-white mb-8">
             Past Events
           </h2>
-          <div className="space-y-6">
+          <div className="grid grid-cols-2 gap-5">
             {pastEvents.map((event, index) => (
               <EventCard key={index} event={event} isPast />
             ))}
@@ -95,8 +86,8 @@ const EventCard = ({ event, isPast = false }: EventCardProps) => {
                   ? `Image for ${event.title}`
                   : `Placeholder image for ${event.title}`
               }
-              fill
-              className={`object-cover `}
+              width={900}
+              height={900}
             />
             {isPast && (
               <div className="absolute top-2 right-2 bg-gray-800 text-white px-2 py-1 text-sm font-semibold rounded">
@@ -119,7 +110,7 @@ const EventCard = ({ event, isPast = false }: EventCardProps) => {
                   })}
                 </time>
               </div>
-              <p className={`mt-4 `}>{event.description}</p>
+              <p className={`mt-4 line-clamp-3 `}>{event.description}</p>
             </div>
           </div>
         </div>

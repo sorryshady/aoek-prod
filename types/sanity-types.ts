@@ -14,9 +14,8 @@ export type newsLetter = {
   fileUrl: string;
   date: string;
 };
-export type gallery = {
+export interface GalleryData {
   title: string;
-  category: string;
-  fileUrl: string;
-  date: string;
-};
+  images: any[];
+  currentSlug: string;
+}

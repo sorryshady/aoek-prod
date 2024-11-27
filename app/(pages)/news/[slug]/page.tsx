@@ -30,7 +30,7 @@ export default async function NewsPage({ params }: { params: Params }) {
   const data: homeEventsCard = await getData(slug);
   return (
     <div className="relative min-h-screen py-24">
-      <div className="absolute inset-0 bg-cover bg-body_img opacity-30 bg-top z-0"></div>
+      <div className="absolute inset-0 bg-cover bg-body_img opacity-10 bg-top z-0"></div>
       <Wrapper className="z-20 relative">
         <Button asChild>
           <Link href="/news">Back</Link>
