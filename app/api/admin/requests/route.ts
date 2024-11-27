@@ -1,9 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { RequestStatus } from "@prisma/client";
-import { db } from '@/db'
+import { VerificationStatus } from "@prisma/client";
+import { db } from "@/db";
+import { cookies } from "next/headers";
+import { decrypt } from "@/lib/session";
+import { SessionPayload } from "@/types";
 
 export async function PUT(request: NextRequest) {
   try {
+    const token = (await cookies()).get("session")?.value;
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { user } = (await decrypt(token)) as SessionPayload;
+    if (!user || user.userRole !== "ADMIN") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await request.json();
     const { requestId, status, adminComments } = body;
 
@@ -15,6 +27,12 @@ export async function PUT(request: NextRequest) {
       );
     }
 
+    if (
+      status !== VerificationStatus.VERIFIED ||
+      status !== VerificationStatus.REJECTED
+    ) {
+      return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+    }
     // Fetch the existing request
     const existingRequest = await db.promotionTransferRequest.findUnique({
       where: { id: requestId },
@@ -34,16 +52,16 @@ export async function PUT(request: NextRequest) {
           status,
           adminComments,
           approvedAt:
-            status === RequestStatus.APPROVED ? new Date() : undefined,
+            status === VerificationStatus.VERIFIED ? new Date() : undefined,
           expiryDate:
-            status === RequestStatus.APPROVED
+            status === VerificationStatus.VERIFIED
               ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
               : undefined,
         },
       });
 
       // If approved, update user details
-      if (status === RequestStatus.APPROVED) {
+      if (status === VerificationStatus.VERIFIED) {
         await tx.user.update({
           where: { id: existingRequest.user.id },
           data: {
@@ -71,7 +89,7 @@ export async function PUT(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const requests = await db.promotionTransferRequest.findMany({
-      where: { status: RequestStatus.PENDING },
+      where: { status: VerificationStatus.PENDING },
       include: { user: true },
       orderBy: { requestedAt: "asc" },
     });

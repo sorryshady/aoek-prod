@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { decrypt } from "@/lib/session";
 import { SessionPayload } from "@/types";
 import {
-  RequestStatus,
+  VerificationStatus,
   RequestType,
   District,
   Designation,
@@ -31,16 +31,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Check if user exists
+    const existingUser = await db.user.findUnique({
+      where: { membershipId: user.membershipId! },
+    });
+
+    if (!existingUser) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+    if (existingUser.userStatus !== "WORKING") {
+      return NextResponse.json(
+        { error: "User is not working" },
+        { status: 400 },
+      );
+    }
+
     const body = await request.json();
-    const {
-      requestType,
-      oldPosition,
-      newPosition,
-      oldWorkDistrict,
-      newWorkDistrict,
-      oldOfficeAddress,
-      newOfficeAddress,
-    } = body;
+    const { requestType, newPosition, newWorkDistrict, newOfficeAddress } =
+      body;
 
     // Validate input
     if (!requestType) {
@@ -62,39 +70,25 @@ export async function POST(request: NextRequest) {
     // check body for transfer request
     if (
       requestType === RequestType.TRANSFER &&
-      (!newWorkDistrict ||
-        !oldWorkDistrict ||
-        !newOfficeAddress ||
-        !oldOfficeAddress)
+      (!newWorkDistrict || !newOfficeAddress)
     ) {
       return NextResponse.json(
         {
           error:
-            "Work Districts and office addresses are required for Transfer",
+            "New work district and office address is required for transfer",
         },
         { status: 400 },
       );
     }
     // Check for equality of districts
-    if (
-      oldWorkDistrict &&
-      newWorkDistrict &&
-      oldWorkDistrict === newWorkDistrict
-    ) {
+    if (newWorkDistrict && user.workDistrict === newWorkDistrict) {
       return NextResponse.json(
-        { error: "Old and New Work Districts cannot be the same" },
+        { error: "Old and new work districts cannot be the same" },
         { status: 400 },
       );
     }
 
     // Additional validations for District
-    if (oldWorkDistrict && !isValidDistrict(oldWorkDistrict)) {
-      return NextResponse.json(
-        { error: "Invalid Old Work District" },
-        { status: 400 },
-      );
-    }
-
     if (newWorkDistrict && !isValidDistrict(newWorkDistrict)) {
       return NextResponse.json(
         { error: "Invalid New Work District" },
@@ -103,51 +97,31 @@ export async function POST(request: NextRequest) {
     }
 
     //  Check body for promotion request
-    if (
-      requestType === RequestType.PROMOTION &&
-      (!newPosition || !oldPosition)
-    ) {
+    if (requestType === RequestType.PROMOTION && !newPosition) {
       return NextResponse.json(
-        { error: "Positions are required for Promotion" },
+        { error: "Positions are required for promotion" },
         { status: 400 },
       );
     }
     // Check for equality of positions
-    if (oldPosition && newPosition && oldPosition === newPosition) {
+    if (newPosition && user.designation === newPosition) {
       return NextResponse.json(
-        { error: "Old and New Positions cannot be the same" },
+        { error: "Old and new designations cannot be the same" },
         { status: 400 },
       );
     }
     // Additional validations for Designation
-    if (oldPosition && !isValidDesignation(oldPosition)) {
-      return NextResponse.json(
-        { error: "Invalid Old Designation" },
-        { status: 400 },
-      );
-    }
-
     if (newPosition && !isValidDesignation(newPosition)) {
       return NextResponse.json(
-        { error: "Invalid New Designation" },
+        { error: "Invalid new designation" },
         { status: 400 },
       );
     }
-
-    // Check if user exists
-    const existingUser = await db.user.findUnique({
-      where: { membershipId: user.membershipId! },
-    });
-
-    if (!existingUser) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
     // Check for existing pending request
     const existingPendingRequest = await db.promotionTransferRequest.findFirst({
       where: {
         membershipId: user.membershipId!,
-        status: RequestStatus.PENDING,
+        status: VerificationStatus.PENDING,
       },
     });
 
@@ -157,19 +131,18 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-
     // Create the request
     const newRequest = await db.promotionTransferRequest.create({
       data: {
         membershipId: user.membershipId!,
         requestType,
-        oldPosition,
+        oldPosition: user.designation,
         newPosition,
-        oldWorkDistrict,
+        oldWorkDistrict: user.workDistrict,
         newWorkDistrict,
-        oldOfficeAddress,
+        oldOfficeAddress: user.officeAddress,
         newOfficeAddress,
-        status: RequestStatus.PENDING,
+        status: VerificationStatus.PENDING,
       },
     });
 

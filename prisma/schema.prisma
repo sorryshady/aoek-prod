@@ -167,15 +167,9 @@ enum RequestType {
     TRANSFER
 }
 
-enum RequestStatus {
-    PENDING
-    APPROVED
-    REJECTED
-}
-
 model PromotionTransferRequest {
-    id               String        @id @default(cuid())
-    user             User          @relation(fields: [membershipId], references: [membershipId])
+    id               String             @id @default(cuid())
+    user             User               @relation(fields: [membershipId], references: [membershipId])
     membershipId     Int
     requestType      RequestType
     oldPosition      Designation? // Using Designation enum
@@ -184,8 +178,8 @@ model PromotionTransferRequest {
     newWorkDistrict  District? // Added new work district
     oldOfficeAddress String? // Added old office address
     newOfficeAddress String? // Added new office address
-    status           RequestStatus @default(PENDING)
-    requestedAt      DateTime      @default(now())
+    status           VerificationStatus @default(PENDING)
+    requestedAt      DateTime           @default(now())
     approvedAt       DateTime?
     expiryDate       DateTime?
     adminComments    String?
