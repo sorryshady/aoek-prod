@@ -102,42 +102,44 @@ enum DistrictPositionTitle {
 }
 
 model User {
-    id                 String                 @id @default(cuid())
+    id                       String                     @id @default(cuid())
     // Personal Info
-    name               String
-    dob                DateTime
-    gender             Gender
-    bloodGroup         BloodGroup
+    name                     String
+    dob                      DateTime
+    gender                   Gender
+    bloodGroup               BloodGroup
     // Current employed Status and professional address
-    userStatus         UserStatus             @default(RETIRED)
-    department         Department?
-    designation        Designation?
-    officeAddress      String?
-    workDistrict       District?
+    userStatus               UserStatus                 @default(RETIRED)
+    department               Department?
+    designation              Designation?
+    officeAddress            String?
+    workDistrict             District?
     // Personal Contact Address
-    personalAddress    String
-    homeDistrict       District
+    personalAddress          String
+    homeDistrict             District
     // Contact Information
-    email              String                 @unique
-    phoneNumber        String?
-    mobileNumber       String
+    email                    String                     @unique
+    phoneNumber              String?
+    mobileNumber             String
     // User photo
-    photoUrl           String?
+    photoUrl                 String?
     // Additional fields specific to User
-    committeeType      CommitteeType          @default(NONE)
-    userRole           UserRole               @default(REGULAR)
-    verificationStatus VerificationStatus     @default(PENDING)
-    razorpayId         String?                @unique
-    password           String?
-    membershipId       Int?                   @unique
-    positionState      StatePositionTitle? // Optional: Only used if committeeType is STATE
-    positionDistrict   DistrictPositionTitle? // Optional: Only used if committeeType is DISTRICT
+    committeeType            CommitteeType              @default(NONE)
+    userRole                 UserRole                   @default(REGULAR)
+    verificationStatus       VerificationStatus         @default(PENDING)
+    razorpayId               String?                    @unique
+    password                 String?
+    membershipId             Int?                       @unique
+    positionState            StatePositionTitle? // Optional: Only used if committeeType is STATE
+    positionDistrict         DistrictPositionTitle? // Optional: Only used if committeeType is DISTRICT
     // MISC
-    createdAt          DateTime               @default(now())
-    updatedAt          DateTime               @updatedAt
-    photoId            String?                @unique
+    createdAt                DateTime                   @default(now())
+    updatedAt                DateTime                   @updatedAt
+    photoId                  String?                    @unique
     // Security Question
-    securityQuestion   SecurityQuestion[]
+    securityQuestion         SecurityQuestion[]
+    PromotionTransferRequest PromotionTransferRequest[]
+    Obituary                 Obituary[]
 }
 
 // Security Questions for Reset Password
@@ -158,4 +160,42 @@ model SecurityQuestion {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+}
+
+enum RequestType {
+    PROMOTION
+    TRANSFER
+}
+
+enum RequestStatus {
+    PENDING
+    APPROVED
+    REJECTED
+}
+
+model PromotionTransferRequest {
+    id               String        @id @default(cuid())
+    user             User          @relation(fields: [membershipId], references: [membershipId])
+    membershipId     Int
+    requestType      RequestType
+    oldPosition      Designation? // Using Designation enum
+    newPosition      Designation? // Using Designation enum
+    oldWorkDistrict  District? // Added old work district
+    newWorkDistrict  District? // Added new work district
+    oldOfficeAddress String? // Added old office address
+    newOfficeAddress String? // Added new office address
+    status           RequestStatus @default(PENDING)
+    requestedAt      DateTime      @default(now())
+    approvedAt       DateTime?
+    expiryDate       DateTime?
+    adminComments    String?
+}
+
+model Obituary {
+    id             String   @id @default(cuid())
+    user           User     @relation(fields: [membershipId], references: [membershipId])
+    membershipId   Int
+    dateRecorded   DateTime @default(now())
+    expiryDate     DateTime
+    additionalNote String?
 }

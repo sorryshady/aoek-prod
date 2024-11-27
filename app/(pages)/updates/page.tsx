@@ -1,3 +1,3 @@
 export default function Updates() {
-  return <div>Updates</div>;
+  return <div className="my-[5rem]">Updates</div>;
 }
