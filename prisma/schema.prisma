@@ -165,6 +165,7 @@ model SecurityQuestion {
 enum RequestType {
     PROMOTION
     TRANSFER
+    RETIREMENT
 }
 
 model PromotionTransferRequest {
@@ -178,6 +179,7 @@ model PromotionTransferRequest {
     newWorkDistrict  District? // Added new work district
     oldOfficeAddress String? // Added old office address
     newOfficeAddress String? // Added new office address
+    retirementDate   DateTime? // Added date for retirement
     status           VerificationStatus @default(PENDING)
     requestedAt      DateTime           @default(now())
     approvedAt       DateTime?

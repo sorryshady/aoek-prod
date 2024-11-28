@@ -8,7 +8,7 @@ import Requests from "@/components/custom/requests";
 import { PromotionTransferRequest } from "@prisma/client";
 import { FormError } from "@/components/custom/form-error";
 import { changeTypeToText } from "@/lib/utils";
-import { FormSuccess } from '@/components/custom/form-success'
+import { FormSuccess } from "@/components/custom/form-success";
 
 async function getData() {
   const { user } = await auth();
@@ -80,11 +80,37 @@ export default async function Account() {
             </div>
           </div>
           <Separator />
+          <div className="space-y-5">
+            <h2 className="text-xl font-bold">Employment Information</h2>
+            <div className="grid grid-cols-2 capitalize gap-5">
+              <div>Employment Status</div>
+              <div>{user.userStatus.toLowerCase()}</div>
+              {user.userStatus === "WORKING" && (
+                <>
+                  <div>Department</div>
+                  <div>{user.department!.toLowerCase()}</div>
+                  <div>Designation</div>
+                  <div>{changeTypeToText(user.designation!)}</div>
+                  <div>Office Address</div>
+                  <div>{user.officeAddress!}</div>
+                  <div>Work District</div>
+                  <div>{changeTypeToText(user.workDistrict!)}</div>
+                </>
+              )}
+            </div>
+          </div>
+          <Separator />
           <AccountUpdate user={user} />
         </div>
         <div className="flex-[0.5] flex flex-col gap-5">
           <UserProfilePhoto name={user.name} photoUrl={user.photoUrl || ""} />
-          <Requests requestStatus={requestStatus} />
+          <Separator />
+          {user.userStatus === "WORKING" && (
+            <>
+              <Requests requestStatus={requestStatus} />
+              <Separator />
+            </>
+          )}
           <Button variant={"outline"}>Change Password</Button>
         </div>
       </div>

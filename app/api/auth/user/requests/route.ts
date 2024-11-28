@@ -7,6 +7,7 @@ import {
   District,
   Designation,
 } from "@prisma/client";
+import { parse } from "date-fns";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -45,8 +46,13 @@ export async function POST(request: NextRequest) {
       );
     }
     const body = await request.json();
-    const { requestType, newPosition, newWorkDistrict, newOfficeAddress } =
-      body;
+    const {
+      requestType,
+      newPosition,
+      newWorkDistrict,
+      newOfficeAddress,
+      retirementDate,
+    } = body;
     // Validate input
     if (!requestType) {
       return NextResponse.json(
@@ -57,7 +63,8 @@ export async function POST(request: NextRequest) {
 
     if (
       requestType !== RequestType.PROMOTION &&
-      requestType !== RequestType.TRANSFER
+      requestType !== RequestType.TRANSFER &&
+      requestType !== RequestType.RETIREMENT
     ) {
       return NextResponse.json(
         { error: "Invalid Request Type" },
@@ -116,6 +123,15 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
+
+    // Check body for retirement request
+    if (requestType === RequestType.RETIREMENT && !retirementDate) {
+      return NextResponse.json(
+        { error: "Retirement date is required for retirement" },
+        { status: 400 },
+      );
+    }
+
     // Check for existing pending request
     const existingPendingRequest = await db.promotionTransferRequest.findFirst({
       where: {
@@ -130,6 +146,7 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
+    const date = parse(retirementDate, "dd/MM/yyyy", new Date());
     // Create the request
     const newRequest = await db.promotionTransferRequest.create({
       data: {
@@ -141,6 +158,7 @@ export async function POST(request: NextRequest) {
         newWorkDistrict,
         oldOfficeAddress: existingUser.officeAddress,
         newOfficeAddress,
+        retirementDate: date,
         status: VerificationStatus.PENDING,
       },
     });

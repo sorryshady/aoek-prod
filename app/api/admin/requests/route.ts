@@ -64,6 +64,7 @@ export async function PUT(request: NextRequest) {
         await tx.user.update({
           where: { id: existingRequest.user.id },
           data: {
+            userStatus: request.retirementDate ? "RETIRED" : undefined,
             designation: request.newPosition || undefined,
             workDistrict: request.newWorkDistrict || undefined,
             officeAddress: request.newOfficeAddress || undefined,

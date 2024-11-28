@@ -6,7 +6,11 @@ import { EmailIdSchema, LoginSchema, SignupSchema } from "./login-schema";
 import { photoSchema } from "./photo-schema";
 import { updateProfileSchema } from "./update-profile-schema";
 import { adminUpdateSchema } from "./admin-update-schema";
-import { promotionSchema, transferSchema } from "./promotion-trasnfer-schema";
+import {
+  promotionSchema,
+  transferSchema,
+  retirementSchema,
+} from "./promotion-transfer-retirement-schema";
 export {
   frontendRegisterSchema,
   backendRegisterSchema,
@@ -18,4 +22,5 @@ export {
   adminUpdateSchema,
   promotionSchema,
   transferSchema,
+  retirementSchema,
 };

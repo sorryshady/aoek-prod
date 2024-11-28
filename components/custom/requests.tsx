@@ -31,14 +31,15 @@ import { changeTypeToText } from "@/lib/utils";
 import { Input } from "../ui/input";
 import SubmitButton from "./submit-button";
 import { FormError } from "./form-error";
-import { promotionSchema, transferSchema } from "@/schemas";
+import { promotionSchema, retirementSchema, transferSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Label } from "../ui/label";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import CustomDate from "./custom-date";
 
-type RequestType = "promotion" | "transfer";
+type RequestType = "promotion" | "transfer" | "retirement";
 interface RequestProps {
   requestStatus: VerificationStatus;
 }
@@ -47,50 +48,52 @@ const Requests = ({ requestStatus }: RequestProps) => {
   const [requestType, setRequestType] = useState<RequestType>("promotion");
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant={"outline"} disabled={requestStatus === "PENDING"}>
-          {requestStatus === "PENDING"
-            ? "Pending Request"
-            : "Transfer/Promotion Request"}
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] lg:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle className="text-2xl">
-            Transfer/Promotion Request
-          </DialogTitle>
-          <DialogDescription>
-            <ul className="flex flex-col gap-1 text-start">
-              <li>
+    <div className="flex flex-col gap-3">
+      <h3 className="font-bold text-nowrap">
+        Transfer, Promotion or Retirement?
+      </h3>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button variant={"outline"} disabled={requestStatus === "PENDING"}>
+            {requestStatus === "PENDING" ? "Pending Request" : "Submit Request"}
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px] lg:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="text-2xl">
+              Transfer, Promotion or Retirement Request
+            </DialogTitle>
+            <DialogDescription className="flex flex-col mt-3">
+              <span>
                 You can submit your transfer or promotion update for approval.
-              </li>
-              <li>You can only submit one request at a time.</li>
-              <li>
+              </span>
+              <span>You can only submit one request at a time.</span>
+              <span>
                 To submit another request, you must wait for the current request
                 to be approved or rejected.
-              </li>
-            </ul>
-          </DialogDescription>
-        </DialogHeader>
-        <div className="space-y-3">
-          <Label className="mt-1">Request Type</Label>
-          <Select
-            onValueChange={(value) => setRequestType(value as RequestType)}
-            defaultValue={requestType}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select request type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="promotion">Promotion</SelectItem>
-              <SelectItem value="transfer">Transfer</SelectItem>
-            </SelectContent>
-          </Select>
-          {<RequestForm type={requestType} setOpen={setOpen} />}
-        </div>
-      </DialogContent>
-    </Dialog>
+              </span>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <Label className="mt-1">Request Type</Label>
+            <Select
+              onValueChange={(value) => setRequestType(value as RequestType)}
+              defaultValue={requestType}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select request type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="promotion">Promotion</SelectItem>
+                <SelectItem value="transfer">Transfer</SelectItem>
+                <SelectItem value="retirement">Retirement</SelectItem>
+              </SelectContent>
+            </Select>
+            {<RequestForm type={requestType} setOpen={setOpen} />}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 };
 
@@ -105,7 +108,12 @@ const RequestForm = ({
 }) => {
   const [error, setError] = useState("");
   const router = useRouter();
-  const schema = type === "promotion" ? promotionSchema : transferSchema;
+  const schema =
+    type === "promotion"
+      ? promotionSchema
+      : type === "transfer"
+        ? transferSchema
+        : retirementSchema;
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   });
@@ -114,7 +122,12 @@ const RequestForm = ({
     try {
       setError("");
       const dataBody = {
-        requestType: type === "promotion" ? "PROMOTION" : "TRANSFER",
+        requestType:
+          type === "promotion"
+            ? "PROMOTION"
+            : type === "retirement"
+              ? "RETIREMENT"
+              : "TRANSFER",
         ...data,
       };
       const response = await fetch(
@@ -198,7 +211,7 @@ const RequestForm = ({
         </form>
       </Form>
     );
-  } else {
+  } else if (type === "promotion") {
     return (
       <Form {...form}>
         <form
@@ -238,6 +251,30 @@ const RequestForm = ({
           <FormError message={error} />
           <SubmitButton
             title="Submit promotion request"
+            isSubmitting={form.formState.isSubmitting}
+          />
+        </form>
+      </Form>
+    );
+  } else {
+    return (
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+          <FormField
+            control={form.control}
+            name="retirementDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Date of retirement</FormLabel>
+                <CustomDate control={form.control} name="retirementDate" />
+                <FormDescription>Provide your retirement date</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormError message={error} />
+          <SubmitButton
+            title="Submit retirement request"
             isSubmitting={form.formState.isSubmitting}
           />
         </form>
