@@ -19,6 +19,7 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
+import Wrapper from "@/components/custom/wrapper";
 
 export default function GalleryCarousel() {
   const [images, setImages] = useState([]);
@@ -111,124 +112,129 @@ export default function GalleryCarousel() {
   }
 
   return (
-    <div className="w-full max-w-5xl mx-auto p-6">
-      <h1 className="text-4xl font-bold text-center mb-8">Gallery</h1>
+    <div className="bg-hero_img inset-0 bg-cover overflow-hidden">
+      <Wrapper className="my-[5rem]">
+        <h1 className="text-4xl font-bold text-center mb-8">Gallery</h1>
 
-      <div className="relative bg-slate-900 rounded-lg p-8">
-        {filteredImages.length > 0 ? (
-          <>
-            <div className="flex items-center justify-center gap-4 mb-8">
-              {/* Previous Image Preview */}
-              {getPreviousImage() && (
-                <div className="relative w-32 h-24 opacity-50">
-                  <Image
-                    src={getPreviousImage().src}
-                    alt={getPreviousImage().alt}
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                </div>
-              )}
-
-              {/* Main Image */}
-              <Link
-                href={`/gallery/${filteredImages[safeCurrentIndex].slug}`}
-                className="relative w-full h-[400px] block"
-              >
-                <Image
-                  src={filteredImages[safeCurrentIndex].src}
-                  alt={filteredImages[safeCurrentIndex].alt}
-                  fill
-                  className="object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
-                />
-              </Link>
-
-              {/* Next Image Preview */}
-              {getNextImage() && (
-                <div className="relative w-32 h-24 opacity-50">
-                  <Image
-                    src={getNextImage().src}
-                    alt={getNextImage().alt}
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                </div>
-              )}
-            </div>
-
-            {/* Navigation Buttons */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white"
-              onClick={goToPrevious}
-            >
-              <ChevronLeft className="h-8 w-8" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white"
-              onClick={goToNext}
-            >
-              <ChevronRight className="h-8 w-8" />
-            </Button>
-
-            {/* Title */}
-            <h2 className="text-2xl font-semibold text-center text-white mb-4">
-              {filteredImages[safeCurrentIndex].title}
-            </h2>
-          </>
-        ) : (
-          <p className="text-white text-xl mb-4 text-center">No images found</p>
-        )}
-
-        {/* Combobox for searching */}
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-expanded={open}
-              className="w-full justify-between"
-            >
-              {value
-                ? images.find(
-                    (image) => image.title.toLowerCase() === value.toLowerCase()
-                  )?.title
-                : "Search for section..."}
-              <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-full p-0">
-            <Command>
-              <CommandInput placeholder="Search for section..." />
-              <CommandEmpty>No section found.</CommandEmpty>
-              <CommandGroup>
-                {images.map((image) => (
-                  <CommandItem
-                    key={image.slug}
-                    onSelect={(currentValue) => {
-                      setValue(currentValue === value ? "" : currentValue);
-                      setOpen(false);
-                    }}
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        value.toLowerCase() === image.title.toLowerCase()
-                          ? "opacity-100"
-                          : "opacity-0"
-                      )}
+        <div className="relative bg-slate-900 rounded-lg p-8">
+          {filteredImages.length > 0 ? (
+            <>
+              <div className="flex items-center justify-center gap-4 mb-8">
+                {/* Previous Image Preview */}
+                {getPreviousImage() && (
+                  <div className="relative w-32 h-24 opacity-50">
+                    <Image
+                      src={getPreviousImage().src}
+                      alt={getPreviousImage().alt}
+                      fill
+                      className="object-cover rounded-lg"
                     />
-                    {image.title}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </Command>
-          </PopoverContent>
-        </Popover>
-      </div>
+                  </div>
+                )}
+
+                {/* Main Image */}
+                <Link
+                  href={`/gallery/${filteredImages[safeCurrentIndex].slug}`}
+                  className="relative w-full h-[400px] block"
+                >
+                  <Image
+                    src={filteredImages[safeCurrentIndex].src}
+                    alt={filteredImages[safeCurrentIndex].alt}
+                    fill
+                    className="object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
+                  />
+                </Link>
+
+                {/* Next Image Preview */}
+                {getNextImage() && (
+                  <div className="relative w-32 h-24 opacity-50">
+                    <Image
+                      src={getNextImage().src}
+                      alt={getNextImage().alt}
+                      fill
+                      className="object-cover rounded-lg"
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Navigation Buttons */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white"
+                onClick={goToPrevious}
+              >
+                <ChevronLeft className="h-8 w-8" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white"
+                onClick={goToNext}
+              >
+                <ChevronRight className="h-8 w-8" />
+              </Button>
+
+              {/* Title */}
+              <h2 className="text-2xl font-semibold text-center text-white mb-4">
+                {filteredImages[safeCurrentIndex].title}
+              </h2>
+            </>
+          ) : (
+            <p className="text-white text-xl mb-4 text-center">
+              No images found
+            </p>
+          )}
+
+          {/* Combobox for searching */}
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={open}
+                className="w-full justify-between"
+              >
+                {value
+                  ? images.find(
+                      (image) =>
+                        image.title.toLowerCase() === value.toLowerCase()
+                    )?.title
+                  : "Search for section..."}
+                <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-full p-0">
+              <Command>
+                <CommandInput placeholder="Search for section..." />
+                <CommandEmpty>No section found.</CommandEmpty>
+                <CommandGroup>
+                  {images.map((image) => (
+                    <CommandItem
+                      key={image.slug}
+                      onSelect={(currentValue) => {
+                        setValue(currentValue === value ? "" : currentValue);
+                        setOpen(false);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          value.toLowerCase() === image.title.toLowerCase()
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+                      {image.title}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </Command>
+            </PopoverContent>
+          </Popover>
+        </div>
+      </Wrapper>
     </div>
   );
 }
