@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
       );
     }
     // Check for equality of districts
-    if (newWorkDistrict && user.workDistrict === newWorkDistrict) {
+    if (newWorkDistrict && existingUser.workDistrict === newWorkDistrict) {
       return NextResponse.json(
         { error: "Old and new work districts cannot be the same" },
         { status: 400 },
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
       );
     }
     // Check for equality of positions
-    if (newPosition && user.designation === newPosition) {
+    if (newPosition && existingUser.designation === newPosition) {
       return NextResponse.json(
         { error: "Old and new designations cannot be the same" },
         { status: 400 },
@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
     // Check for existing pending request
     const existingPendingRequest = await db.promotionTransferRequest.findFirst({
       where: {
-        membershipId: user.membershipId!,
+        membershipId: existingUser.membershipId!,
         status: VerificationStatus.PENDING,
       },
     });
@@ -134,13 +134,13 @@ export async function POST(request: NextRequest) {
     // Create the request
     const newRequest = await db.promotionTransferRequest.create({
       data: {
-        membershipId: user.membershipId!,
+        membershipId: existingUser.membershipId!,
         requestType,
-        oldPosition: user.designation,
+        oldPosition: existingUser.designation,
         newPosition,
-        oldWorkDistrict: user.workDistrict,
+        oldWorkDistrict: existingUser.workDistrict,
         newWorkDistrict,
-        oldOfficeAddress: user.officeAddress,
+        oldOfficeAddress: existingUser.officeAddress,
         newOfficeAddress,
         status: VerificationStatus.PENDING,
       },
