@@ -503,6 +503,7 @@ export const AccountUpdate = ({ user }: { user: SessionUser }) => {
           <Button
             type="button"
             size={"icon"}
+            variant={"outline"}
             className="absolute -top-5 right-0"
             onClick={() => setEdit(true)}
           >

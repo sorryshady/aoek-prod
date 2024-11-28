@@ -30,7 +30,6 @@ export async function POST(request: NextRequest) {
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
     // Check if user exists
     const existingUser = await db.user.findUnique({
       where: { membershipId: user.membershipId! },
@@ -45,11 +44,9 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-
     const body = await request.json();
     const { requestType, newPosition, newWorkDistrict, newOfficeAddress } =
       body;
-
     // Validate input
     if (!requestType) {
       return NextResponse.json(
@@ -67,6 +64,7 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
+
     // check body for transfer request
     if (
       requestType === RequestType.TRANSFER &&
@@ -80,6 +78,7 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
+
     // Check for equality of districts
     if (newWorkDistrict && existingUser.workDistrict === newWorkDistrict) {
       return NextResponse.json(
@@ -179,6 +178,40 @@ export async function GET(request: NextRequest) {
     console.error("Fetching requests error:", error);
     return NextResponse.json(
       { error: "Failed to fetch requests" },
+      { status: 500 },
+    );
+  }
+}
+
+// update a requests visibility
+export async function PATCH(request: NextRequest) {
+  try {
+    const token = (await cookies()).get("session")?.value;
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { user } = (await decrypt(token)) as SessionPayload;
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { searchParams } = request.nextUrl;
+    const requestId = searchParams.get("requestId");
+    if (!requestId) {
+      return NextResponse.json(
+        { error: "Request ID are required" },
+        { status: 400 },
+      );
+    }
+    const updatedRequest = await db.promotionTransferRequest.update({
+      where: { id: requestId },
+      data: { showAgain: false },
+    });
+    return NextResponse.json(updatedRequest);
+  } catch (error) {
+    console.error("Updating request error: ", error);
+    return NextResponse.json(
+      { error: "Failed to update request" },
       { status: 500 },
     );
   }

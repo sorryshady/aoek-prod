@@ -183,6 +183,7 @@ model PromotionTransferRequest {
     approvedAt       DateTime?
     expiryDate       DateTime?
     adminComments    String?
+    showAgain        Boolean            @default(true)
 }
 
 model Obituary {

@@ -46,7 +46,7 @@ const UserProfilePhoto = ({ photoUrl, name }: UserProfilePhotoProps) => {
     }
   };
   return (
-    <div className="flex-[0.5] h-fit flex flex-col">
+    <div className="h-fit flex flex-col">
       <div className="overflow-hidden rounded-lg w-full md:w-[50%] mx-auto lg:w-full max-h-72">
         <Image
           src={photo || fallBack}
@@ -66,6 +66,7 @@ const UserProfilePhoto = ({ photoUrl, name }: UserProfilePhotoProps) => {
       <SubmitButton
         className="mt-5 w-full md:w-[50%] lg:w-full mx-auto"
         title="Upload"
+        variant={"outline"}
         isSubmitting={isSubmitting}
         onClick={() => document.getElementById("photo-upload")!.click()}
       />
