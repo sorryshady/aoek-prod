@@ -11,6 +11,7 @@ import {
   transferSchema,
   retirementSchema,
 } from "./promotion-transfer-retirement-schema";
+import { adminCommentsSchema } from "./admin-comments-schema";
 export {
   frontendRegisterSchema,
   backendRegisterSchema,
@@ -23,4 +24,5 @@ export {
   promotionSchema,
   transferSchema,
   retirementSchema,
+  adminCommentsSchema,
 };

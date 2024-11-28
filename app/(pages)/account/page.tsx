@@ -17,6 +17,16 @@ async function getData() {
   );
   const data = await response.json();
   const lastRequest = data[0] as PromotionTransferRequest;
+  if (!lastRequest) {
+    return {
+      user,
+      requestStatus: null,
+      requestType: null,
+      adminComments: null,
+      visible: false,
+      requestId: null,
+    };
+  }
   return {
     user,
     requestStatus: lastRequest.status,
@@ -63,7 +73,7 @@ export default async function Account() {
               <div>{user.name}</div>
               <div>Date of Birth</div>
               <div>
-                {new Date(user.dob).toLocaleDateString("en-US", {
+                {new Date(user.dob).toLocaleDateString("en-IN", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
@@ -107,7 +117,7 @@ export default async function Account() {
           <Separator />
           {user.userStatus === "WORKING" && (
             <>
-              <Requests requestStatus={requestStatus} />
+              <Requests requestStatus={requestStatus || "VERIFIED"} />
               <Separator />
             </>
           )}

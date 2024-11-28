@@ -116,6 +116,12 @@ const RequestForm = ({
         : retirementSchema;
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      newOfficeAddress: "",
+      newWorkDistrict: "",
+      newPosition: "",
+      retirementDate: "",
+    },
   });
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
@@ -263,7 +269,7 @@ const RequestForm = ({
           <FormField
             control={form.control}
             name="retirementDate"
-            render={({ field }) => (
+            render={() => (
               <FormItem className="flex flex-col">
                 <FormLabel>Date of retirement</FormLabel>
                 <CustomDate control={form.control} name="retirementDate" />

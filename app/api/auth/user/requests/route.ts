@@ -146,7 +146,12 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-    const date = parse(retirementDate, "dd/MM/yyyy", new Date());
+
+    let date;
+    if (retirementDate) {
+      date = parse(retirementDate, "dd/MM/yyyy", new Date());
+    }
+
     // Create the request
     const newRequest = await db.promotionTransferRequest.create({
       data: {

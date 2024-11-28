@@ -8,7 +8,7 @@ import { SessionPayload } from "@/types";
 function isValidStatus(status: any): status is VerificationStatus {
   return Object.values(VerificationStatus).includes(status);
 }
-export async function PUT(request: NextRequest) {
+export async function PATCH(request: NextRequest) {
   try {
     const token = (await cookies()).get("session")?.value;
     if (!token) {
@@ -86,8 +86,17 @@ export async function PUT(request: NextRequest) {
 }
 
 // Get pending requests for admin
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
+    const token = (await cookies()).get("session")?.value;
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { user } = (await decrypt(token)) as SessionPayload;
+    if (!user || user.userRole !== "ADMIN") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const requests = await db.promotionTransferRequest.findMany({
       where: { status: VerificationStatus.PENDING },
       include: { user: true },

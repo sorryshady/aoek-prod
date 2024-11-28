@@ -13,8 +13,8 @@ export const FormSuccess = ({
   visible,
   requestId,
 }: FormSuccessProps) => {
-  if (!message) return null;
   const router = useRouter();
+  if (!message) return null;
   const clickHandler = async () => {
     if (requestId) {
       await fetch(

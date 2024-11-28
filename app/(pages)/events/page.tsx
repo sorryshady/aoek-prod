@@ -47,7 +47,7 @@ export default async function UpcomingEventsPage() {
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   <time dateTime={event.date}>
-                    {new Date(event.date).toLocaleDateString("en-US", {
+                    {new Date(event.date).toLocaleDateString("en-IN", {
                       year: "numeric",
                       month: "long",
                       day: "numeric",

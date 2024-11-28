@@ -90,7 +90,7 @@ export default async function ProfilePage({
   );
   return (
     <Wrapper className="my-[5rem] min-h-[70vh] flex justify-center items-center">
-      <div className="max-w-6xl mx-auto pt-10">
+      <div className="max-w-4xl mx-auto pt-10">
         <div className="space-y-8">
           <div className="flex flex-col  md:flex-row items-center md:items-start mb-8">
             <Image

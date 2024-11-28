@@ -1,6 +1,8 @@
 "use client";
+import UserRequests from "@/components/custom/user-requests";
 import DataTable from "@/components/data-table/data-table";
 import { Card } from "@/components/ui/card";
+import { Table, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
@@ -17,9 +19,12 @@ const AdminTabs = () => {
   };
   return (
     <Tabs value={activeTab} onValueChange={handleTabChange}>
-      <TabsList className="grid w-full grid-cols-3">
+      <TabsList className="grid w-full grid-cols-4">
         <TabsTrigger value="general">General</TabsTrigger>
         <TabsTrigger value="pending">Pending</TabsTrigger>
+        <TabsTrigger value="requests">
+          Transfer/Promotion/Retirement
+        </TabsTrigger>
         <TabsTrigger value="cms">Content Management</TabsTrigger>
       </TabsList>
       <TabsContent value="general">
@@ -30,6 +35,26 @@ const AdminTabs = () => {
       <TabsContent value="pending">
         <Card className="p-4 pt-8">
           <DataTable tab="pending" />
+        </Card>
+      </TabsContent>
+      <TabsContent value="requests">
+        <Card>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-center w-[200px]">
+                  Membership ID
+                </TableHead>
+                <TableHead className="text-center w-[200px]">Name</TableHead>
+                <TableHead className="text-center w-[200px]">
+                  Request Type
+                </TableHead>
+                <TableHead className="text-center">Details</TableHead>
+                <TableHead className="text-center">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <UserRequests />
+          </Table>
         </Card>
       </TabsContent>
       <TabsContent value="cms">

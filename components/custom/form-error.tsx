@@ -10,8 +10,8 @@ interface FormErrorProps {
 }
 
 export const FormError = ({ message, visible, requestId }: FormErrorProps) => {
-  if (!message) return null;
   const router = useRouter();
+  if (!message) return null;
   const clickHandler = async () => {
     if (requestId) {
       await fetch(

@@ -164,7 +164,7 @@ export const AdminUpdate = ({ user }: { user: SessionUser }) => {
                   <InfoField label="Name" value={user.name} />
                   <InfoField
                     label="Date of Birth"
-                    value={new Date(user.dob).toLocaleDateString("en-US", {
+                    value={new Date(user.dob).toLocaleDateString("en-IN", {
                       year: "numeric",
                       month: "long",
                       day: "numeric",
@@ -440,7 +440,7 @@ export const AdminUpdate = ({ user }: { user: SessionUser }) => {
                 <InfoField label="Name" value={user.name} />
                 <InfoField
                   label="Date of Birth"
-                  value={new Date(user.dob).toLocaleDateString("en-US", {
+                  value={new Date(user.dob).toLocaleDateString("en-IN", {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
@@ -573,7 +573,7 @@ function InfoField({ label, value }: { label: string; value: string }) {
   return (
     <div className="grid grid-cols-2 gap-4 items-start">
       <span className="w-32 font-medium text-muted-foreground">{label}</span>
-      <span>{value}</span>
+      <span className="overflow-hidden text-ellipsis">{value}</span>
     </div>
   );
 }
