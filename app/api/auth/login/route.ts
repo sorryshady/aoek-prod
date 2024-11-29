@@ -37,7 +37,20 @@ export async function GET(request: NextRequest) {
       : { membershipId: Number(membershipId) }; // Assuming membershipId is always present if email isn't
 
     // Fetch user from the database
-    const existingUser = await db.user.findUnique({ where: whereClause });
+    const existingUser = await db.user.findUnique({
+      where: whereClause,
+      select: {
+        name: true,
+        email: true,
+        dob: true,
+        gender: true,
+        membershipId: true,
+        userStatus: true,
+        userRole: true,
+        verificationStatus: true,
+        password: true,
+      },
+    });
     if (!existingUser) {
       const field = email ? "email" : "membershipId";
       return NextResponse.json(
@@ -63,11 +76,10 @@ export async function GET(request: NextRequest) {
     // Determine if this is the first login
     const firstLogin = !existingUser.password;
 
-    // Return user details without sensitive fields
-    const safeUser = excludeFields(existingUser, ["password", "createdAt", "updatedAt"]);
+    const user = excludeFields(existingUser, ["password"]);
 
     return NextResponse.json({
-      user: safeUser,
+      user,
       firstLogin,
     });
   } catch (error: unknown) {
@@ -134,7 +146,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create session user payload
-    const sessionUser = excludeFields(existingUser, ["password"]);
+    const sessionUser = excludeFields(existingUser, ["password", "createdAt", "updatedAt"]);
 
     // Handle first login (password setting + security question)
     if (firstLogin === "true") {
