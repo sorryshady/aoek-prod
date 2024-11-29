@@ -21,8 +21,23 @@ import {
 import { cn } from "@/lib/utils";
 import Wrapper from "@/components/custom/wrapper";
 
+interface Imagedata {
+  title: string;
+  src: string;
+  alt: string;
+  slug: string;
+}
+interface GetImage {
+  currentSlug: string;
+  title: string;
+  firstImage: {
+    url: string;
+    alt: string;
+  };
+}
+
 export default function GalleryCarousel() {
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState<Imagedata[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
@@ -90,7 +105,7 @@ export default function GalleryCarousel() {
         alt
       }
     }`;
-    const images = await client.fetch(query);
+    const images: GetImage[] = await client.fetch(query);
     return images.map((image) => ({
       title: image.title,
       src: image.firstImage?.url || "",
@@ -124,8 +139,8 @@ export default function GalleryCarousel() {
                 {getPreviousImage() && (
                   <div className="relative w-32 h-24 opacity-50">
                     <Image
-                      src={getPreviousImage().src}
-                      alt={getPreviousImage().alt}
+                      src={getPreviousImage()?.src || ""}
+                      alt={getPreviousImage()?.alt || ""}
                       fill
                       className="object-cover rounded-lg"
                     />
@@ -149,8 +164,8 @@ export default function GalleryCarousel() {
                 {getNextImage() && (
                   <div className="relative w-32 h-24 opacity-50">
                     <Image
-                      src={getNextImage().src}
-                      alt={getNextImage().alt}
+                      src={getNextImage()?.src || ""}
+                      alt={getNextImage()?.alt || ""}
                       fill
                       className="object-cover rounded-lg"
                     />
