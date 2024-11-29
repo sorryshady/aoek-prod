@@ -1,10 +1,11 @@
 "use server";
 
+import { getToken } from "@/lib/session";
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
-  const token = (await cookies()).get("session")?.value;
+export async function GET(request: NextRequest) {
+  const token = await getToken(request);
   if (!token) {
     return NextResponse.json(
       { error: "Not logged in. Cannot log out" },

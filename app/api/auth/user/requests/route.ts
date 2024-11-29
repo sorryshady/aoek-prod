@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { decrypt } from "@/lib/session";
+import { decrypt, getToken } from "@/lib/session";
 import { SessionPayload } from "@/types";
 import {
   VerificationStatus,
@@ -8,7 +8,6 @@ import {
   Designation,
 } from "@prisma/client";
 import { parse } from "date-fns";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 // Function to check if a value is a valid District
@@ -22,7 +21,7 @@ function isValidDesignation(designation: any): designation is Designation {
 // Create a new promotion/transfer request
 export async function POST(request: NextRequest) {
   try {
-    const token = (await cookies()).get("session")?.value;
+    const token = await getToken(request);
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -209,7 +208,7 @@ export async function GET(request: NextRequest) {
 // update a requests visibility
 export async function PATCH(request: NextRequest) {
   try {
-    const token = (await cookies()).get("session")?.value;
+    const token = await getToken(request);
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

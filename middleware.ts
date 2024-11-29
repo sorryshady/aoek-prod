@@ -1,6 +1,6 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getToken } from "./lib/session";
 
 // List of public routes that don't require authentication
 const PUBLIC_ROUTES = [
@@ -21,7 +21,7 @@ const PUBLIC_ROUTES = [
 // Middleware entry point
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  const session = (await cookies()).get("session")?.value;
+  const session = await getToken(request);
 
   console.log(`[Middleware] Path: ${path}, Session Exists: ${!!session}`);
 

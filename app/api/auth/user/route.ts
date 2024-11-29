@@ -2,16 +2,13 @@
 "use state";
 
 import { db } from "@/db";
-import { createSession, decrypt } from "@/lib/session";
+import { createSession, decrypt, getToken } from "@/lib/session";
 import { excludeFields } from "@/lib/utils";
-import { SafeUser, SessionPayload, SessionUser } from "@/types";
-import { cookies } from "next/headers";
+import { SessionPayload, SessionUser } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
-  const token =
-    (await cookies()).get("session")?.value ||
-    request.headers.get("Authorization")?.split("Bearer ")[1];
+  const token = await getToken(request);
   if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -30,7 +27,7 @@ export async function GET(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
-    const token = (await cookies()).get("session")?.value;
+    const token = await getToken(request);
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

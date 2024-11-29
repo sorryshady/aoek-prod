@@ -2,14 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { UserStatus } from "@prisma/client";
 import { db } from "@/db";
-import { cookies } from "next/headers";
 import { SessionPayload } from "@/types";
-import { decrypt } from "@/lib/session";
+import { decrypt, getToken } from "@/lib/session";
 
 // Create an obituary
 export async function POST(request: NextRequest) {
   try {
-    const token = (await cookies()).get("session")?.value;
+    const token = await getToken(request);
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

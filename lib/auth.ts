@@ -4,6 +4,7 @@
 import { SessionUser } from "@/types";
 import { AuthStage } from "@/types/session-types";
 import { cookies } from "next/headers";
+import { getBearerToken } from './session'
 
 const verifyToken = async () => {
   const token = (await cookies()).get("session")?.value;

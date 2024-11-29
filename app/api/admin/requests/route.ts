@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { VerificationStatus } from "@prisma/client";
 import { db } from "@/db";
-import { cookies } from "next/headers";
-import { decrypt } from "@/lib/session";
+import { decrypt, getToken } from "@/lib/session";
 import { SessionPayload } from "@/types";
 
 function isValidStatus(status: any): status is VerificationStatus {
@@ -10,7 +9,7 @@ function isValidStatus(status: any): status is VerificationStatus {
 }
 export async function PATCH(request: NextRequest) {
   try {
-    const token = (await cookies()).get("session")?.value;
+    const token = await getToken(request);
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -86,9 +85,9 @@ export async function PATCH(request: NextRequest) {
 }
 
 // Get pending requests for admin
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const token = (await cookies()).get("session")?.value;
+    const token = await getToken(request);
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

@@ -1,11 +1,11 @@
 import { db } from "@/db";
+import { getToken } from '@/lib/session'
 import { utapi } from "@/lib/utapi";
 import { excludeFields } from "@/lib/utils";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(request: NextRequest) {
-  const token = (await cookies()).get("session")?.value;
+    const token = await getToken(request);
   const { searchParams } = request.nextUrl;
   const fileId = searchParams.get("fileId");
   if (!token) {
@@ -36,7 +36,7 @@ export async function DELETE(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const token = (await cookies()).get("session")?.value;
+    const token = await getToken(request);
   if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

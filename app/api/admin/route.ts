@@ -1,11 +1,10 @@
 "use server";
 
 import { db } from "@/db";
-import { decrypt } from "@/lib/session";
+import { decrypt, getToken } from "@/lib/session";
 import { excludeFields } from "@/lib/utils";
 import { SessionPayload } from "@/types";
 import { Prisma, VerificationStatus } from "@prisma/client";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -14,14 +13,14 @@ export async function GET(request: NextRequest) {
     const userType = searchParams.get("userType");
 
     // Extract token from cookies and verify
-    const token = (await cookies()).get("session")?.value;
+    const token = await getToken(request);
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { user } = (await decrypt(token)) as SessionPayload;
     const existingUser = await db.user.findUnique({
-      where: { membershipId: user.membershipId!},
+      where: { membershipId: user.membershipId! },
     });
 
     if (!user || !existingUser || existingUser.userRole !== "ADMIN") {

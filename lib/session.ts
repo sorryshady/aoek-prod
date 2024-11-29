@@ -4,6 +4,7 @@ import { ExtendedJWTPayload, SessionPayload, SessionUser } from "@/types";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { NextRequest } from "next/server";
 
 const secretKey = process.env.SECRET_KEY;
 const encodedKey = new TextEncoder().encode(secretKey);
@@ -49,3 +50,17 @@ export const decrypt = async (session: string) => {
     return { error };
   }
 };
+
+export const getToken = async (request: NextRequest) => {
+  const token =
+    await getBearerToken(request) || (await cookies()).get("session")?.value;
+  return token;
+};
+
+export async function getBearerToken(req: NextRequest) {
+  const authHeader = req.headers.get("Authorization");
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    return authHeader.substring(7); // Remove "Bearer " prefix
+  }
+  return undefined;
+}
