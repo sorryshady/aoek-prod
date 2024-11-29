@@ -25,7 +25,6 @@ export async function POST(request: NextRequest) {
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
     const { user } = (await decrypt(token)) as SessionPayload;
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

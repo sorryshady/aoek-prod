@@ -9,11 +9,22 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   const token = await getToken(request);
+  const { searchParams } = request.nextUrl;
+  const membershipId = searchParams.get("membershipId");
+  if (!membershipId) {
+    return NextResponse.json(
+      { error: "Membership ID is required" },
+      { status: 400 },
+    );
+  }
   if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const { user } = (await decrypt(token)) as SessionPayload;
+  if (!user || user.membershipId !== Number(membershipId)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   const existingUser = await db.user.findUnique({
     where: { membershipId: user.membershipId! },
   });

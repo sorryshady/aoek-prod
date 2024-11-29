@@ -192,6 +192,7 @@ model Obituary {
     id             String   @id @default(cuid())
     user           User     @relation(fields: [membershipId], references: [membershipId])
     membershipId   Int
+    dateOfDeath    DateTime
     dateRecorded   DateTime @default(now())
     expiryDate     DateTime
     additionalNote String?

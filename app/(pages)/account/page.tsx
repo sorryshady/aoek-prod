@@ -15,6 +15,7 @@ async function getData() {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_URL}/api/auth/user/requests?membershipId=${user?.membershipId}`,
   );
+  console.log(response);
   const data = await response.json();
   const lastRequest = data[0] as PromotionTransferRequest;
   if (!lastRequest) {

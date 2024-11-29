@@ -1,7 +1,9 @@
 "use client";
+import Obituaries from "@/components/custom/obituaries";
 import UserRequests from "@/components/custom/user-requests";
 import DataTable from "@/components/data-table/data-table";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { Table, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -19,12 +21,13 @@ const AdminTabs = () => {
   };
   return (
     <Tabs value={activeTab} onValueChange={handleTabChange}>
-      <TabsList className="grid w-full grid-cols-4">
+      <TabsList className="grid w-full grid-cols-5">
         <TabsTrigger value="general">General</TabsTrigger>
         <TabsTrigger value="pending">Pending</TabsTrigger>
         <TabsTrigger value="requests">
           Transfer/Promotion/Retirement
         </TabsTrigger>
+        <TabsTrigger value="obituaries">Obituaries</TabsTrigger>
         <TabsTrigger value="cms">Content Management</TabsTrigger>
       </TabsList>
       <TabsContent value="general">
@@ -55,6 +58,15 @@ const AdminTabs = () => {
             </TableHeader>
             <UserRequests />
           </Table>
+        </Card>
+      </TabsContent>
+      <TabsContent value="obituaries">
+        <Card className="p-2">
+          <CardHeader className="text-2xl font-bold p-2">Obituaries</CardHeader>
+          <Separator />
+          <CardContent>
+            <Obituaries />
+          </CardContent>
         </Card>
       </TabsContent>
       <TabsContent value="cms">
