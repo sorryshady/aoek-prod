@@ -4,6 +4,7 @@ import { changeTypeToText } from "@/lib/utils";
 import { Obituaries, Promotions, Retirements, Transfers } from "@/types";
 import Image from "next/image";
 
+export const dynamic = "force-dynamic";
 async function getData() {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_URL}/api/general/requests`,

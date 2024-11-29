@@ -17,18 +17,10 @@ import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { BloodGroup, Designation, StatePositionTitle } from "@prisma/client";
+import { commiteeUser } from "@/types/user-types";
 
 interface StateCommitteeProps {
-  members: {
-    name: string;
-    designation: Designation;
-    membershipId: number;
-    bloodGroup: BloodGroup;
-    mobileNumer: string;
-    personalAddress: string;
-    positionState: StatePositionTitle;
-    photoUrl: string;
-  }[];
+  members: commiteeUser[];
 }
 export function StateCommittee({ members }: StateCommitteeProps) {
   const [api, setApi] = React.useState<any>();
@@ -49,12 +41,14 @@ export function StateCommittee({ members }: StateCommitteeProps) {
   }, [api]);
 
   const autoplay = React.useRef(
-    Autoplay({ delay: 1500, stopOnInteraction: true }),
+    Autoplay({ delay: 1500, stopOnInteraction: true })
   );
 
   return (
     <div className="w-full  mx-auto px-4 py-8">
-      <h1 className="text-center text-2xl font-bold mb-8">State Committee</h1>
+      {/* <h1 className="text-center text-3xl font-extrabold mb-8">
+        State Committee
+      </h1> */}
       <Card className="bg-[#1a2634] p-8 rounded-lg">
         <CardContent className="p-0">
           <Carousel

@@ -7,10 +7,10 @@ import axios from "axios";
 export const dynamic = "force-dynamic";
 async function getData() {
   const stateRes = await axios.get(
-    `${process.env.NEXT_PUBLIC_URL}/api/general?committee=state&include=false`,
+    `${process.env.NEXT_PUBLIC_URL}/api/general?committee=state&include=false`
   );
   const districtRes = await axios.get(
-    `${process.env.NEXT_PUBLIC_URL}/api/general?committee=district`,
+    `${process.env.NEXT_PUBLIC_URL}/api/general?committee=district`
   );
   const stateCommittee = stateRes.data;
   const districtCommittee = districtRes.data;
@@ -20,9 +20,13 @@ export default async function Committee() {
   const { stateCommittee, districtCommittee } = await getData();
   if (!stateCommittee || !districtCommittee) return notFound();
   return (
-    <div>
+    <div className="bg-hero_img inset-0 bg-cover overflow-hidden">
       <Wrapper className="my-[5rem]">
+        <h1 className="text-center font-bold text-3xl mt-8">State Committee</h1>
         <StateCommittee members={stateCommittee} />
+        <h1 className="text-center font-bold text-3xl mt-8">
+          District Committee
+        </h1>
         <DistrictCommittee members={districtCommittee} />
       </Wrapper>
     </div>

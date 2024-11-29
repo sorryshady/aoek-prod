@@ -1,4 +1,4 @@
-import { Image, PortableTextBlock } from "@sanity/types";
+import { File, Image, PortableTextBlock } from "@sanity/types";
 
 export type simpleNewsCard = {
   title: string;
@@ -8,3 +8,14 @@ export type simpleNewsCard = {
   image: Image;
   date: string;
 };
+export type newsLetter = {
+  title: string;
+  category: string;
+  fileUrl: string;
+  date: string;
+};
+export interface GalleryData {
+  title: string;
+  images: any[];
+  currentSlug: string;
+}

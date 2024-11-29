@@ -11,7 +11,7 @@ import React from "react";
 
 async function getData(
   email: string,
-  status: "verified" | "pending",
+  status: "verified" | "pending"
 ): Promise<{ user: any }> {
   if (status === "verified") {
     const existingUser = await db.user.findUnique({
@@ -86,7 +86,7 @@ export default async function ProfilePage({
   const { status } = await searchParams;
   const { user }: { user: SessionUser } = await getData(
     decodeURIComponent(email),
-    status,
+    status
   );
   return (
     <Wrapper className="my-[5rem] min-h-[70vh] flex justify-center items-center">

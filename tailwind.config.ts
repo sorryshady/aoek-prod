@@ -80,6 +80,7 @@ export default {
       },
       backgroundImage: {
         hero_img: 'url("/white-bridge.png")',
+        body_img: 'url("/black-bridge.png")',
       },
     },
   },
