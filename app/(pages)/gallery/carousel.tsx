@@ -5,19 +5,6 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Search, Check } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
-import { cn } from "@/lib/utils";
 import Wrapper from "@/components/custom/wrapper";
 import { Imagedata } from "./page";
 
@@ -27,7 +14,6 @@ interface GalleryCarouselProps {
 
 export default function GalleryCarousel({ images }: GalleryCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
 
   // Filter images based on selected value

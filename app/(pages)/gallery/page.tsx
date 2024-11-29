@@ -1,4 +1,5 @@
 import { client } from "@/lib/sanity";
+import GalleryCarousel from "./carousel";
 
 export interface Imagedata {
   title: string;
@@ -16,7 +17,7 @@ export interface GetImage {
   };
 }
 
-export async function fetchGalleryImages(): Promise<Imagedata[]> {
+export default async function fetchGalleryImages(): Promise<Imagedata[]> {
   try {
     const query = `*[_type == "gallery"]| order(_createdAt desc) {
       title,
