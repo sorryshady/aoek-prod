@@ -5,7 +5,7 @@ import { FaFacebookSquare as Facebook } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="bg-[#20333C] space-y-10">
+    <footer className="bg-[#20333C] space-y-10 relative z-20">
       <div className="h-[0.5px] bg-gray-500 mx-auto max-w-7xl" />
       <Wrapper className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 text-white gap-5">
         <div>

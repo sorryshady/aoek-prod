@@ -81,13 +81,15 @@ const Obituaries = () => {
             })}
           </TableCell>
           <TableCell className="text-center">
-            <Image
-              src={obituary.user.photoUrl || "/fall-back.webp"}
-              alt={obituary.user.name}
-              height={100}
-              width={100}
-              className="mx-auto"
-            />
+            <div className="h-24 overflow-hidden">
+              <Image
+                src={obituary.user.photoUrl || "/fall-back.webp"}
+                alt={obituary.user.name}
+                height={100}
+                width={100}
+                className="mx-auto object-cover"
+              />
+            </div>
           </TableCell>
           <TableCell className="text-center">
             {obituary.additionalNote}
