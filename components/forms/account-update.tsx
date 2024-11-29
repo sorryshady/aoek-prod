@@ -90,7 +90,7 @@ export const AccountUpdate = ({ user }: { user: SessionUser }) => {
       const data = await response.json();
 
       if (data.error) {
-        console.log("error encountered");
+        console.error("error encountered");
         throw new Error(data.error);
       }
 

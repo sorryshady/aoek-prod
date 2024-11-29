@@ -5,7 +5,6 @@ export const obituarySchema = z.object({
   dateOfDeath: z
     .string({ message: "Retirement date is required." })
     .refine((val) => {
-        console.log(val);
       const date = parse(val, "dd/MM/yyyy", new Date());
       return (
         isValid(date) && date <= new Date() && date >= new Date("1900-01-01")

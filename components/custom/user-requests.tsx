@@ -70,11 +70,10 @@ const UserRequests = () => {
           throw new Error("Failed to fetch requests");
         }
         const data = await response.json();
-        console.log(data);
         setRequests(data);
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
+        console.error(err);
         toast.error("Failed to fetch requests");
         setIsLoading(false);
       }

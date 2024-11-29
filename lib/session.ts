@@ -21,7 +21,7 @@ export const createSession = async (user: SessionUser) => {
     });
     return session;
   } catch (error) {
-    console.log("Error: ", error);
+    console.error("Error: ", error);
     return null;
   }
 };
@@ -46,7 +46,7 @@ export const decrypt = async (session: string) => {
     });
     return payload as ExtendedJWTPayload;
   } catch (error) {
-    console.log("Error: ", error);
+    console.error("Error: ", error);
     return { error };
   }
 };
