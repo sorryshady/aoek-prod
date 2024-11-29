@@ -17,7 +17,6 @@ export async function GET(request: NextRequest) {
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  console.log("Reached here");
   const existingUser = await db.user.findUnique({
     where: { membershipId: user.membershipId! },
   });

@@ -2,28 +2,25 @@ import { db } from "@/db";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const name = searchParams.get("name");
-    const email = searchParams.get("email");
-    const membershipId = searchParams.get("membershipId");
+    const body = await request.json();
+    const { search } = body;
 
-    // Validate at least one search parameter
-    if (!name && !email && !membershipId) {
-      return NextResponse.json(
-        { error: "At least one search parameter is required" },
-        { status: 400 },
-      );
+    // Validate search parameter
+    if (!search) {
+      return NextResponse.json({ error: "Empty search" }, { status: 400 });
     }
 
-    // Build search conditions
+    // Construct dynamic where clause
     const where: Prisma.UserWhereInput = {
-      OR: [
-        name ? { name: { contains: name, mode: "insensitive" } } : {},
-        email ? { email: { equals: email } } : {},
-        membershipId ? { membershipId: parseInt(membershipId) } : {},
-      ],
+      OR: search
+        ? [
+            { name: { contains: search, mode: "insensitive" } },
+            { email: { contains: search, mode: "insensitive" } },
+            { membershipId: parseInt(search) },
+          ]
+        : undefined,
     };
 
     // Search users

@@ -4,6 +4,7 @@ import { UserStatus } from "@prisma/client";
 import { db } from "@/db";
 import { SessionPayload } from "@/types";
 import { decrypt, getToken } from "@/lib/session";
+import { parse } from "date-fns";
 
 // Create an obituary
 export async function POST(request: NextRequest) {
@@ -18,12 +19,18 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { membershipId, additionalNote } = body;
+    const { membershipId, additionalNote, dateOfDeath } = body;
 
     // Validate input
     if (!membershipId) {
       return NextResponse.json(
         { error: "Membership ID is required" },
+        { status: 400 },
+      );
+    }
+    if (!dateOfDeath) {
+      return NextResponse.json(
+        { error: "Date of death is required" },
         { status: 400 },
       );
     }
@@ -61,6 +68,7 @@ export async function POST(request: NextRequest) {
       return await tx.obituary.create({
         data: {
           membershipId,
+          dateOfDeath: parse(dateOfDeath, "dd/MM/yyyy", new Date()),
           additionalNote,
           expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         },

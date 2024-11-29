@@ -1,8 +1,9 @@
 "use client";
+import AddNewObituary from "@/components/custom/add-new-obituary";
 import Obituaries from "@/components/custom/obituaries";
 import UserRequests from "@/components/custom/user-requests";
 import DataTable from "@/components/data-table/data-table";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
@@ -61,12 +62,25 @@ const AdminTabs = () => {
         </Card>
       </TabsContent>
       <TabsContent value="obituaries">
-        <Card className="p-2">
-          <CardHeader className="text-2xl font-bold p-2">Obituaries</CardHeader>
+        <Card className="p-4 space-y-2">
+          <AddNewObituary />
           <Separator />
-          <CardContent>
+          <h2 className="text-2xl font-semibold">Obituaries</h2>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-center">No</TableHead>
+                <TableHead className="text-center w-[200px]">Name</TableHead>
+                <TableHead className="text-center w-[200px]">
+                  Department
+                </TableHead>
+                <TableHead className="text-center">Date of Death</TableHead>
+                <TableHead className="text-center">Photo</TableHead>
+                <TableHead className="text-center">Admin Comments</TableHead>
+              </TableRow>
+            </TableHeader>
             <Obituaries />
-          </CardContent>
+          </Table>
         </Card>
       </TabsContent>
       <TabsContent value="cms">

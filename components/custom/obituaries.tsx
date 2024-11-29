@@ -1,72 +1,101 @@
 "use client";
+
 import { Obituary, User } from "@prisma/client";
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-// import { Label } from "../ui/label";
-// import { Input } from "../ui/input";
-// import { Button } from "../ui/button";
-// import SubmitButton from "./submit-button";
 import { Loader2 } from "lucide-react";
+import { TableBody, TableCell, TableRow } from "../ui/table";
+import { changeTypeToText } from "@/lib/utils";
+import Image from "next/image";
 
 type ObituarieResponse = Obituary & {
   user: User;
 };
+
+const fetchObituaries = async (): Promise<ObituarieResponse[]> => {
+  const response = await fetch("/api/admin/obituaries?includeExpired=true");
+
+  if (!response.ok) {
+    toast.error("Failed to fetch obituaries");
+    throw new Error("Failed to fetch obituaries");
+  }
+
+  return response.json();
+};
+
 const Obituaries = () => {
-  const [obituaries, setObituaries] = useState<ObituarieResponse[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-//   const [searching, setSearching] = useState(false);
+  const {
+    data: obituaries = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["admin", "obituaries"],
+    queryFn: fetchObituaries,
+    retry: 1,
+  });
 
-  useEffect(() => {
-    const fetchRequests = async () => {
-      try {
-        const response = await fetch(
-          "/api/admin/obituaries?includeExpired=true",
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch obituaries");
-        }
-        const data = await response.json();
-        console.log(data);
-        setObituaries(data);
-        setIsLoading(false);
-      } catch (err) {
-        console.log(err);
-        toast.error("Failed to fetch obituaries");
-        setIsLoading(false);
-      }
-    };
+  if (isLoading) {
+    return (
+      <TableBody>
+        <TableRow>
+          <TableCell colSpan={6} className="h-24 text-center">
+            <div className="flex justify-center items-center h-full">
+              <Loader2 className="h-6 w-6 animate-spin mr-2" />
+              Loading...
+            </div>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    );
+  }
 
-    fetchRequests();
-  }, []);
+  if (isError || obituaries.length === 0) {
+    return (
+      <TableBody>
+        <TableRow>
+          <TableCell colSpan={6} className="h-24 text-center">
+            <div className="flex justify-center items-center h-full text-muted-foreground">
+              {isError ? "Error fetching obituaries" : "No obituaries found"}
+            </div>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    );
+  }
 
   return (
-    <div className="py-4">
-      {isLoading ? (
-        <div className="flex justify-center items-center h-24">
-          <Loader2 className="h-6 w-6 animate-spin mr-2" /> Loading...
-        </div>
-      ) : obituaries.length > 0 ? (
-        <div>Data</div>
-      ) : (
-        <div className="flex justify-center items-center h-24 text-muted-foreground">
-          No obituaries found.
-        </div>
-      )}
-    </div>
+    <TableBody>
+      {obituaries.map((obituary, index) => (
+        <TableRow key={obituary.id}>
+          <TableCell className="text-center">{index + 1}</TableCell>
+          <TableCell className="text-center">{obituary.user.name}</TableCell>
+          <TableCell className="text-center">
+            {changeTypeToText(obituary.user.department || "-")}
+          </TableCell>
+          <TableCell className="text-center">
+            {new Date(obituary.dateOfDeath).toLocaleDateString("en-IN", {
+              year: "numeric",
+              month: "short",
+              day: "2-digit",
+            })}
+          </TableCell>
+          <TableCell className="text-center">
+            <Image
+              src={obituary.user.photoUrl || "/fall-back.webp"}
+              alt={obituary.user.name}
+              height={100}
+              width={100}
+              className="mx-auto"
+            />
+          </TableCell>
+          <TableCell className="text-center">
+            {obituary.additionalNote}
+          </TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
   );
 };
 
 export default Obituaries;
-
-{
-  /* <div className="flex flex-col gap-3">
-        <Label className="text-nowrap">Find User</Label>
-        <div className="flex items-center gap-3">
-          <Input
-            placeholder="Enter name, email or membership id"
-            className="w-[300px]"
-          />
-          <SubmitButton title="Search" isSubmitting={searching} />
-        </div>
-      </div> */
-}

@@ -11,7 +11,7 @@ type CustomDateProps = {
 const CustomDate: React.FC<CustomDateProps> = ({
   name,
   control,
-  placeholder = "MM/DD/YYYY",
+  placeholder = "DD/MM/YYYY",
 }) => {
   const {
     field,
