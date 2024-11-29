@@ -63,7 +63,7 @@ export type commiteeUser = {
   designation: Designation;
   membershipId: number;
   bloodGroup: BloodGroup;
-  mobileNumer: string;
+  mobileNumber: string;
   personalAddress: string;
   positionState: StatePositionTitle;
   photoUrl: string;
