@@ -14,7 +14,7 @@ export default async function StateCommitteePage() {
   const { members } = await getData();
   return (
     <Wrapper className="min-h-[70vh] my-[5rem]">
-      <h1 className="text-5xl font-bold text-center">State Committee Page</h1>
+      <h1 className="text-5xl font-bold text-center">{members.length}</h1>
     </Wrapper>
   );
 }
