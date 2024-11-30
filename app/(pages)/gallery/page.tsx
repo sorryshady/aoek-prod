@@ -45,8 +45,9 @@ async function getData() {
 export default async function GalleryPage() {
   const data = await getData();
   return (
-    <div className="relative min-h-screen py-24">
-      <div className="absolute inset-0 bg-cover bg-hero_img opacity-90 bg-top z-0" />
+    <div className="relative  py-24">
+      <div className="absolute inset-0 bg-gradient-to-b from-[#5386A4]/100 to-[#1F333E]/100 z-0 h-screen" />
+      <div className="absolute inset-0 bg-cover bg-hero_img opacity-30 bg-top z-0" />
       <GalleryCarousel images={data} />
     </div>
   );

@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 
 async function getData() {
   const response = await axios.get(
-    `${process.env.NEXT_PUBLIC_URL}/api/general?committee=state&include=true`
+    `${process.env.NEXT_PUBLIC_URL}/api/general?committee=state&include=true`,
   );
 
   const members: commiteeUser[] = response.data;
@@ -64,7 +64,8 @@ export default async function StateCommitteePage() {
                   <TooltipContent className="bg-[#2d4153] text-white shadow-lg border">
                     <div className="space-y-2 text-sm">
                       <p>
-                        <strong>Blood Group:</strong> {member.bloodGroup}
+                        <strong>Blood Group:</strong>{" "}
+                        {changeTypeToText(member.bloodGroup)}
                       </p>
                       <p>
                         <strong>Designation:</strong>{" "}

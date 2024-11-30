@@ -49,8 +49,10 @@ export default function GalleryCarousel({ images }: GalleryCarouselProps) {
   if (images.length === 0) {
     return (
       <div className="w-full max-w-5xl mx-auto p-6">
-        <h1 className="text-4xl font-bold text-center mb-8">Gallery</h1>
-        <div className="relative bg-slate-900 rounded-lg p-8 text-center">
+        <h1 className="text-4xl font-bold text-white text-center mb-8">
+          Gallery
+        </h1>
+        <div className="relative bg-[#20333C] rounded-lg p-8 text-center">
           <p className="text-white text-xl mb-4">No images.</p>
         </div>
       </div>
@@ -58,10 +60,12 @@ export default function GalleryCarousel({ images }: GalleryCarouselProps) {
   }
 
   return (
-    <Wrapper className="my-[5rem]">
-      <h1 className="text-4xl font-bold text-center mb-8">Gallery</h1>
+    <Wrapper className="relative z-20">
+      <h1 className="text-4xl font-bold text-white text-center mb-8">
+        Gallery
+      </h1>
 
-      <div className="relative bg-slate-900 rounded-lg p-8">
+      <div className="relative bg-[#20333C] rounded-lg p-8">
         {images.length > 0 ? (
           <>
             <div className="flex items-center justify-center gap-4 mb-8">
