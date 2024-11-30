@@ -21,6 +21,8 @@ const PUBLIC_ROUTES = [
 
 // Middleware entry point
 export async function middleware(request: NextRequest) {
+  const origin = request.headers.get("origin") ?? "";
+  console.log("origin is: ", origin);
   const path = request.nextUrl.pathname;
   const session = await getToken(request);
 
@@ -71,9 +73,5 @@ function redirectToLogin(request: NextRequest) {
 
 // Middleware configuration
 export const config = {
-  matcher: [
-    "/account",
-    "/admin/:path*",
-    "/protected/:path*",
-  ],
+  matcher: ["/account", "/admin/:path*", "/protected/:path*"],
 };
