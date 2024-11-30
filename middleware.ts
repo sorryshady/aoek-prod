@@ -2,6 +2,19 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "./lib/session";
 
+// Remove trailing slashes from origins
+const allowedOrigins = [
+  "https://aoek-prod.vercel.app",
+  "https://www.aoek-prod.vercel.app",
+  "http://localhost:3000",
+];
+
+const corsOptions = {
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Credentials": "true", // Important for cookies/sessions
+};
+
 // List of public routes that don't require authentication
 const PUBLIC_ROUTES = [
   "/",
@@ -16,45 +29,64 @@ const PUBLIC_ROUTES = [
   "/public",
   "/gallery",
   "/contact",
-  "/about", // Add any other public routes
+  "/about",
 ];
 
 // Middleware entry point
 export async function middleware(request: NextRequest) {
+  const origin = request.headers.get("origin") ?? "";
+  const isAllowedOrigin = allowedOrigins.includes(origin);
+  const isPreflight = request.method === "OPTIONS";
+
+  // Handle preflight requests
+  if (isPreflight) {
+    const preflightHeaders = {
+      ...(isAllowedOrigin && {
+        "Access-Control-Allow-Origin": origin,
+        "Access-Control-Allow-Credentials": "true"
+      }),
+      ...corsOptions,
+    };
+    return NextResponse.json({}, { headers: preflightHeaders });
+  }
+
   const path = request.nextUrl.pathname;
   const session = await getToken(request);
+  const response = NextResponse.next();
 
-  console.log(`[Middleware] Path: ${path}, Session Exists: ${!!session}`);
+  // Set CORS headers
+  if (isAllowedOrigin) {
+    response.headers.set("Access-Control-Allow-Origin", origin);
+    response.headers.set("Access-Control-Allow-Credentials", "true");
+  }
+
+  Object.entries(corsOptions).forEach(([key, value]) => {
+    response.headers.set(key, value);
+  });
 
   // Redirect logged-in users away from login/register
   if (session && (path === "/login" || path === "/register")) {
-    console.log(
-      "[Middleware] Logged-in user accessing /login or /register. Redirecting to /",
-    );
     return NextResponse.redirect(new URL("/", request.url));
   }
 
   // Allow access to public routes
   if (isPublicRoute(path)) {
-    console.log("[Middleware] Public route. Allowing access.");
-    return NextResponse.next();
+    return response;
   }
 
   // Protected route: Require session
   if (!session) {
-    console.log("[Middleware] No session found. Redirecting to login.");
     return redirectToLogin(request);
   }
 
   // Assume session is valid for protected routes
-  console.log("[Middleware] Protected route. Session found. Proceeding.");
-  return NextResponse.next();
+  return response;
 }
 
 // Helper: Check if a route is public
 function isPublicRoute(path: string): boolean {
   return PUBLIC_ROUTES.some(
-    (route) => path === route || path.startsWith(route + "/"),
+    (route) => path === route || path.startsWith(route + "/")
   );
 }
 
@@ -62,10 +94,6 @@ function isPublicRoute(path: string): boolean {
 function redirectToLogin(request: NextRequest) {
   const loginUrl = new URL("/login", request.url);
   loginUrl.searchParams.set("redirectTo", encodeURIComponent(request.url));
-  console.log(
-    "[Middleware] Will redirect to: ",
-    decodeURIComponent(new URL(request.url).href),
-  );
   return NextResponse.redirect(loginUrl);
 }
 
@@ -75,5 +103,6 @@ export const config = {
     "/account",
     "/admin/:path*",
     "/protected/:path*",
+    "/api/:path*" // Add this to ensure API routes are covered
   ],
 };
