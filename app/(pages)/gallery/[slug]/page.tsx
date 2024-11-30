@@ -3,6 +3,7 @@ import { client } from "@/lib/sanity";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
+import Wrapper from "@/components/custom/wrapper";
 
 interface GalleryData {
   title: string;
@@ -35,32 +36,36 @@ export default async function GalleryDetailPage({
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Link
-        href="/gallery"
-        className="inline-flex items-center text-lg mb-8 hover:text-gray-600"
-      >
-        <ChevronLeft className="mr-2" /> Back to Galleries
-      </Link>
+    <Wrapper>
+      <div className="container mx-auto px-4 py-8">
+        <Link
+          href="/gallery"
+          className="inline-flex items-center text-lg mb-8 hover:text-gray-600"
+        >
+          <ChevronLeft className="mr-2" /> Back to Galleries
+        </Link>
 
-      <h1 className="text-4xl font-bold text-center mb-12">{gallery.title}</h1>
+        <h1 className="text-4xl font-bold text-center mb-12">
+          {gallery.title}
+        </h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {gallery.images.map((image, index) => (
-          <div
-            key={index}
-            className="relative aspect-square overflow-hidden rounded-lg group"
-          >
-            <Image
-              src={image.url}
-              alt={image.alt || `Gallery image ${index + 1}`}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
-            />
-          </div>
-        ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {gallery.images.map((image, index) => (
+            <div
+              key={index}
+              className="relative aspect-square overflow-hidden rounded-lg group"
+            >
+              <Image
+                src={image.url}
+                alt={image.alt || `Gallery image ${index + 1}`}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </Wrapper>
   );
 }
 

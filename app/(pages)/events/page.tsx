@@ -12,17 +12,22 @@ function isEventOver(eventDate: string): boolean {
 }
 
 async function getData() {
-  const query = `*[_type == "upcomingEvent"] | order(date desc) {
+  const currentDate = new Date();
+  const pastMonthDate = new Date(
+    currentDate.setMonth(currentDate.getMonth() - 1)
+  );
+
+  const query = `*[_type == "upcomingEvent" && date >= $pastMonthDate] | order(date desc) {
     title,
     image,
     description,
     date,
-    venue,
+    venue
   }`;
-  const data = await client.fetch(query);
+
+  const data = await client.fetch(query, { pastMonthDate });
   return data;
 }
-
 export default async function UpcomingEventsPage() {
   const events: upcomingEvent[] = await getData();
   const upcomingEvents = events.filter((event) => !isEventOver(event.date));
