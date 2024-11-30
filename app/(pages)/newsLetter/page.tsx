@@ -16,7 +16,7 @@ async function getData() {
   return data;
 }
 
-export default async function Newsletter() {
+export default async function NewsletterPage() {
   const newsletters: newsLetter[] = await getData();
 
   return (
