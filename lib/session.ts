@@ -16,7 +16,6 @@ export const createSession = async (user: SessionUser) => {
 
     (await cookies()).set("session", session, {
       httpOnly: true,
-      sameSite: "lax",
       secure: true,
       expires: expiresAt,
     });

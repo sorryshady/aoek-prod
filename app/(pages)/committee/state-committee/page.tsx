@@ -11,7 +11,7 @@ import { commiteeUser } from "@/types/user-types";
 import axios from "axios";
 import Image from "next/image";
 
-export const dynamic = "force-dynamic";
+
 
 async function getData() {
   const response = await axios.get(

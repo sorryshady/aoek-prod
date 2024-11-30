@@ -4,7 +4,6 @@ import Wrapper from "@/components/custom/wrapper";
 import { notFound } from "next/navigation";
 import axios from "axios";
 
-export const dynamic = "force-dynamic";
 async function getData() {
   const stateRes = await axios.get(
     `${process.env.NEXT_PUBLIC_URL}/api/general?committee=state&include=false`

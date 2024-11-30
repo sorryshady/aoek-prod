@@ -5,7 +5,6 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 
-export const dynamic = "force-dynamic";
 async function getData() {
   const stateRes = await axios.get(
     `${process.env.NEXT_PUBLIC_URL}/api/general?committee=state&include=false`
