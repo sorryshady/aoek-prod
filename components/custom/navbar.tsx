@@ -73,7 +73,7 @@ const DesktopNavbar = ({
           <ActiveLinks title="Downloads" href="/downloads" />
         </li>
         <li>
-          <ActiveLinks title="Newsletter" href="/newsletter" />
+          <ActiveLinks title="Newsletter" href="/news-letter" />
         </li>
         <li>
           <ActiveLinks title="Updates" href="/updates" />
@@ -179,7 +179,7 @@ const MobileNavbar = ({
               <ActiveLinks
                 onClick={handleLinkClick}
                 title="Newsletter"
-                href={"/newsletter"}
+                href={"/news-letter"}
               />
             </li>
             <li>
