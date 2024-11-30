@@ -24,30 +24,22 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const session = await getToken(request);
 
-  console.log(`[Middleware] Path: ${path}, Session Exists: ${!!session}`);
-
   // Redirect logged-in users away from login/register
   if (session && (path === "/login" || path === "/register")) {
-    console.log(
-      "[Middleware] Logged-in user accessing /login or /register. Redirecting to /",
-    );
     return NextResponse.redirect(new URL("/", request.url));
   }
 
   // Allow access to public routes
   if (isPublicRoute(path)) {
-    console.log("[Middleware] Public route. Allowing access.");
     return NextResponse.next();
   }
 
   // Protected route: Require session
   if (!session) {
-    console.log("[Middleware] No session found. Redirecting to login.");
     return redirectToLogin(request);
   }
 
   // Assume session is valid for protected routes
-  console.log("[Middleware] Protected route. Session found. Proceeding.");
   return NextResponse.next();
 }
 
@@ -62,10 +54,6 @@ function isPublicRoute(path: string): boolean {
 function redirectToLogin(request: NextRequest) {
   const loginUrl = new URL("/login", request.url);
   loginUrl.searchParams.set("redirectTo", encodeURIComponent(request.url));
-  console.log(
-    "[Middleware] Will redirect to: ",
-    decodeURIComponent(new URL(request.url).href),
-  );
   return NextResponse.redirect(loginUrl);
 }
 

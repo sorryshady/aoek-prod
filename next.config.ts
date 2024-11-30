@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { headers } from 'next/headers'
 
 const nextConfig: NextConfig = {
     reactStrictMode: false,
@@ -28,5 +29,6 @@ const nextConfig: NextConfig = {
       ],
     },
   };
+
 
 export default nextConfig;
