@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Search, Check } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Wrapper from "@/components/custom/wrapper";
@@ -14,45 +14,35 @@ interface GalleryCarouselProps {
 
 export default function GalleryCarousel({ images }: GalleryCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [value, setValue] = useState("");
-
-  // Filter images based on selected value
-  const filteredImages =
-    value && images.length > 0
-      ? images.filter(
-          (image) => image.title.toLowerCase() === value.toLowerCase(),
-        )
-      : images;
 
   // Reset currentIndex if it becomes invalid after filtering
-  const safeCurrentIndex =
-    currentIndex >= filteredImages.length ? 0 : currentIndex;
+  const safeCurrentIndex = currentIndex >= images.length ? 0 : currentIndex;
 
   const goToPrevious = () => {
     setCurrentIndex((current) =>
-      current === 0 ? filteredImages.length - 1 : current - 1,
+      current === 0 ? images.length - 1 : current - 1,
     );
   };
 
   const goToNext = () => {
     setCurrentIndex((current) =>
-      current === filteredImages.length - 1 ? 0 : current + 1,
+      current === images.length - 1 ? 0 : current + 1,
     );
   };
 
   // Get previous and next images for preview with null checks
   const getPreviousImage = () => {
-    if (filteredImages.length === 0) return null;
+    if (images.length === 0) return null;
     const prevIndex =
-      safeCurrentIndex === 0 ? filteredImages.length - 1 : safeCurrentIndex - 1;
-    return filteredImages[prevIndex];
+      safeCurrentIndex === 0 ? images.length - 1 : safeCurrentIndex - 1;
+    return images[prevIndex];
   };
 
   const getNextImage = () => {
-    if (filteredImages.length === 0) return null;
+    if (images.length === 0) return null;
     const nextIndex =
-      safeCurrentIndex === filteredImages.length - 1 ? 0 : safeCurrentIndex + 1;
-    return filteredImages[nextIndex];
+      safeCurrentIndex === images.length - 1 ? 0 : safeCurrentIndex + 1;
+    return images[nextIndex];
   };
 
   // Loading state
@@ -72,7 +62,7 @@ export default function GalleryCarousel({ images }: GalleryCarouselProps) {
       <h1 className="text-4xl font-bold text-center mb-8">Gallery</h1>
 
       <div className="relative bg-slate-900 rounded-lg p-8">
-        {filteredImages.length > 0 ? (
+        {images.length > 0 ? (
           <>
             <div className="flex items-center justify-center gap-4 mb-8">
               {/* Previous Image Preview */}
@@ -89,12 +79,12 @@ export default function GalleryCarousel({ images }: GalleryCarouselProps) {
 
               {/* Main Image */}
               <Link
-                href={`/gallery/${filteredImages[safeCurrentIndex].slug}`}
+                href={`/gallery/${images[safeCurrentIndex].slug}`}
                 className="relative w-full h-[400px] block"
               >
                 <Image
-                  src={filteredImages[safeCurrentIndex].src}
-                  alt={filteredImages[safeCurrentIndex].alt}
+                  src={images[safeCurrentIndex].src}
+                  alt={images[safeCurrentIndex].alt}
                   fill
                   className="object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
                 />
@@ -133,7 +123,7 @@ export default function GalleryCarousel({ images }: GalleryCarouselProps) {
 
             {/* Title */}
             <h2 className="text-2xl font-semibold text-center text-white mb-4">
-              {filteredImages[safeCurrentIndex].title}
+              {images[safeCurrentIndex].title}
             </h2>
           </>
         ) : (
