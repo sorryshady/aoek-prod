@@ -1,5 +1,6 @@
 import { client } from "@/lib/sanity";
 import GalleryCarousel from "./carousel";
+import Wrapper from "@/components/custom/wrapper";
 
 export interface Imagedata {
   title: string;
@@ -17,7 +18,7 @@ export interface GetImage {
   };
 }
 
-export default async function fetchGalleryImages(): Promise<Imagedata[]> {
+async function getData() {
   try {
     const query = `*[_type == "gallery"]| order(_createdAt desc) {
       title,
@@ -40,4 +41,16 @@ export default async function fetchGalleryImages(): Promise<Imagedata[]> {
     console.error("Error fetching gallery images:", error);
     return [];
   }
+}
+
+export default async function GalleryPage() {
+  const data = await getData();
+  return (
+    <div className="relative min-h-screen py-24">
+      <div className="absolute inset-0 bg-cover bg-hero_img opacity-90 bg-top z-0" />
+      {/* <Wrapper className="relative z-20"> */}
+      <GalleryCarousel images={data} />
+      {/* </Wrapper> */}
+    </div>
+  );
 }

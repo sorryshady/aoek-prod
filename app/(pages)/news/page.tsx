@@ -50,8 +50,8 @@ export default async function News({
   const { posts, totalPages } = await getData(currentPage);
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-[#464A66] to-[#2E6589] py-24">
-      <div className="absolute inset-0 bg-cover bg-body_img opacity-30 bg-top z-0"></div>
+    <div className="relative min-h-screen bg-gradient-to-r from-[#464A66] to-[#2E6589] py-24">
+      <div className="absolute inset-0 bg-cover bg-body_img opacity-30 bg-top z-0" />
       <Wrapper className="relative z-20">
         <h1 className="text-4xl md:text-5xl font-bold text-center text-white mb-12">
           View the latest news
