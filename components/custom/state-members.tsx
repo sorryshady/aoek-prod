@@ -19,7 +19,6 @@ import Autoplay from "embla-carousel-autoplay";
 import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { BloodGroup, Designation, StatePositionTitle } from "@prisma/client";
 import { commiteeUser } from "@/types/user-types";
 
 interface StateCommitteeProps {
@@ -28,8 +27,8 @@ interface StateCommitteeProps {
 
 export function StateCommittee({ members }: StateCommitteeProps) {
   const [api, setApi] = React.useState<any>();
-  const [current, setCurrent] = React.useState(0);
-  const [count, setCount] = React.useState(0);
+  const [, setCurrent] = React.useState(0);
+  const [, setCount] = React.useState(0);
 
   useEffect(() => {
     if (!api) {
@@ -45,7 +44,7 @@ export function StateCommittee({ members }: StateCommitteeProps) {
   }, [api]);
 
   const autoplay = React.useRef(
-    Autoplay({ delay: 1500, stopOnInteraction: true })
+    Autoplay({ delay: 1500, stopOnInteraction: true }),
   );
 
   return (

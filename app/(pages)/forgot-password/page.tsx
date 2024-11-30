@@ -40,7 +40,7 @@ export default async function ForgotPasswordPage({
     <Wrapper className="my-[5rem] flex justify-center items-center min-h-[70vh]">
       <ForgotPassword
         securityQuestion={data.securityQuestion[0].question}
-        membershipId={data.membershipId}
+        membershipId={data.membershipId!}
         email={data.email}
       />
     </Wrapper>
