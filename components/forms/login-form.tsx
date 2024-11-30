@@ -31,6 +31,8 @@ import { SessionUser } from "@/types";
 import { useAuth } from "@/app/providers/auth-context";
 import { useSearchParams } from "next/navigation";
 import { AuthStage } from "@/types/session-types";
+import { Button } from "../ui/button";
+import Link from "next/link";
 
 const LoginForm = () => {
   const params = useSearchParams();
@@ -290,10 +292,25 @@ const NormalLogin = ({ user, redirectTo }: LoginProps) => {
                     {...field}
                   />
                 </FormControl>
-                <ShowPassword
-                  showPassword={showPassword}
-                  setShowPassword={setShowPassword}
-                />
+                <div className="flex w-full justify-between">
+                  <ShowPassword
+                    showPassword={showPassword}
+                    setShowPassword={setShowPassword}
+                  />
+                  <Button
+                    variant={"link"}
+                    className="px-0 font-normal"
+                    size={"sm"}
+                    type="button"
+                    asChild
+                  >
+                    <Link
+                      href={`/forgot-password?email=${user.email || ""}&membershipId=${user.membershipId || ""}`}
+                    >
+                      Forgot Password?
+                    </Link>
+                  </Button>
+                </div>
                 <FormMessage />
               </FormItem>
             )}

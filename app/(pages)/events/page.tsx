@@ -18,12 +18,12 @@ async function getData() {
   );
 
   const query = `*[_type == "upcomingEvent" && date >= $pastMonthDate] | order(date desc) {
-    title,
-    image,
-    description,
-    date,
-    venue
-  }`;
+      title,
+      image,
+      description,
+      date,
+      venue
+    }`;
 
   const data = await client.fetch(query, { pastMonthDate });
   return data;
@@ -31,7 +31,9 @@ async function getData() {
 export default async function UpcomingEventsPage() {
   const events: upcomingEvent[] = await getData();
   const upcomingEvents = events.filter((event) => !isEventOver(event.date));
-  const pastEvents = events.filter((event) => isEventOver(event.date));
+  const pastEvents = events
+    .filter((event) => isEventOver(event.date))
+    .slice(0, 4);
 
   return (
     <div className="relative min-h-screen bg-gradient-to-r from-[#464A66] to-[#2E6589] py-24">

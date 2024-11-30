@@ -19,8 +19,8 @@ import Autoplay from "embla-carousel-autoplay";
 import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { BloodGroup, Designation, StatePositionTitle } from "@prisma/client";
 import { commiteeUser } from "@/types/user-types";
+import { changeTypeToText } from "@/lib/utils";
 
 interface StateCommitteeProps {
   members: commiteeUser[];
@@ -28,8 +28,8 @@ interface StateCommitteeProps {
 
 export function StateCommittee({ members }: StateCommitteeProps) {
   const [api, setApi] = React.useState<any>();
-  const [current, setCurrent] = React.useState(0);
-  const [count, setCount] = React.useState(0);
+  const [, setCurrent] = React.useState(0);
+  const [, setCount] = React.useState(0);
 
   useEffect(() => {
     if (!api) {
@@ -45,13 +45,13 @@ export function StateCommittee({ members }: StateCommitteeProps) {
   }, [api]);
 
   const autoplay = React.useRef(
-    Autoplay({ delay: 1500, stopOnInteraction: true })
+    Autoplay({ delay: 1500, stopOnInteraction: true }),
   );
 
   return (
     <TooltipProvider>
       <div className="w-full mx-auto px-4 py-8">
-        <Card className="bg-[#1a2634] p-8 rounded-lg">
+        <Card className="bg-gradient-to-b from-slate-700 to-slate-800 rounded-t-lg p-8 rounded-lg">
           <CardContent className="p-0">
             <Carousel
               plugins={[autoplay.current]}
@@ -82,24 +82,19 @@ export function StateCommittee({ members }: StateCommitteeProps) {
                             {member.name}
                           </h3>
                           <p className="text-gray-400 text-sm text-center capitalize">
-                            {member.positionState
-                              .toLowerCase()
-                              .split("_")
-                              .join(" ")}
+                            {changeTypeToText(member.positionState)}
                           </p>
                         </div>
                       </TooltipTrigger>
                       <TooltipContent className="bg-[#2d4153] text-white">
                         <div className="space-y-1">
                           <p>
-                            <strong>Blood Group:</strong> {member.bloodGroup}
+                            <strong>Blood Group:</strong>{" "}
+                            {changeTypeToText(member.bloodGroup)}
                           </p>
                           <p>
                             <strong>Designation:</strong>{" "}
-                            {member.designation
-                              .toLowerCase()
-                              .split("_")
-                              .join(" ")}
+                            {changeTypeToText(member.designation)}
                           </p>
                           <p>
                             <strong>Membership ID:</strong>{" "}

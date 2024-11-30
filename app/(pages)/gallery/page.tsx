@@ -1,6 +1,5 @@
 import { client } from "@/lib/sanity";
 import GalleryCarousel from "./carousel";
-import Wrapper from "@/components/custom/wrapper";
 
 export interface Imagedata {
   title: string;
@@ -46,11 +45,10 @@ async function getData() {
 export default async function GalleryPage() {
   const data = await getData();
   return (
-    <div className="relative min-h-screen py-24">
-      <div className="absolute inset-0 bg-cover bg-hero_img opacity-90 bg-top z-0" />
-      {/* <Wrapper className="relative z-20"> */}
+    <div className="relative  py-24">
+      <div className="absolute inset-0 bg-gradient-to-b from-[#5386A4]/100 to-[#1F333E]/100 z-0 h-screen" />
+      <div className="absolute inset-0 bg-cover bg-hero_img opacity-30 bg-top z-0" />
       <GalleryCarousel images={data} />
-      {/* </Wrapper> */}
     </div>
   );
 }

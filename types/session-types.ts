@@ -1,7 +1,7 @@
-import { User } from "@prisma/client";
+import {  User } from "@prisma/client";
 import { JWTPayload } from "jose";
 
-export type SessionUser = Omit<User, "password" | "createdAt" | "updatedAt">;
+export type SessionUser = Omit<User, "password" | "createdAt" | "updatedAt">
 
 export type SessionPayload = {
   user: SessionUser;

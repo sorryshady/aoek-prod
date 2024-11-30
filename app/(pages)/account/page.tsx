@@ -3,12 +3,12 @@ import { Separator } from "@/components/ui/separator";
 import UserProfilePhoto from "@/components/custom/user-profile-photo";
 import { auth } from "@/lib/auth";
 import { AccountUpdate } from "@/components/forms/account-update";
-import { Button } from "@/components/ui/button";
 import Requests from "@/components/custom/requests";
 import { PromotionTransferRequest } from "@prisma/client";
 import { FormError } from "@/components/custom/form-error";
 import { changeTypeToText } from "@/lib/utils";
 import { FormSuccess } from "@/components/custom/form-success";
+import ChangePassword from "@/components/custom/change-password";
 
 async function getData() {
   const { user } = await auth();
@@ -121,7 +121,7 @@ export default async function Account() {
               <Separator />
             </>
           )}
-          <Button variant={"outline"}>Change Password</Button>
+          <ChangePassword />
         </div>
       </div>
     </Wrapper>
