@@ -2,6 +2,13 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "./lib/session";
 
+// CORS Configuration
+const ALLOWED_ORIGINS = [
+  "http://localhost:3000",
+  "https://yourmobileapp.com",
+  "https://aoek-testing.vercel.app",
+];
+
 // List of public routes that don't require authentication
 const PUBLIC_ROUTES = [
   "/",
@@ -19,19 +26,50 @@ const PUBLIC_ROUTES = [
   "/about", // Add any other public routes
 ];
 
+// CORS headers generation
+function getCorsHeaders(origin: string): Record<string, string> {
+  return ALLOWED_ORIGINS.includes(origin)
+    ? {
+        "Access-Control-Allow-Origin": origin,
+        "Access-Control-Allow-Methods":
+          "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+        "Access-Control-Allow-Headers":
+          "Content-Type, Authorization, X-Requested-With",
+        "Access-Control-Allow-Credentials": "true",
+      }
+    : {};
+}
+
 // Middleware entry point
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  const session = await getToken(request);
+  const origin = request.headers.get("origin") || "";
+
+  // Handle CORS preflight requests
+  if (request.method === "OPTIONS") {
+    const corsHeaders = getCorsHeaders(origin);
+    return new NextResponse(null, {
+      status: 204,
+      headers: corsHeaders,
+    });
+  }
+
+  // Create a response object for CORS
+  const response = NextResponse.next();
+  const corsHeaders = getCorsHeaders(origin);
+  Object.entries(corsHeaders).forEach(([key, value]) => {
+    response.headers.append(key, value);
+  });
 
   // Redirect logged-in users away from login/register
+  const session = await getToken(request);
   if (session && (path === "/login" || path === "/register")) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
   // Allow access to public routes
   if (isPublicRoute(path)) {
-    return NextResponse.next();
+    return response;
   }
 
   // Protected route: Require session
@@ -40,7 +78,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Assume session is valid for protected routes
-  return NextResponse.next();
+  return response;
 }
 
 // Helper: Check if a route is public
@@ -63,5 +101,6 @@ export const config = {
     "/account",
     "/admin/:path*",
     "/protected/:path*",
+    "/api/:path*", // Add API routes to CORS handling
   ],
 };
