@@ -58,7 +58,7 @@ export default async function Home() {
             </div>
             <div className="flex-1">
               <Image
-                src={"/aoek-logo.png"}
+                src={"/aoek-logo.webp"}
                 height={400}
                 width={400}
                 alt={"logo"}

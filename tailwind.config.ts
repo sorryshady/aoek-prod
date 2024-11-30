@@ -79,8 +79,8 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       backgroundImage: {
-        hero_img: 'url("/white-bridge.png")',
-        body_img: 'url("/black-bridge.png")',
+        hero_img: 'url("/white-bridge.webp")',
+        body_img: 'url("/black-bridge.webp")',
       },
     },
   },

@@ -31,11 +31,11 @@ const FileActions = ({ fileUrl, title }: FileActionsProps) => {
     <CardFooter className="flex justify-center gap-4 p-6">
       <Button asChild variant="ghost" size="icon">
         <Link href={fileUrl} target="_blank">
-          <Eye className="h-4 w-4" />
+          <Eye className="h-6 w-6" />
         </Link>
       </Button>
       <Button variant="ghost" size="icon" onClick={handleDownload}>
-        <Download className="h-4 w-4" />
+        <Download className="h-6 w-6" />
       </Button>
     </CardFooter>
   );

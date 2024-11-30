@@ -15,6 +15,7 @@ const PUBLIC_ROUTES = [
   "/forgot-password",
   "/public",
   "/gallery",
+  "/contact",
   "/about", // Add any other public routes
 ];
 
@@ -71,14 +72,6 @@ function redirectToLogin(request: NextRequest) {
 // Middleware configuration
 export const config = {
   matcher: [
-    /*
-     * Match all paths except:
-     * - API routes
-     * - Static files (_next/static)
-     * - Image optimization files (_next/image)
-     * - Favicon and robots.txt
-     * - Public routes
-     */
     "/account",
     "/admin/:path*",
     "/protected/:path*",

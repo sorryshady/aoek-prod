@@ -12,7 +12,7 @@ export default function Contact() {
           <div className="flex gap-10 lg:gap-20 lg:flex-row flex-col items-start">
             <div className="w-full lg:w-1/2 text-white space-y-8">
               <div className="space-y-2">
-                <h1 className="text-4xl font-bold">Let's talk</h1>
+                <h1 className="text-4xl font-bold">Let&apos;s talk</h1>
                 <p className="text-gray-200 ">
                   We collaborate with thousands of creators, entrepreneurs and
                   complete legends.

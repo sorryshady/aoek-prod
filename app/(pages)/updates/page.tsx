@@ -7,7 +7,7 @@ import Image from "next/image";
 export const dynamic = "force-dynamic";
 async function getData() {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_URL}/api/general/requests`
+    `${process.env.NEXT_PUBLIC_URL}/api/general/requests`,
   );
   const data = await response.json();
   const {
@@ -25,7 +25,6 @@ async function getData() {
 }
 export default async function Updates() {
   const { promotions, transfers, retirements, obituaries } = await getData();
-  console.log(promotions, transfers, retirements, obituaries);
   return (
     <div className="py-[5rem] relative min-h-[70vh]">
       <div className="absolute inset-0 bg-gradient-to-b from-[#5386A4]/100 to-[#1F333E]/100 z-0 h-full" />
@@ -185,7 +184,7 @@ export default async function Updates() {
                         <p className="text-white capitalize">
                           Retired on:{" "}
                           {new Date(
-                            retirement.retirementDate
+                            retirement.retirementDate,
                           ).toLocaleDateString("en-IN", {
                             day: "numeric",
                             month: "long",
@@ -241,7 +240,7 @@ export default async function Updates() {
                               day: "numeric",
                               month: "long",
                               year: "numeric",
-                            }
+                            },
                           )}
                         </p>
                       </div>

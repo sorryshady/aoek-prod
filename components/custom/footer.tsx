@@ -10,7 +10,7 @@ const Footer = () => {
       <Wrapper className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 text-white gap-5">
         <div>
           <Link href="/" className="flex items-center gap-3">
-            <Image src="/logo.png" alt="logo" width={60} height={60} />
+            <Image src="/aoek-logo.webp" alt="logo" width={60} height={60} />
             <span className="text-2xl font-bold text-white tracking-wider">
               AOEK
             </span>

@@ -11,7 +11,12 @@ export default function About() {
             About Us
           </h1>
           <div className="flex justify-center items-center my-6">
-            <Image src={"/aoek-logo.png"} alt="logo" width={400} height={200} />
+            <Image
+              src={"/aoek-logo.webp"}
+              alt="logo"
+              width={400}
+              height={200}
+            />
           </div>
           <div className="text-black text-center px-4 text-2xl">
             <p>

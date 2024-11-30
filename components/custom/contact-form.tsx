@@ -31,10 +31,12 @@ const ContactForm = () => {
   const onSubmit = async (values: z.infer<typeof contactFormSchema>) => {
     try {
       setIsSubmitting(true);
+      console.log(values);
       await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
       toast.success("Message has been sent successfully");
       form.reset();
     } catch (error) {
+      console.error(error);
       toast.error("Failed to send message. Please try again.");
     } finally {
       setIsSubmitting(false);

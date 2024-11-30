@@ -31,7 +31,7 @@ export default async function Newsletter() {
             <Card key={index} className="overflow-hidden">
               <CardHeader className="flex items-center justify-center p-6">
                 <Image
-                  src="/abridge.png"
+                  src="/abridge.webp"
                   alt="Abridge Logo"
                   width={120}
                   height={40}

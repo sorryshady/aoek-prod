@@ -1,5 +1,4 @@
-import Image from "next/image";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import Wrapper from "@/components/custom/wrapper";
 import { client } from "@/lib/sanity";
 import { newsLetter } from "@/types/sanity-types";
@@ -29,16 +28,7 @@ export default async function Downloads() {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 relative z-10">
           {newsletters.map((newsletter, index) => (
             <Card key={index} className="overflow-hidden">
-              <CardHeader className="flex items-center justify-center p-6">
-                <Image
-                  src="/abridge.png"
-                  alt="Abridge Logo"
-                  width={120}
-                  height={40}
-                  className="h-10 w-auto"
-                />
-              </CardHeader>
-              <CardContent className="text-center">
+              <CardContent className="text-center p-8">
                 <h2 className="text-lg font-medium">{newsletter.title}</h2>
                 <p className="text-sm text-muted-foreground">
                   {new Date(newsletter.date).toLocaleDateString("en-US", {
@@ -46,12 +36,11 @@ export default async function Downloads() {
                     year: "numeric",
                   })}
                 </p>
+                <FileActions
+                  fileUrl={newsletter.fileUrl}
+                  title={newsletter.title}
+                />
               </CardContent>
-
-              <FileActions
-                fileUrl={newsletter.fileUrl}
-                title={newsletter.title}
-              />
             </Card>
           ))}
         </div>
