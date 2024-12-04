@@ -18,12 +18,11 @@ const downloads: SchemaTypeDefinition = {
       type: 'string',
       options: {
         list: [
-          {title: 'Technical Writing', value: 'technicalWriting'},
-          {title: 'Circulars & Orders', value: 'circulars'},
-          {title: 'Election Nomination', value: 'electionNomination'},
-          {title: 'IS Codes', value: 'isCodes'},
-          {title: 'IRC Codes', value: 'ircCodes'},
-          {title: 'Handbooks', value: 'handbooks'},
+          {title: 'Technical Writing', value: 'technical-writing'},
+          {title: 'Circulars & Orders', value: 'circulars-and-orders'},
+          {title: 'Election Nomination', value: 'election-nomination'},
+          {title: 'IS Codes', value: 'is-codes'},
+          {title: 'IRC Codes', value: 'irc-codes'},
           {title: 'Handbooks', value: 'handbooks'},
           {title: 'Others', value: 'others'},
         ],
